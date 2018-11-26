@@ -1,0 +1,31 @@
+export function enTransitionCn(value) {
+  switch(value) {
+    case 'low':
+    return '偏低'
+    case 'middle': 
+    return '中等'
+    default: 
+    return '良好'
+  }
+}
+
+export function thirdPartyVerification() {
+  return [
+    { id: 1, title: '手机风险评分', checked: false },
+    { id: 2, title: '信贷反欺诈核查', checked: false },
+    { id: 3, title: '贷前综合风险报告', checked: false },
+    { id: 4, title: '多头负债', checked: false },
+    { id: 5, title: '多头借贷', checked: false },
+    { id: 6, title: '公安负面信息验证', checked: false },
+    { id: 7, title: '被执行人详情查询', checked: false },
+    { id: 8, title: '网贷逾期名单', checked: false }, 
+    { id: 9, title: '身份证实名认证', checked: false },
+    { id: 10, title: '银行四要素实名验证', checked: false },
+    { id: 11, title: '三网手机二要素验证', checked: false },
+    { id: 12, title: '运营商', checked: false },
+    { id: 13, title: '京东数据', checked: false },
+    { id: 14, title: '淘宝数据', checked: false },
+    { id: 15, title: '借*宝借条+米*借条+无*借条+今*借到', checked: false },
+    { id: 16, title: '支付宝授权', checked: false }
+  ]
+}

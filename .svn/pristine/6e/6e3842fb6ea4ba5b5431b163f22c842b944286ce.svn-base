@@ -1,0 +1,86 @@
+<template>
+  <div>
+    <Form :model="form" :label-width="150" style="text-align: left;">
+      <FormItem label="渠道名:">
+        <Input v-model="form.input" size="large" clearable></Input>
+      </FormItem>
+      <FormItem label="渠道简称:">
+        <Input v-model="form.input" size="large" clearable></Input>
+      </FormItem>
+      <FormItem label="公司全称:">
+        <Input v-model="form.input" size="large" clearable></Input>
+      </FormItem>
+      <FormItem label="业务类型:">
+        <Input v-model="form.input" size="large" clearable></Input>
+      </FormItem>
+      <FormItem label="姓名:">
+        <Input v-model="form.input" size="large" clearable></Input>
+      </FormItem>
+      <FormItem label="身份证:">
+        <Input v-model="form.input" size="large" clearable></Input>
+      </FormItem>
+      <FormItem label="银行账号:">
+        <Input v-model="form.input" size="large" clearable></Input>
+      </FormItem>
+      <FormItem label="开户行:">
+        <Input v-model="form.input" size="large" clearable></Input>
+      </FormItem>
+      <FormItem label="账期:">
+        <InputNumber :min="0" v-model="form.input" style="width: 60%;" size="large"></InputNumber>天
+      </FormItem>
+      <FormItem label="渠道管理员:">
+        <template>
+          <Select v-model="form.input" size="large" style="width: 60%;" ></Select>
+          <Button type="primary" shape="circle" icon="ios-trash-outline"></Button>
+        </template>
+        <button class="btn-add">新增</button>
+      </FormItem>
+      <FormItem label="产品ID:">
+        <template>
+          <Select v-model="form.input" size="large" style="width: 60%;" ></Select>
+          <Button type="primary" shape="circle" icon="ios-trash-outline"></Button>
+        </template>
+        <button class="btn-add">新增</button>
+      </FormItem>
+      <FormItem label="联系人:">
+        <template>
+          <Select v-model="form.input" size="large" style="width: 60%;" ></Select>
+          <Button type="primary" shape="circle" icon="ios-trash-outline"></Button>
+        </template>
+        <p style="text-align: left; font-size: 18px;margin-bottom: 10px; color: red;">*联系人手机会收到订单短信通知。</p>
+        <button class="btn-add">新增联系人</button>
+      </FormItem>
+    </Form>
+  </div>  
+</template>
+
+<script>
+export default {
+  props: {
+    form: {
+      type: Object,
+      default: {}
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .btn-add {
+    display: block;
+    clear: both;
+    overflow: hidden;
+    background: transparent;
+    height: 50px;
+    line-height: 50px;
+    color: #4A90E2;
+    font-size: 15px;
+    text-decoration: underline;
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    &:hover {
+      color: #49a9ee;
+    }
+  }
+</style>

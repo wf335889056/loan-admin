@@ -1,0 +1,223 @@
+<template>
+  <div>
+    <Row>
+      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="drawerShow = true">账户管理</Button>
+      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="topUpModal = true">充值</Button>
+      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="futForwardModal = true">提出</Button>
+    </Row>
+    <p class="p1"><span>富有账户余额：3.00元</span> <span>可用余额：3.00元</span></p>
+    <Row>
+    </Row>
+    <Divider />
+    <Tabs value="name1">
+      <TabPane label="流水明细" name="name1">
+        <Table :loading="loading" :columns="columns" :data="list1"></Table>
+      </TabPane>
+      <TabPane label="入账明细" name="name2">
+        <Table :columns="columns" :data="list2"></Table>
+      </TabPane>
+      <TabPane label="支出明细" name="name3">
+        <Table :columns="columns" :data="list3"></Table>
+      </TabPane>
+    </Tabs>
+    <Modal v-model="topUpModal" title="给账户余额充钱" ok-text="提交" @on-ok="topUpOk">
+      <Form :model="form1" :label-width="100" label-position="left">
+        <FormItem label="账户类型:">
+          <Input value="富有" :readonly="true" size="default" style="width: 80px;"></Input>
+        </FormItem>
+        <FormItem label="账户余额:">
+          <span style="color: #009900;">3.00</span>元
+        </FormItem>
+        <FormItem label="充值金额:">
+          <InputNumber :min="0" v-model="form1.input" size="default"></InputNumber>元
+        </FormItem>
+        <FormItem label="选择账户:">
+          <Select v-model="form1.input" size="default">
+            <Option v-for="(item, index) in options" :value="item.code" :key="index" :label="item.bankName"></Option>
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
+    <Modal v-model="futForwardModal" title="提款到银行卡" @on-ok="futForwarOk">
+      <Form :model="form2" :label-width="100" label-position="left">
+        <FormItem label="账户类型:">
+          <Input value="富有" :readonly="true" size="default" style="width: 80px;"></Input>
+        </FormItem>
+        <FormItem label="账户余额:">
+          <span style="color: #009900;">3.00</span>元
+        </FormItem>
+        <FormItem label="可提现:">
+          <span style="color: #009900;">3.00</span>元
+        </FormItem>
+        <FormItem label="提款额:">
+          <InputNumber :min="0" v-model="form2.input" size="default"></InputNumber>元
+        </FormItem>
+        <FormItem label="选择账户:">
+          <Select v-model="form2.input" size="default">
+            
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
+    <Modal v-model="accountModal" title="新增账户" @on-ok="accountOk">
+      <Form :model="form3" :label-width="120" label-position="left">
+        <FormItem label="账户备注:">
+          <Input v-model="form3.input" size="default"></Input>
+        </FormItem>
+        <FormItem label="开户银行:">
+          <Select v-model="form3.input" size="default">
+            <Option v-for="(item, index) in options" :value="item.code" :key="index" :label="item.bankName"></Option>
+          </Select>
+        </FormItem>
+        <FormItem label="银行卡号:">
+          <Input v-model="form3.input" size="default"></Input>
+        </FormItem>
+        <FormItem label="身份证号码:">
+          <Input v-model="form3.input" size="default"></Input>
+        </FormItem>
+        <FormItem label="银行预留手机号码:">
+          <Input v-model="form3.input" size="default"></Input>
+        </FormItem>
+        <FormItem label="开户名:">
+          <Input v-model="form3.input" size="default"></Input>
+        </FormItem>
+        <FormItem label="开户名:">
+          <Select v-model="form3.input" size="default">
+            <Option :value="1">个人账户</Option>
+            <Option :value="2">对公账户</Option>
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
+    <Drawer title="账户管理" v-model="drawerShow" width="60" class="drawer">
+      <div class="detail">
+        <div class="content">
+          <p v-if="type == 1">放款限额: {{money.toFixed(2)}}/月 <span @click="type = 2">编辑</span></p>
+          <p v-if="type == 2">放款限额:
+            <InputNumber :min="0" v-model="money" size="default" style="width: 200px;"></InputNumber>元
+            <span @click="handleSubmit">保存</span><span @click="type = 1">取消</span>
+          </p>
+        </div>
+        <div class="content">
+          <Table :columns="columns1" :data="listData"></Table>
+        </div>
+      </div>
+      <div class="footer">
+        <Button size="default" type="success" class="btn" @click="accountModal = true">新增</Button>
+      </div>
+    </Drawer>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      list1: [],
+      list2: [],
+      list3: [],
+      listData: [{name: 1}],
+      loading: true,
+      columns: [
+        { title: '行为', key: 'name', align: 'center' },
+        { title: '交易流水号', key: 'name', align: 'center' },
+        { title: '发生金额', key: 'name', align: 'center' },
+        { title: '操作人', key: 'name', align: 'center' },
+        { title: '出款账户', key: 'name', align: 'center' },
+        { title: '入款账户', key: 'name', align: 'center' },
+        { title: '账户类型', key: 'name', align: 'center' },
+        { title: '操作时间', key: 'name', align: 'center' }
+      ],
+      columns1: [
+        { title: '账户备注', key: 'name', align: 'center' },
+        { title: '开户银行', key: 'name', align: 'center' },
+        { title: '银行卡号', key: 'name', align: 'center' },
+        { title: '身份证号码', key: 'name', align: 'center' },
+        { title: '银行预留手机号', key: 'name', align: 'center' },
+        { title: '开户名', key: 'name', align: 'center' },
+        { title: '账户类型', key: 'name', align: 'center' },
+        {
+          title: '操作',
+          key: 'action',
+          align: 'center',
+          render: (h, params) => {
+            return h('Button', {
+              props: {
+                type: 'text',
+                size: 'small'
+              },
+              style: {
+                color: '#2db7f5'
+              },
+              on: {
+                click: () => {
+                  this.handleUpdate()
+                }
+              }
+            }, '删除')
+          }
+        }
+      ],
+      drawerShow: false,
+      topUpModal: false,
+      futForwardModal: false,
+      accountModal: false,
+      form1: {},
+      form2: {},
+      form3: {},
+      type: 1,
+      money: 1000000.00,
+      options: [
+        { bankName: '中国工商银行', code: '0801020000' },
+        { bankName: '中国建设银行', code: '0801050000' },
+        { bankName: '中国民生银行', code: '0803050000' },
+        { bankName: '华夏银行', code: '0803040000' },
+        { bankName: '招商银行', code: '0803080000' },
+        { bankName: '中国银行', code: '0801040000' },
+        { bankName: '交通银行', code: '0803010000' },
+        { bankName: '上海浦东发展银行', code: '0803100000' },
+        { bankName: '兴业银行', code: '0803090000' },
+        { bankName: '中信银行', code: '0803020000' },
+        { bankName: '平安银行', code: '0804100000' },
+        { bankName: '上海银行', code: '080401001C' }
+      ]
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.loading = false
+    }, 1000)
+  },
+  methods: {
+    topUpOk() {
+    },
+    futForwarOk() {
+    },
+    accountOk() {
+    },
+    handleSubmit() {
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .p1 {
+    font-size: 16px;
+    span {
+      margin-right: 30px;
+    }
+  }
+  .drawer {
+    .detail {
+      p {
+        font-size: 16px;
+        span {
+          margin-left: 20px;
+          color: #4A90E2;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+</style>

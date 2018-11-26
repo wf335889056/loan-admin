@@ -1,0 +1,20 @@
+export default {
+  state: {
+    token: '',
+    userInfo: {}
+  },
+  mutations: {
+    SET_TOKEN: (state, token) => {
+      state.token = token
+    },
+    SET_USERINFO: (state, userInfo) => {
+      state.userInfo = userInfo
+    }
+  },
+  actions: {
+  },
+  getters: {
+    token: state => state.token,
+    userInfo: state => state.userInfo
+  }
+}

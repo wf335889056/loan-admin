@@ -1,0 +1,10 @@
+export function enTransitionCn(value) {
+  switch(value) {
+    case 'low' :
+    return '偏低'
+    case 'middle' : 
+    return '中等'
+    default : 
+    return '良好'
+  }
+}

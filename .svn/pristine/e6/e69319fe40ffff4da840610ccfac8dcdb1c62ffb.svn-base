@@ -1,0 +1,54 @@
+import fetch from './fetch'
+
+/*********
+@param {*} query 参数 String
+@method {*} 请求方式 Object
+@url {*} 请求地址 String
+*********
+*/
+
+// 公司信息
+export function getCompanyMsg(query) {
+  return fetch({
+    url: '/deskManagementController/companyInfo',
+    method: 'post',
+    params: query
+  })
+}
+export function updateCompanyMsg(query) {
+  return fetch({
+    url: '/deskManagementController/updateCompanyInfo',
+    method: 'post',
+    params: query
+  })
+}
+
+// 合同管理
+export function getContractList(query) {
+  return fetch({
+    url: '/bargainController/getBargainList',
+    method: 'post',
+    params: query
+  })
+}
+export function getContractMsg(query) {
+  return fetch({
+    url: '/bargainController/getBargain',
+    method: 'post',
+    params: query
+  })
+}
+export function addContractMsg(query) {
+  return fetch({
+    url: '/bargainController/saveBargain',
+    method: 'post',
+    params: query
+  })
+}
+export function updateContractMsg(query) {
+  return fetch({
+    url: '/bargainController/updateBargainStatus',
+    method: 'post',
+    params: query
+  })
+}

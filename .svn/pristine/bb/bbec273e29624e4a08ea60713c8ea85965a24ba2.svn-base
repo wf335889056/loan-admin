@@ -1,0 +1,187 @@
+<template>
+  <div>
+    <div class="top-box">
+      <img :src="topImage" alt="top" class="topImage">
+      <div class="circle">
+        <img :src="logo" alt="log" class="logo">
+      </div>
+      <div class="title android" v-if="isAndroid">
+        <span>小优金融</span>
+      </div>
+      <div class="title ios" v-if="isIos">
+        <span>小优金融</span>
+      </div>
+    </div>
+    <div class="center-box">
+      <p class="p">
+        <span>版本：1.0.01（build 1.0.0.1）</span>
+        <span style="margin-left: 24px;">大小：12.2MB</span>
+      </p>
+      <p class="p">更新时间：2018-09-30 14:33:18</p>
+      <div class="qr-code">
+        <div class="code-img">
+          <img src="" alt="二维码">
+        </div>
+      </div>
+      <div class="btn">
+        <img :src="btnImage" alt="btn" @click="handleSubmit">
+        <p>或者用手机扫描二维码安装</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import logo from '@/assets/logo_xyjr60.png'
+import topImage from '@/assets/top@2x_2.png'
+import btnImage from '@/assets/button_cked@2x_2.png'
+import { appDevice } from '@/utils'
+export default {
+  data() {
+    return {
+      logo,
+      topImage,
+      btnImage
+    }
+  },
+  computed: {
+    isIos() {
+      return appDevice().iPhone
+    },
+    isAndroid() {
+      return appDevice().android
+    }
+  },
+  methods: {
+    handleSubmit() {
+      if (this.isIos) {
+        return
+      }
+      if (this.isAndroid) {
+        return
+      }
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .top-box {
+    position: relative;
+    .topImage {
+      width: 100%;
+    }
+    .circle {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      background: url('../../assets/bg_yuan@2x.png') center no-repeat;
+      background-size: 100%;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      position: absolute;
+      left: 50%;
+      margin-left: -60px;
+      top: 38px;
+      .logo {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+      }
+    }
+    .title {
+      position: absolute;
+      right: 0;
+      left: 0;
+      bottom: 15px;
+      font-size:20px;
+      line-height: 40px;
+      color: #FFFFFF;
+      text-align: center;
+      letter-spacing: 2px;
+      span {
+        display: inline-block;
+        padding-right: 54px;
+        padding-left: 28px;
+        position: relative;
+        &::before, &::after {
+          content: '';
+          display: inline-block;
+          position: absolute
+        }
+        &::after {
+          width: 44px;
+          height: 18px;
+          right: 0;
+          top: 50%;
+          margin-top: -9px;
+        }
+      }
+      &.android {
+        span::before {
+          width: 17px;
+          height: 20px;
+          background: url('../../assets/icon_ad1@2x.png') center no-repeat;
+          background-size: 100%;
+          left: 0;
+          top: 50%;
+          margin-top: -12px;
+        }
+        span::after {
+          background: url('../../assets/icon_ad2@2x.png') center no-repeat;
+          background-size: 100%;
+        }
+      }
+      &.ios {
+        span::before {
+          width: 16px;
+          height: 20px;
+          background: url('../../assets/icon_apple1@2x.png') center no-repeat;
+          background-size: 100%;
+          left: 0;
+          top: 50%;
+          margin-top: -12px;
+        }
+        span::after {
+          background: url('../../assets/icon_apple2@2x.png') center no-repeat;
+          background-size: 100%;
+        }
+      }
+    }
+  }
+  .center-box {
+    text-align: center;
+    .p {
+      font-size:12px;
+      color:rgba(119,119,119,1);
+      margin: 10px 0;
+    }
+    .qr-code {
+      padding: 26px 0 33px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .code-img {
+        width: 160px;
+        height: 160px;
+        border: 1px solid #666666;
+        padding: 9px;
+        img {
+          width: 140px;
+          height: 140px;
+        }
+      }
+    }
+    .btn {
+      img {
+        width: 207px;
+      }
+      p {
+        font-size:12px;
+        color: #666666;
+      }
+    }
+  }
+</style>

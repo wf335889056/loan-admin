@@ -1,0 +1,22 @@
+<template>
+  <div></div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+    }
+  },
+  mounted() {
+    document.title = '小优金融 - 小额贷服务'
+  },
+  methods: {
+
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+</style>

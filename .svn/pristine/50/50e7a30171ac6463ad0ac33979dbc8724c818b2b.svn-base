@@ -1,0 +1,1 @@
+{"code":200,"msg":"成功","data":{"account":{"name":"田晓徵","mobile":"13180050758","id_card":"130124198909272414","bank":"","ip":"","imei":""},"risk":{"found":true,"risks":[{"code":"1001","value":"middle","description":"信贷中介"},{"code":"1005","value":"middle","description":"存在骗贷行为"},{"code":"1007","value":"low","description":"存在支付异常行为"}],"score":72}}}

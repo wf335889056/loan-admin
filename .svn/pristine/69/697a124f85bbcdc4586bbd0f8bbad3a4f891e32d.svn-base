@@ -1,0 +1,285 @@
+<template>
+  <div>
+    <Spin fix size="large" v-if="loadDrawer"></Spin>
+    <template v-else>
+      <div class="d1">
+      <div>
+        <div class="title">账户信息</div>
+        <div class="content account">
+          <div>
+            <p class="p1">账户余额(元)</p>
+            <p class="p2">2.07</p>
+          </div>
+          <div>
+            <p class="p1">可用余额(元)</p>
+            <p class="p2">2.07</p>
+          </div>
+          <div>
+            <p class="p1">查询费余额(元)</p>
+            <p class="p2">500.00</p>
+          </div>
+          <div>
+            <p class="p1">打款中余额(元)</p>
+            <p class="p2">0.00</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="title">当前数据</div>
+        <div class="content data">
+          <ul>
+            <li v-for="(item, index) in datas" :key="index">
+              <p class="p1"><span :style="{'background-color': item.color}"></span>{{item.title}}</p>
+              <p class="p2">{{item.number}}单</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="title">待收和逾期</div>
+        <div class="content overdue">
+          <div>
+            <p><span style="background-color: rgb(254, 182, 62)"></span>代收笔数</p>
+            <span class="sp">笔数: 123笔</span>
+            <span class="sp">本金: 100元</span>
+            <span class="sp">利息: 1231313.1231元</span>
+          </div>
+          <div>
+            <p><span></span>逾期数据</p>
+            <span class="sp">笔数: 123笔</span>
+            <span class="sp">本金: 100元</span>
+            <span class="sp">利息: 1231313.1231元</span>
+            <span class="sp">罚息: 1231231.1元</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d2">
+      <div>
+        <div class="title">回款数据</div>
+        <div class="content returned">
+          <p>笔数: <span>1笔</span> 金额: 3590.00元</p>
+          <p>本金: 125.00元, 利息: 3465.00元, 罚息: 0.00元, 手续费: 0.00元</p>
+          <p>已回款1笔, 共计3590.00元, 其中本金125.00元, 利息3456.00元, 罚息0.00元, 手续费0.00元</p>
+          <div class="table">
+            <Table :loading="loading" :columns="columns" :data="returneds"></Table>
+            <Page :current="returnedsPage" size="small" :page-size="5" :total="returneds.length" show-total class="page" @on-change="handleChange" />
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="title">放款数据</div>
+        <div class="content loan">
+          <echarts />
+        </div>
+      </div>
+    </div>
+    </template>
+  </div>
+</template>
+
+<script>
+  import echarts from '@/components/echarts.vue'
+  export default {
+    components: { echarts },
+    data() {
+      return {
+        loadDrawer: true,
+        datas: [
+          { title: '等待审核', number: 800, color: 'rgb(84, 174, 248)' },
+          { title: '代收款', number: 800, color: 'rgb(254, 182, 62)' },
+          { title: '待签署合同', number: 800, color: 'rgb(122, 213, 19)' },
+          { title: '填写资料', number: 800, color: '#666666' },
+          { title: '审核拒绝', number: 800, color: '#666666' },
+          { title: '取消放款', number: 800, color: '#666666' },
+          { title: '还款中', number: 800, color: '#666666' },
+          { title: '还款完成', number: 800, color: '#666666' },
+          { title: '已逾期', number: 800, color: 'red' },
+        ],
+        columns: [
+          { title: '客户', key: 'name', align: 'center' },
+          { title: '手机号码', key: 'name', align: 'center' },
+          { title: '账单金额', key: 'name', align: 'center' },
+          {
+            title: '状态',
+            key: 'name',
+            align: 'center',
+            filters: [
+              { label: '未还款', value: 1 },
+              { label: '已还款', value: 2 }
+            ],
+            filterMultiple: false,
+            filterMethod (value, row) {
+              if (value === 1) {
+                // return row.show > 4000;
+              } else if (value === 2) {
+                // return row.show < 4000;
+              }
+              console.log(row)
+            }
+          },
+          { title: '本金', key: 'name', align: 'center' },
+          { title: '利息', key: 'name', align: 'center' },
+          { title: '罚息', key: 'name', align: 'center' },
+          { title: '手续费', key: 'name', align: 'center' }
+        ],
+        returneds: [{name: '123'}, {name: '123'}, {name: '123'}, {name: '123'}, {name: '123'}],
+        loading: true,
+        returnedsPage: 1
+      }
+    },
+    mounted() {
+      setTimeout(() => {
+        this.loading = false
+        this.loadDrawer = false
+      }, 1000)
+    },
+    methods: {
+      handleChange(val) {
+        console.log(val)
+      }
+    }
+  }
+</script>
+
+<style lang="less" scoped>
+  .d1 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    height: 350px;
+    > div {
+      flex: 1;
+      margin: 0 12px;
+      border: 1px solid #e9e9e9;
+      border-radius: 4px;
+      &:hover {
+        box-shadow: 0 1px 6px rgba(0,0,0,.2);
+        border-color: rgba(0,0,0,.2);
+      }
+      .content {
+        height: 302px;
+      }
+    } 
+  }
+  .d2 {
+    display: flex;
+    justify-content: center;
+    height: 500px;
+    > div {
+      flex: 1;
+      margin: 0 12px;
+      border: 1px solid #e9e9e9;
+      border-radius: 4px;
+      &:hover {
+        box-shadow: 0 1px 6px rgba(0,0,0,.2);
+        border-color: rgba(0,0,0,.2);
+      }
+      .content {
+        height: 452px;
+      }
+    }
+  }
+  .title {
+    line-height: 48px;
+    padding: 0 24px;
+    border-bottom: 1px solid #e9e9e9;
+    color: rgba(0,0,0,.85);
+  }
+  .content {
+    padding: 24px;
+    text-align: center;
+    color: #333;
+    &.account {
+      overflow: hidden;
+      > div {
+        width: 50%;
+        float: left;
+        padding: 38px 0;
+        &:nth-of-type(1), &:nth-of-type(2) {
+          border-bottom: 1px solid #eeeeee;
+        }
+        &:nth-of-type(2n) {
+          border-left: 1px solid #eeeeee;
+        }
+        .p1 {
+          font-size: 12px;
+          line-height: 20px;
+        }
+        .p2 {
+          font-size: 26px;
+          line-height: 30px;
+          font-weight: bold;
+          color: #000;
+        }
+      }
+    }
+    &.data {
+      ul {
+        overflow: hidden;
+        li {
+        width: 33.3333%;
+        float: left;
+        padding: 20px 0;
+        cursor: pointer;
+          .p1 {
+            font-size: 12px;
+            
+            line-height: 20px;
+            span {
+              width: 10px;
+              height: 10px;
+              display: inline-block;
+              border-radius: 50%;
+              background-color: red;
+              margin-right: 10px;
+            }
+          }
+          .p2 {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            line-height: 30px;
+            &:hover {
+              color: #2db7f5;
+            }
+          }
+        }
+      }
+    }
+    &.overdue {
+      text-align: left;
+      > div {
+        line-height: 40px;
+        overflow: hidden;
+        p {
+          span {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: red;
+          }
+        }
+        .sp {
+          width: 50%;
+          float: left;
+        }
+      }
+    }
+    &.returned {
+      text-align: left;
+      overflow: hidden;
+      > p {
+        line-height: 16px;
+        padding: 10px 0;
+      }
+      .table {
+        overflow: auto;
+        height: 300px;
+        position: relative;
+      }
+    }
+  }
+</style>

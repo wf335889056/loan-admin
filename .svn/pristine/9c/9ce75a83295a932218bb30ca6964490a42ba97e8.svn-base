@@ -1,0 +1,36 @@
+<template>
+  <div class="tab-box">
+    <Tabs type="card">
+      <TabPane v-for="item in tabs" :label="item.title" :key="item.id">
+        <antiFraud v-if="item.id == 2" />
+        <longDebt v-if="item.id == 4" />
+        <longBorrowing v-if="item.id == 5" />
+        <networkPhoneThree v-if="item.id == 11" />
+      </TabPane>
+    </Tabs>
+  </div>
+</template>
+
+<script>
+import { thirdPartyVerification } from '@/utils'
+import antiFraud from './antiFraud.vue'
+import longBorrowing from './longBorrowing.vue'
+import longDebt from './longDebt.vue'
+import networkPhoneThree from './networkPhone3.vue'
+export default {
+  components: { antiFraud, longBorrowing, longDebt, networkPhoneThree },
+  data() {
+    return {
+      tabs: thirdPartyVerification()
+    }
+  },
+  mounted() {
+  },
+  methods: {
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+</style>

@@ -1,0 +1,320 @@
+<template>
+  <div class="wrapper">
+    <Row>
+      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="handleAdd">新增产品  </Button>
+    </Row>
+    <div class="table">
+      <Table :loading="loading" :columns="columns" :data="list"></Table>
+      <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" />
+    </div>
+    <Drawer title="新增产品" v-model="drawerShow" width="80" class="drawer">
+      <div class="detail">
+        <div class="form">
+          <Divider>第一步</Divider>
+          <p class="title"><Tag color="warning">设置产品基本属性</Tag></p>
+          <Form :model="form" :label-width="150" style="text-align: left;">
+            <FormItem label="产品名称:">
+              <Input v-model="form.input" size="large" clearable></Input>
+            </FormItem>
+            <FormItem label="产品描述:">
+              <Input v-model="form.input" size="large" clearable></Input>
+            </FormItem>
+            <FormItem label="产品图片:">
+              <uploadImage :uploadList="images" @upload="imageSuccess"/>
+            </FormItem>
+            <!-- <p style="text-align: right; font-size: 20px;margin-bottom: 10px;">*相关通知短信会发送至此手机号</p> -->
+            <FormItem label="产品类型:">
+              <Input value="金融贷款产品" size="large" clearable :readonly="true"></Input>
+            </FormItem>
+            <FormItem label="还款方式和利率:">
+              <template>
+                <p>还款方式:
+                  <Select v-model="form.input" size="large" clearable>
+                    <Option v-for="item in options" :value="item.value" :key="item.value" :label="item.label"></Option>
+                  </Select>
+                </p>
+                <p>
+                  利息计算周期:
+                  <Select v-model="form.input" size="large" clearable>
+                    <Option :value="1">放款后第二天开始计算利息</Option>
+                    <Option :value="2">放款日当天开始计算利息</Option>
+                  </Select>
+                </p>
+                <p>设置期数&利率</p>
+                <ul>
+                  <li>
+                    <span style="margin-right: 30px;"><InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>期</span>
+                    <span style="margin-right: 30px;"><InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>%(月)</span>
+                    <span style="margin-right: 30px;"><InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>%(月)</span>
+                    <Button type="primary" shape="circle" icon="ios-trash-outline"></Button>
+                  </li>
+                  <button class="btn-add">添加</button>
+                  <p style="text-align: left; font-size: 18px;margin-bottom: 10px; color: red;">*等本等息形式每月还款额为： 贷款额/期数 + 贷款额*月费率。</p>
+                </ul>
+              </template>
+              <button class="btn-add">增加还款方式</button>
+            </FormItem>
+            <FormItem label="手续费:">
+              <p>
+                <i-switch size="large" v-model="form.input" :true-value="1" :false-value="0">
+                  <span slot="open">是</span>
+                  <span slot="close">否</span>
+                </i-switch>
+              </p>
+              <template>
+                <div style="margin-bottom: 10px;margin-top: 10px;">
+                  手续费支付方式: 
+                  <RadioGroup v-model="form.input" size="large" style="margin-left: 50px;">
+                    <Radio :label="1">按期支付</Radio>
+                    <Radio :label="2">贷前扣除</Radio>
+                  </RadioGroup>
+                  <span style="float:right;">最大手续费：<InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>元</span>
+                </div>
+                <ul>
+                  <li style="margin-bottom: 10px;margin-top: 10px;">
+                    <span style="margin-right: 20px;">手续费名称: <Input v-model="form.input" size="large" clearable style="width: 200px;"></Input></span>
+                    <span style="margin-right: 20px;">收取方式: 
+                      <Select v-model="form.input" size="large" clearable style="width: 200px;">
+                        <Option :value="1">固定费用(元)</Option>
+                        <Option :value="2">按借款金额比例(%)</Option>
+                      </Select>
+                      <InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>
+                    </span>
+                    <Button type="primary" shape="circle" icon="ios-trash-outline"></Button>
+                  </li>
+                  <button class="btn-add">新增手续费</button>
+                </ul>
+              </template>
+            </FormItem>
+            <FormItem label="提前还款:">
+              <p>
+                <i-switch size="large" v-model="form.input" :true-value="1" :false-value="0">
+                  <span slot="open">是</span>
+                  <span slot="close">否</span>
+                </i-switch>
+              </p>
+              <template>
+                <RadioGroup v-model="form.input" size="large" style="margin-bottom: 10px;margin-top: 10px;">
+                  <Radio :label="1" :disabled="checked == false">按日计息
+                    <span style="margin-left: 30px;">
+                      日息:
+                      <InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>%
+                    </span>
+                  </Radio>
+                  <Radio :label="2" :disabled="checked == false">按当前还款周期利息计算</Radio>
+                </RadioGroup>
+                <div style="margin-bottom: 10px;margin-top: 10px;">
+                  <Checkbox v-model="checked">有违约金</Checkbox>
+                  <p>剩余未还本金的比例: <InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>%</p>
+                </div>
+              </template>
+            </FormItem>
+            <FormItem label="罚息&计算方式:">
+              <div class="check-box">
+                <Checkbox v-model="checked" size="large">
+                  <RadioGroup v-model="form.input" size="large">
+                    <Radio :label="1" :disabled="checked == false">按日复利计算</Radio>
+                    <Radio :label="2" :disabled="checked == false">按日单利计算</Radio>
+                  </RadioGroup>
+                  <span style="margin-left: 30px;">
+                    利率:
+                    <InputNumber :min="0" v-model="form.input" style="width: 100px;" :disabled="checked == false" size="large"></InputNumber>%
+                  </span>
+                </Checkbox>
+              </div>
+              <div class="check-box">
+                <Checkbox v-model="checked" size="large">
+                  <RadioGroup v-model="form.input" size="large">
+                    <Radio :label="1" :disabled="checked == false">按月复利计算</Radio>
+                    <Radio :label="2" :disabled="checked == false">按月单利计算</Radio>
+                  </RadioGroup>
+                  <span style="margin-left: 30px;">
+                    利率:
+                    <InputNumber :min="0" v-model="form.input" style="width: 100px;" :disabled="checked == false" size="large"></InputNumber>%
+                  </span>
+                </Checkbox>
+              </div>
+              <div class="check-box">
+                <Checkbox v-model="checked" size="large">
+                  罚息上限：本金额的: <InputNumber :min="0" v-model="form.input" style="width: 100px;" :disabled="checked == false" size="large"></InputNumber>%
+                </Checkbox>
+              </div>
+              <p style="text-align: left; font-size: 18px;margin-bottom: 10px; color: red;">*按日，按月独立计算，可相互叠加。</p>
+            </FormItem>
+            <FormItem label="贷款支付给:">
+              <RadioGroup v-model="form.input" size="large">
+                <Radio :label="1">渠道商（消费场景，适用消费分期）</Radio>
+                <Radio :label="2">贷款人（适用现金贷）</Radio>
+              </RadioGroup>
+            </FormItem>
+            <FormItem label="最高放贷金额:">
+              <InputNumber v-model="form.input" :min="0" style="width: 60%;" :formatter="value => `¥ ${value}`.replace(/B(?=(d{3})+(?!d))/g, ',')"
+                :parser="value => value.replace(/$s?|(,*)/g, '')" size="large"></InputNumber>元
+            </FormItem>
+            <FormItem label="放贷须过几级审批:">
+              <RadioGroup v-model="form.input" size="large">
+                <Radio :label="1">1级</Radio>
+                <Radio :label="2">2级</Radio>
+              </RadioGroup>
+            </FormItem>
+            <!-- <FormItem label="产品申请限制:">
+            </FormItem> -->
+            <FormItem label="有未还清贷款时继续申请:">
+              <i-switch size="large" v-model="form.input" :true-value="1" :false-value="0">
+                <span slot="open">是</span>
+                <span slot="close">否</span>
+              </i-switch>
+            </FormItem>
+            <FormItem label="申请人数配置:">
+              <span>增长系数：<InputNumber :min="0" v-model="form.input" size="large"></InputNumber></span>
+              <span style="margin-left: 50px;">保底数量：<InputNumber :min="0" v-model="form.input" size="large"></InputNumber></span>
+            </FormItem>
+            <FormItem label="产品利率显示:">
+              <p>产品列表利率文案</p>
+              <Input v-model="form.input" size="large" clearable></Input>
+              <p>申请表页面是否显示
+              <i-switch  size="large" v-model="form.input" :true-value="1" :false-value="0">
+                <span slot="open">是</span>
+                <span slot="close">否</span>
+              </i-switch>
+              </p>
+            </FormItem>
+            <FormItem label="重复查询大数据期限:">
+              <InputNumber :min="0" v-model="form.input" style="width: 60%;" size="large"></InputNumber>天
+            </FormItem>
+          </Form>
+        </div>
+      </div>
+      <div class="footer">
+        <Button size="default" type="info" class="btn" @click="handleNext">下一步</Button>
+      </div>
+    </Drawer>
+  </div>
+</template>
+
+<script>
+import uploadImage from '@/components/uploadImage.vue'
+export default {
+  components: { uploadImage },
+  data() {
+    return {
+      list: [{name: 12313}],
+      loading: true,
+      page: 1,
+      columns: [
+        { title: '产品编号', key: 'name', align: 'center' },
+        { title: '产品名称', key: 'name', align: 'center' },
+        { title: '状态', key: 'name', align: 'center' },
+        { title: '渠道数', key: 'name', align: 'center' },
+        { title: '最后更新人', key: 'name', align: 'center' },
+        { title: '创建时间', key: 'name', align: 'center' },
+        {
+          title: '操作',
+          key: 'action',
+          width: 100,
+          align: 'center',
+          render: (h, params) => {
+            const forbidden = h('Button', {
+              props: {
+                type: 'text',
+                size: 'small'
+              },
+              style: {
+                color: '#2db7f5'
+              },
+              on: {
+                click: (e) => {
+                  e.stopPropagation()
+                }
+              }
+            }, '禁用')
+            const start = h('Button', {
+              props: {
+                type: 'text',
+                size: 'small'
+              },
+              style: {
+                color: '#2db7f5'
+              },
+              on: {
+                click: (e) => {
+                  e.stopPropagation()
+                }
+              }
+            }, '启用')
+            return params.status == 1? start : forbidden
+          }
+        }
+      ],
+      drawerShow: true,
+      form: {},
+      images: [
+        {
+          'name': 'a42bdcc1178e62b4694c830f028db5c0',
+          'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
+        },
+        {
+          'name': 'bc7521e033abdd1e92222d733590f104',
+          'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
+        }
+      ],
+      checked: false,
+      options: [
+        { value: 1, label: '等本等息 (按月还款)' },
+        { value: 2, label: '等本等息 (按周还款)' },
+        { value: 3, label: '等本等息 (自定义周期)' },
+        { value: 4, label: '先息后本 (按月还款)' },
+        { value: 5, label: '先息后本 (按周还款)' },
+        { value: 6, label: '先息后本 (自定义周期)' },
+        { value: 7, label: '等额本息 (按月还款)' },
+        { value: 8, label: '等额本息 (按周还款)' },
+        { value: 9, label: '等额本息 (自定义周期)' },
+        { value: 10, label: '等额本金 (按月还款)' },
+        { value: 11, label: '等额本金 (按周还款)' },
+        { value: 12, label: '等额本金 (自定义周期)' },
+        { value: 13, label: '利随本金 (到期还款)' },
+        { value: 14, label: '等额本金 (固定还款日)' },
+        { value: 15, label: '等额本息 (固定还款日)' },
+        { value: 16, label: '先息后本 (固定还款日)' },
+        { value: 17, label: '等本等息 (固定还款日)' }
+      ]
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.loading = false
+    }, 1000)
+  },
+  methods: {
+    imageSuccess() {
+    },
+    handleNext() {
+
+    },
+    handleAdd() {
+      this.drawerShow = true
+    },
+    handleSubmit() {
+    },
+    handleChange(val) {
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .btn-add {
+    display: block;
+    clear: both;
+    overflow: hidden;
+    background: transparent;
+    height: 50px;
+    line-height: 50px;
+    color: #508cee;
+    font-size: 15px;
+    text-decoration: underline;
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+  }
+</style>

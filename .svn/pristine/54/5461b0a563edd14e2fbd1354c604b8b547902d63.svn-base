@@ -1,0 +1,54 @@
+<template>
+  <div>
+    <Row style="position: relative;">
+      <p class="p">产品详情</p>
+      <div class="btn-box">
+        <Button type="primary" size="large" @click="handleStart">启动</Button>
+        <Button type="primary" size="large" @click="handleForbidden">禁用</Button>
+      </div>
+    </Row>
+    <Divider />
+    <Collapse v-model="collapse" accordion>
+      <Panel name="1">产品基本信息
+      </Panel>
+      <Panel name="2">客户风控资料
+      </Panel>
+      <Panel name="3">合作渠道
+      </Panel>
+      <Panel name="4">选择授权合同
+      </Panel>
+      <Panel name="5">选择借款和展期合同
+      </Panel>
+    </Collapse>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      collapse: '1'
+    }
+  },
+  methods: {
+    handleStart() {
+    },
+    handleForbidden() {
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .p {
+    font-size: 30px;
+    color: #508cee;
+    margin: 10px 0;
+  }
+  .btn-box {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -18px;
+  }
+</style>

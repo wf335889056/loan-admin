@@ -1,0 +1,115 @@
+@import './reset.css';
+@import 'iview/dist/styles/iview.css';
+
+@color: '#131313';
+
+.table .page {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.returned .table .page {
+  bottom: 10px;
+  right: 10px;
+}
+
+.wrapper {
+  .row {
+    border: 1px solid #EDEDED;
+    border-radius: 4px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+    line-height: 40px;
+  }
+}
+
+.formInline {
+  .ivu-form-item {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+}
+
+.drawer {
+  .footer {
+    box-shadow: 0 0 4px 0 rgba(91, 122, 138, 0.38);
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    height: 50px;
+    padding: 10px 50px;
+    text-align: right;
+    .btn {
+      margin-left: 30px;
+    }
+  }
+  .detail {
+    position: absolute;
+    top: 0;
+    bottom: 50px;
+    right: 0;
+    left: 0;
+    padding: 0 20px 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #f3f4f8;
+    .title {
+      margin: 20px 0;
+    }
+    .content {
+      background-color: #fff;
+      padding: 10px 2% 10px;
+      border-radius: 4px;
+      .line-msg {
+        border: 1px solid #E1E7EB;
+        line-height: 20px;
+        padding: 6px;
+        text-align: center;
+      }
+      .info-p {
+        line-height: 24px;
+        color: #5B7A8A;
+        padding: 6px 0;
+        margin-top: 10px;
+      }
+      .info-ul {
+        height: 100%;
+        overflow: hidden;
+        border-top: 1px solid #E1E7EB;
+        border-left: 1px solid #E1E7EB;
+        li {
+          width: 50%;
+          float: left;
+          text-align: center;
+          display: flex;
+          height: 32px;
+          line-height: 32px;
+          border-bottom: 1px solid #E1E7EB;
+          span {
+            flex: 1;
+            border-right: 1px solid #E1E7EB;
+            &.sp1 {
+              background-color: #F5F8FB;
+            }
+            &.sp2 {
+              color: #888;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.form {
+  text-align: center;
+  width: 80%;
+  margin: auto;
+}
+.check-box {
+  margin-bottom: 30px;
+  .ivu-checkbox {
+    margin-right: 30px;
+  }
+}

@@ -1,0 +1,174 @@
+<template>
+<div class="wrapper">
+    <Row>
+      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="handleAdd">新增合同  </Button>
+    </Row>
+    <div class="table">
+      <Table :loading="loading" :columns="columns" :data="list" @on-row-click="handleClick"></Table>
+      <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" />
+    </div>
+    <Drawer :title="drawerTitle" v-model="drawerShow" width="60" class="drawer">
+      <div class="detail">
+        <div class="form" style="margin-top: 30px;">
+          <Form :model="form" :label-width="150" style="text-align: left;">
+            <FormItem label="合同文档:">
+              <Upload type="drag" accept=".doc" action="//jsonplaceholder.typicode.com/posts/" 
+              :before-upload="beforeUpload" :on-success="uploadSuccess"
+              :on-remove="uploadRemove" :on-preview="uploadPreview">
+                <div style="padding: 20px 0">
+                  <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                  <p>上传合同, 仅支持.doc格式,且只能上传一份</p>
+                </div>
+              </Upload>
+            </FormItem>
+            <FormItem label="合同名称(签署时显示):">
+              <Input v-model="form.input" size="large" clearable></Input>
+            </FormItem>
+            <FormItem label="合同类型:">
+              <Select v-model="form.input" size="large" clearable>
+                <Option :value="1">授权合同</Option>
+                <Option :value="2">借款合同</Option>
+                <Option :value="3">展期合同</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="签署方式:">
+              <Select v-model="form.input" size="large" clearable>
+                <Option :value="1">手写签名</Option>
+                <Option :value="2">电子签名</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="签署类型:">
+              <Input value="公司" size="large" :readonly="true"></Input>
+            </FormItem>
+          </Form>
+        </div>
+      </div>
+      <div class="footer">
+        <Button size="default" type="info" class="btn" @click="handleSubmit">保存</Button>
+      </div>
+    </Drawer>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      list: [{ name: 12313 }],
+      loading: true,
+      page: 1,
+      columns: [
+        { title: '合同编号', key: 'name', align: 'center' },
+        { title: '合同名称', key: 'name', align: 'center' },
+        { title: '合同类型', key: 'name', align: 'center' },
+        { title: '签署方式', key: 'name', align: 'center' },
+        { title: '状态', key: 'name', align: 'center' },
+        { title: '创建人', key: 'name', align: 'center' },
+        { title: '创建时间', key: 'name', align: 'center' },
+        {
+          title: '操作',
+          key: 'action',
+          width: 200,
+          align: 'center',
+          render: (h, params) => {
+            const forbidden = h('Button', {
+              props: {
+                type: 'text',
+                size: 'small'
+              },
+              style: {
+                color: 'red'
+              },
+              on: {
+                click: (e) => {
+                  e.stopPropagation()
+                }
+              }
+            }, '禁用')
+            const start = h('Button', {
+              props: {
+                type: 'text',
+                size: 'small'
+              },
+              style: {
+                color: '#2db7f5'
+              },
+              on: {
+                click: (e) => {
+                  e.stopPropagation()
+                }
+              }
+            }, '启用')
+            const down = h('Button', {
+              props: {
+                type: 'text',
+                size: 'small'
+              },
+              style: {
+                color: '#2db7f5'
+              },
+              on: {
+                click: (e) => {
+                  e.stopPropagation()
+                }
+              }
+            }, '下载')
+            return h('div', [params.status == 1? start : forbidden, down])
+          }
+        }
+      ],
+      drawerShow: true,
+      drawerTitle: '新增合同',
+      form: {},
+      files: []
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.loading = false
+    }, 1000)
+  },
+  methods: {
+    beforeUpload(file) {
+      // console.log(file)
+      if (file.type != 'application/msword') {
+        this.$Message.error('只能上传.doc后缀格式的word文档')
+        return false
+      }
+      if (this.files.length > 0) {
+        this.$Message.error('最多可上传1份合同')
+        return false
+      }
+      return true
+    },
+    uploadSuccess(response, file, fileList) {
+
+    },
+    uploadRemove(file, fileList) {
+      
+    },
+    uploadPreview(file) {
+
+    },
+    handleSubmit() {
+
+    },
+    handleAdd() {
+      this.drawerTitle = '新增合同'
+      this.drawerShow = true
+    },
+    handleClick(row) {
+      console.log(row)
+      this.drawerTitle = '合同详情'
+      this.drawerShow = true
+    },
+    handleChange(val) {
+      console.log(val)
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+</style>

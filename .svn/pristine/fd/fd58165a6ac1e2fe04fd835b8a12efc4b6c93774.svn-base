@@ -1,0 +1,67 @@
+<template>
+  <div>
+    <Row>
+      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="handleAccount">账户管理</Button>
+      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="handleTopUp">充值</Button>
+      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="handlePutForward">提出</Button>
+    </Row>
+    <p class="p1"><span>宝付账户余额：3.00元</span> <span>可用余额：3.00元</span></p>
+    <Row>
+    </Row>
+    <Divider />
+    <Tabs value="name1">
+      <TabPane label="流水明细" name="name1">
+        <Table :loading="loading" :columns="columns" :data="list1"></Table>
+      </TabPane>
+      <TabPane label="入账明细" name="name2">
+        <Table :columns="columns" :data="list2"></Table>
+      </TabPane>
+      <TabPane label="支出明细" name="name3">
+        <Table :columns="columns" :data="list3"></Table>
+      </TabPane>
+    </Tabs>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      list1: [],
+      list2: [],
+      list3: [],
+      loading: true,
+      columns: [
+        { title: '行为', key: 'name', align: 'center' },
+        { title: '交易流水号', key: 'name', align: 'center' },
+        { title: '发生金额', key: 'name', align: 'center' },
+        { title: '操作人', key: 'name', align: 'center' },
+        { title: '出款账户', key: 'name', align: 'center' },
+        { title: '入款账户', key: 'name', align: 'center' },
+        { title: '账户类型', key: 'name', align: 'center' },
+        { title: '操作时间', key: 'name', align: 'center' }
+      ]
+    }
+  },
+  mounted() {
+    this.loading = false
+  },
+  methods: {
+    handleAccount() {
+    },
+    handleTopUp() {
+    },
+    handlePutForward() {
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .p1 {
+    font-size: 16px;
+    span {
+      margin-right: 30px;
+    }
+  }
+</style>

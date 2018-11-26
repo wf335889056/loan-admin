@@ -1,0 +1,158 @@
+<template>
+  <div>
+    <Row>
+      <Col span="12">
+        <p class="title">套餐余量</p>
+        <div class="buy-box" @click="handleBuy">
+          <Icon type="md-add" />购买套餐
+        </div>
+      </col>
+      <Col span="12">
+        <p class="title">计费余额 <span>365.30</span>元</p>
+        <div class="buy-box" @click="handleTopUp">
+          <Icon type="logo-yen" />充值
+        </div>  
+      </col>
+    </Row>
+    <Divider />
+    <Tabs value="1">
+      <TabPane label="入账明细" name="1">
+        <Table :loading="loading" :columns="columns1" :data="list1"></Table>
+      </TabPane>
+      <TabPane label="套餐使用明细" name="2">
+        <Table :columns="columns2" :data="list3"></Table>
+      </TabPane>
+      <TabPane label="大数据计费" name="3">
+        <Table :columns="columns1" :data="list2"></Table>
+      </TabPane>
+      <TabPane label="短信计费" name="4">
+        <Table :columns="columns3" :data="list4"></Table>
+      </TabPane>
+    </Tabs>
+    <Modal v-model="modelTopUp" title="查询费充值"
+      @on-ok="topUpConfirm">
+      <Form :model="formInline1">
+        <FormItem label="充值金额（最低1000元起充）/元:">
+          <InputNumber :min="1000" :step="500" style="width: 200px;" v-model="formInline1.user" placeholder="输入充值金额"></InputNumber>
+        </FormItem>
+        <FormItem label="支付方式:">
+          <Select v-model="formInline1.pay" clearable placeholder="选择支付方式">
+            <Option :value="1">支付宝</Option>
+            <Option :value="2">微信</Option>
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
+    <Modal v-model="modeBuy" title="选择套餐"
+      @on-ok="buyConfirm">
+      <Form :model="formInline2">
+        <FormItem label="套餐名称:">
+          <p>手机风险评分+信贷反欺诈核查+贷前综合风险报告+多头负债+多头借贷+身份证实名认证+三网手机二要素验证</p>
+        </FormItem>
+        <FormItem label="选择购买方案（查询人次/价格）:">
+          <Select v-model="formInline1.pay" clearable placeholder="选择">
+            <Option :value="1">2000次/3488元</Option>
+            <Option :value="2">5000次/8633.00元</Option>
+            <Option :value="3">10000次/16910.00元</Option>
+            <Option :value="4">50000次/80100.00元</Option>
+            <Option :value="5">100000次/156640.00元</Option>
+          </Select>
+        </FormItem>
+      </Form>
+      </Form>
+    </Modal>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      loading: true,
+      list1: [],
+      list2: [],
+      list3: [],
+      lsit4: [],
+      columns1: [
+        { title: '交易流水号', key: 'name', align: 'center' },
+        { title: '消费ID', key: 'name', align: 'center' },
+        { title: '交易金额', key: 'name', align: 'center' },
+        { title: '操作时间', key: 'name', align: 'center' },
+        { title: '交易类型', key: 'name', align: 'center' },
+        { title: '操作人', key: 'name', align: 'center' },
+        { title: '备注消息', key: 'name', align: 'center' }
+      ],
+      columns2: [
+        { title: '交易流水号', key: 'name', align: 'center' },
+        { title: '消费ID', key: 'name', align: 'center' },
+        { title: '套餐编号', key: 'name', align: 'center' },
+        { title: '套餐名称', key: 'name', align: 'center' },
+        { title: '剩余次数', key: 'name', align: 'center' },
+        { title: '操作人', key: 'name', align: 'center' },
+        { title: '备注消息', key: 'name', align: 'center' }
+      ],
+      columns3: [
+        { title: '接收手机号', key: 'name', align: 'center' },
+        { title: '发送状态', key: 'name', align: 'center' },
+        { title: '接收状态', key: 'name', align: 'center' },
+        { title: '类型', key: 'name', align: 'center' },
+        { title: '发送内容', key: 'name', align: 'center' },
+        { title: '计费条数', key: 'name', align: 'center' },
+        { title: '消费金额', key: 'name', align: 'center' },
+        { title: '发送时间', key: 'name', align: 'center' },
+        { title: '备注', key: 'name', align: 'center' }
+      ],
+      modelTopUp: false,
+      modeBuy: false,
+      formInline1: {},
+      formInline2: {}
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.loading = false
+    }, 1000)
+  },
+  methods: {
+    buyConfirm() {
+
+    },
+    topUpConfirm() {
+    },
+    handleBuy() {
+      this.modeBuy = true
+    },
+    handleTopUp() {
+      this.modelTopUp = true
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+ .title {
+    color: #333333;
+    font-size: 20px;
+    font-weight: bold;
+    padding-left: 10px;
+    line-height: 40px;
+    span {
+      color: red;
+      font-size: 30px;
+      font-weight: bold;
+      margin-left: 30px;
+    }
+ }
+ .buy-box {
+   margin: 30px 0 20px 0;
+   width: 300px;
+   height: 100px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   color: #508cee;
+   cursor: pointer;
+   font-size: 20px;
+   border: 1px solid #d6dde1;
+ }
+</style>

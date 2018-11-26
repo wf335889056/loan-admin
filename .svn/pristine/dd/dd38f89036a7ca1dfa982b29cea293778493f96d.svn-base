@@ -1,0 +1,29 @@
+<template>
+  <div>
+    
+  </div>
+</template>
+
+<script>
+  export default {
+    props: {
+      form: {
+        type: Object,
+        default: {}
+      }
+    },
+    data() {
+      return {
+      }
+    },
+    methods: {
+      handleSubmit() {
+        
+      }
+    }
+  }
+</script>
+
+<style lang="less" scoped>
+
+</style>

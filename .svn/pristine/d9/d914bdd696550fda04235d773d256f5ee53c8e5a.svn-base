@@ -1,0 +1,83 @@
+<template>
+  <div>
+    <ul class="ul-box">
+      <li v-for="item in optionsList" :key="item.id" :class="{'active': item.checked}" @click="handleToggle(item)">
+        <Icon type="md-checkbox" v-if="item.checked" />
+        {{item.title}}
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+  export default {
+    props: {
+      checkedList: {
+        type: Array,
+        default: []
+      }
+    },
+    data() {
+      return {
+        options: [
+          { id: 1, title: '手机风险评分', checked: false },
+          { id: 2, title: '信贷反欺诈核查', checked: false },
+          { id: 3, title: '贷前综合风险报告', checked: false },
+          { id: 4, title: '多头负债', checked: false },
+          { id: 5, title: '多头借贷', checked: false },
+          { id: 6, title: '公安负面信息验证', checked: false },
+          { id: 7, title: '被执行人详情查询', checked: false },
+          { id: 8, title: '网贷逾期名单', checked: false }, 
+          { id: 9, title: '身份证实名认证', checked: false },
+          { id: 10, title: '银行四要素实名验证', checked: false },
+          { id: 11, title: '三网手机二要素验证', checked: false },
+          { id: 12, title: '运营商', checked: false },
+          { id: 13, title: '京东数据', checked: false },
+          { id: 14, title: '淘宝数据', checked: false },
+          { id: 15, title: '借*宝借条+米*借条+无*借条+今*借到', checked: false },
+          { id: 16, title: '支付宝授权', checked: false }
+        ]
+      }
+    },
+    computed: {
+      optionsList() {
+        const options = this.options
+        for (const o of options) {
+          this.checkedList.forEach(it => {
+            if (it.checked && it.id == o.id) {
+              o.checked = true
+            }
+          })
+        }
+        return options
+      }
+    },
+    methods: {
+      handleToggle(item) {
+        item.checked = !item.checked
+        const list = this.options.filter(it => it.checked)
+        this.$emit('update', list)
+      }
+    }
+  }
+</script>
+
+<style lang="less" scoped>
+  .ul-box{
+    li {
+      display: inline-block;
+      padding: 10px 15px;
+      color: #4081e9;
+      background-color: #fff;
+      font-size: 16px;
+      line-height: 20px;
+      cursor: pointer;
+      border: 1px solid #4081e9;
+      margin: 10px;
+      &.active {
+        color: #fff;
+        background-color: #4081e9;
+      }
+    }
+  }
+</style>

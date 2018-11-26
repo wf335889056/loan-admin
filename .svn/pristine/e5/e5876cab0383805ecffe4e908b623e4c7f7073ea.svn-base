@@ -1,0 +1,4 @@
+@font-face  {
+  font-family: 'themeFont';
+  src: url('../assets/font.TTF');
+}

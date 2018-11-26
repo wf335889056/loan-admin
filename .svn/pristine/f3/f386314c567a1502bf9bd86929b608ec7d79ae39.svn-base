@@ -1,0 +1,33 @@
+import axios from 'axios'
+import qs from 'qs'
+
+export const dev = process.env.NODE_ENV === 'development'
+const baseUrl = ''
+
+const service = axios.create({
+  baseURL: dev? '/api' : baseUrl ,
+  timeout: 5000,
+  withCredentials: true
+})
+
+serivce.interceptors.request.use(
+  config => {
+    if (store.getters.userToken) {
+      config.headers['X-Token'] = store.getters.userToken
+    }
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
+serivce.interceptors.response.use(
+  response => {
+    return response
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
+
+export default service

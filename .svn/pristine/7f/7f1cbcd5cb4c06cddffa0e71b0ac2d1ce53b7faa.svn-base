@@ -1,0 +1,128 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import Common from '@/views/common'
+import Login from '@/views/login'
+import Dashboard from '@/views/dashboard'
+import CustomIndex from '@/views/custom/index.vue'
+import CustomOther from '@/views/custom/other.vue'
+import ApplyIndex from '@/views/apply/index.vue'
+import AuditIndex from '@/views/audit/index.vue'
+import AuditOther from '@/views/audit/other.vue'
+import CollectionIndex from '@/views/collection/index.vue'
+import LoanList from '@/views/loan/list.vue'
+import LoanOrder from '@/views/loan/order.vue'
+import LoanRecord from '@/views/loan/record.vue'
+import OperartionIndex from '@/views/operartion/index.vue'
+import OperartionConversion from '@/views/operartion/conversion.vue'
+import SettingAccount from '@/views/setting/account.vue'
+import SettingChannel from '@/views/setting/channel.vue'
+import SettingCompany from '@/views/setting/company.vue'
+import SettingData from '@/views/setting/data.vue'
+import SettingFinance from '@/views/setting/finance.vue'
+import SettingPrice from '@/views/setting/price.vue'
+import SettingProduct from '@/views/setting/product.vue'
+import OverdueIndex from '@/views/overdue/index.vue'
+
+Vue.use(Router)
+
+export default new Router({
+  routes: [
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/',
+      name: 'dashboard',
+      redirect: '/dashboard',
+      component: Common,
+      children: [
+        { path: '/dashboard', component: Dashboard }
+      ]
+    },
+    {
+      path: '/custom',
+      name: 'custom',
+      redirect: '/custom/index',
+      component: Common,
+      children: [
+        { path: 'index', component: CustomIndex },
+        { path: 'other', component: CustomOther }
+      ]
+    },
+    {
+      path: '/apply',
+      name: 'apply',
+      redirect: '/apply/list',
+      component: Common,
+      children: [
+        { path: 'list', component: ApplyIndex }
+      ]
+    },
+    {
+      path: '/audit',
+      name: 'audit',
+      redirect: '/audit/index',
+      component: Common,
+      children: [
+        { path: 'index', component: AuditIndex },
+        { path: 'other', component: AuditOther }
+      ]
+    },
+    {
+      path: '/collection',
+      name: 'collection',
+      redirect: '/collection/index',
+      component: Common,
+      children: [
+        { path: 'index', component: CollectionIndex }
+      ]
+    },
+    {
+      path: '/loan',
+      name: 'loan',
+      redirect: '/loan/list',
+      component: Common,
+      children: [
+        { path: 'list', component: LoanList },
+        { path: 'order', component: LoanOrder },
+        { path: 'record', component: LoanRecord }
+      ]
+    },
+    {
+      path: '/operartion',
+      name: 'operartion',
+      redirect: '/operartion/index',
+      component: Common,
+      children: [
+        { path: 'index', component: OperartionIndex },
+        { path: 'conversion', component: OperartionConversion }
+      ]
+    },
+    {
+      path: '/setting',
+      name: 'setting',
+      redirect: '/setting/account',
+      component: Common,
+      children: [
+        { path: 'account', component: SettingAccount },
+        { path: 'channel', component: SettingChannel },
+        { path: 'company', component: SettingCompany },
+        { path: 'data', component: SettingData },
+        { path: 'finance', component: SettingFinance },
+        { path: 'price', component: SettingPrice },
+        { path: 'product', component: SettingProduct }
+      ]
+    },
+    {
+      path: '/overdue',
+      name: 'overdue',
+      redirect: '/overdue/index',
+      component: Common,
+      children: [
+        { path: 'index', component: OverdueIndex }
+      ]
+    }
+  ]
+})
