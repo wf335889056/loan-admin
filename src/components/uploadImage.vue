@@ -35,8 +35,10 @@
 export default {
     props: {
       uploadList: {
-        type: Array,
-        default: []
+        type: Array
+      },
+      uploadMax: {
+        type: Number
       }
     },
     data () {
@@ -65,7 +67,7 @@ export default {
             this.$Message.error('上传文件超出最大文件限制2M')
         },
         handleBeforeUpload () {
-            const check = this.uploadList.length < 5;
+            const check = this.uploadList.length < this.uploadMax
             if (!check) {
                 this.$Message.error('最多可上传5张图')
             }

@@ -12,7 +12,7 @@
         <div class="form">
           <Divider>第一步</Divider>
           <p class="title"><Tag color="warning">设置渠道商基本信息</Tag></p>
-          <newChannel :form="formChannel" :admins="channelAdminList" :products="channelProduct" />
+          <newChannel :form="formChannel" :admins="channelAdminList" :products="channelProduct" :contacts="channelContacts" />
         </div>
       </div>
       <div class="footer">
@@ -31,16 +31,14 @@ export default {
   data() {
     return {
       formChannel: {
-        channelId: '',
         channelName: '',
         channelNameShort: '',
         channelCompanyName: '',
-        channelBusinessType: '',
-        channelLinkman: '',
-        userName: ''
+        channelBusinessType: ''
       },
-      channelAdminList: [],
-      channelProduct: [],
+      channelAdminList: [{ userId: '' }],
+      channelProduct: [{ channelProductId: '' }],
+      channelContacts: [{ linkmanName: '', linkmanPhone: '' }],
       list: [],
       listTotal: 0,
       loading: true,
@@ -127,6 +125,33 @@ export default {
       this.fetchChannelLisgOrMsg()
     },
     handleSubmit() {
+      const params = this.formChannel
+      const products = []
+      for (const o of this.channelProduct) {
+        products.push(o.channelProductId)
+      }
+      const admins = []
+      for (const o of this.channelAdminList) {
+        admins.push(o.userId)
+      }
+      params.channelAdminList = admins.join(',') || ''
+      params.channelProduct = products.join(',') || ''
+      params.channelLinkman = JSON.stringify(this.channelContacts) || ''
+      params.channelId = ''
+      params.companyId = this.userInfo.companyId
+      params.userName = this.unseInfo.userName
+      addOrUpdateChannelMsg(params).then(res => {
+        if (res.state == 1) {
+          this.$Message.success('保存成功')
+          this.fetchChannelLisgOrMsg()
+          for (const i in this.formChannel) {
+            this.formChannel[i] = ''
+          }
+          this.channelAdminList = [{ userId: '' }]
+          this.channelProduct = [{ channelProductId: '' }]
+          this.channelContacts = [{ linkmanName: '', linkmanPhone: '' }]
+        }
+      })
     },
     fetchChannelLisgOrMsg() {
       const params = {

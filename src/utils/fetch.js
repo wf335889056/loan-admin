@@ -49,7 +49,7 @@ service.interceptors.response.use(
     return res
   },
   error => {
-    iView.Message.error(JSON.stringify(error))
+    iView.Message.error('network error 500..., 技术员工正在修复中')
     return Promise.reject(error)
   }
 )

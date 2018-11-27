@@ -215,3 +215,11 @@ export function updateChannelMaxLoan(query) {
     params: query
   })
 }
+// 产品管理-新增保存产品
+export function addOrUpdateProductMsg(query) {
+  return fetch({
+    url: '/productController/saveProduct',
+    method: 'post',
+    params: query
+  })
+}

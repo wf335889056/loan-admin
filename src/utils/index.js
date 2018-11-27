@@ -30,7 +30,7 @@ export function thirdPartyVerification() {
     { id: 11, title: '三网手机二要素验证', checked: false },
     { id: 13, title: '京东数据', checked: false },
     { id: 14, title: '淘宝数据', checked: false },
-    { id: 15, title: '借*宝借条+米*借条+无*借条+今*借到', checked: false },
+    // { id: 15, title: '借*宝借条+米*借条+无*借条+今*借到', checked: false },
     { id: 16, title: '支付宝授权', checked: false }
   ]
 }

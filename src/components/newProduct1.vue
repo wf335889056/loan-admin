@@ -2,13 +2,13 @@
   <div>
           <Form :model="form" :label-width="150" style="text-align: left;">
             <FormItem label="产品名称:">
-              <Input v-model="form.input" size="large" clearable></Input>
+              <Input v-model="form.productName" size="large" clearable></Input>
             </FormItem>
             <FormItem label="产品描述:">
-              <Input v-model="form.input" size="large" clearable></Input>
+              <Input v-model="form.description" size="large" clearable></Input>
             </FormItem>
             <FormItem label="产品logo:">
-              <uploadImage :uploadList="images" @upload="imageSuccess"/>
+              <uploadImage :uploadList="imgs" @upload="imageSuccess" :uploadMax="1"/>
             </FormItem>
             <!-- <p style="text-align: right; font-size: 20px;margin-bottom: 10px;">*相关通知短信会发送至此手机号</p> -->
             <FormItem label="产品类型:">
@@ -57,7 +57,7 @@
                       <span style="margin-right: 30px;"><InputNumber :min="0" v-model="form.input" style="width: 100px;"size="large"></InputNumber>  期  </span>
                       <span style="margin-right: 30px;"><InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>% (月)</span>
                       <span style="margin-right: 30px;"><InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>% (月)</span>
-                      <Button type="primary" shape="circle" icon="ios-trash-outline"></Button>
+                      <Button type="error" shape="circle" icon="ios-trash-outline"></Button>
                     </li>
                     <button class="btn-add">添加</button>
                     <p style="text-align: left; font-size: 18px;margin-bottom: 10px; color: red;">*等本等息形式每月还款额为： 贷款额/期数 + 贷款额*费率。</p>
@@ -112,7 +112,7 @@
                       </Select>
                       <InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>
                     </span>
-                    <Button type="primary" shape="circle" icon="ios-trash-outline"></Button>
+                    <Button type="error" shape="circle" icon="ios-trash-outline"></Button>
                   </li>
                   <button class="btn-add">新增手续费</button>
                 </ul>
@@ -120,67 +120,63 @@
             </FormItem>
             <FormItem label="提前还款:">
               <p>
-                <i-switch size="large" v-model="form.input" :true-value="1" :false-value="0">
+                <i-switch size="large" v-model="form.aheadReypayStatus" :true-value="1" :false-value="0">
                   <span slot="open">是</span>
                   <span slot="close">否</span>
                 </i-switch>
               </p>
-              <template>
-                <RadioGroup v-model="form.input" size="large" style="margin-bottom: 10px;margin-top: 10px;">
-                  <Radio :label="1" :disabled="checked == false">按日计息
-                    <span style="margin-left: 30px;">
-                      日息:
-                      <InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>%
-                    </span>
-                  </Radio>
-                  <Radio :label="2" :disabled="checked == false">按当前还款周期利息计算</Radio>
-                </RadioGroup>
-                <div style="margin-bottom: 10px;margin-top: 10px;">
-                  <Checkbox v-model="checked">有违约金</Checkbox>
-                  <p>剩余未还本金的比例: <InputNumber :min="0" v-model="form.input" style="width: 100px;" size="large"></InputNumber>%</p>
-                </div>
-              </template>
+              <RadioGroup v-model="form.aheadReypayInterestType" size="large" style="margin-bottom: 10px;margin-top: 10px;">
+                <Radio :label="1" :disabled="form.aheadReypayInterestType == false">按日计息
+                  <span style="margin-left: 30px;">
+                    日息:
+                    <InputNumber :min="0" v-model="form.aheadReypayInterestDayRate" style="width: 100px;" size="large"></InputNumber>%
+                  </span>
+                </Radio>
+                <Radio :label="2" :disabled="form.aheadReypayInterestType == false">按当前还款周期利息计算</Radio>
+              </RadioGroup>
+              <div style="margin-bottom: 10px;margin-top: 10px;">
+                <Checkbox v-model="form.aheadReypayDeditStatus">有违约金</Checkbox>
+                <p>剩余未还本金的比例: <InputNumber :min="0" v-model="form.aheadReypayDeditRatio" style="width: 100px;" size="large"></InputNumber>%</p>
+              </div>
             </FormItem>
             <FormItem label="罚息&计算方式:">
               <div class="check-box">
-                <Checkbox v-model="checked" size="large">
-                  <RadioGroup v-model="form.input" size="large">
-                    <Radio :label="1" :disabled="checked == false">按日复利计算</Radio>
-                    <Radio :label="2" :disabled="checked == false">按日单利计算</Radio>
+                <Checkbox v-model="form.defaultDayStatus" size="large">
+                  <RadioGroup v-model="form.defaultDayType" size="large">
+                    <Radio :label="1" :disabled="form.defaultDayStatus == false">按日复利计算</Radio>
+                    <Radio :label="2" :disabled="form.defaultDayStatus == false">按日单利计算</Radio>
                   </RadioGroup>
                   <span style="margin-left: 30px;">
                     利率:
-                    <InputNumber :min="0" v-model="form.input" style="width: 100px;" :disabled="checked == false" size="large"></InputNumber>%
+                    <InputNumber :min="0" v-model="form.defaultDayRate" style="width: 100px;" :disabled="form.defaultDayStatus == false" size="large"></InputNumber>%
                   </span>
                 </Checkbox>
               </div>
               <div class="check-box">
-                <Checkbox v-model="checked" size="large">
+                <Checkbox v-model="form.defaultMonthStatus" size="large">
                   <RadioGroup v-model="form.input" size="large">
-                    <Radio :label="1" :disabled="checked == false">按月复利计算</Radio>
-                    <Radio :label="2" :disabled="checked == false">按月单利计算</Radio>
+                    <Radio :label="1" :disabled="form.defaultMonthStatus == false">按月复利计算</Radio>
+                    <Radio :label="2" :disabled="form.defaultMonthStatus == false">按月单利计算</Radio>
                   </RadioGroup>
                   <span style="margin-left: 30px;">
                     利率:
-                    <InputNumber :min="0" v-model="form.input" style="width: 100px;" :disabled="checked == false" size="large"></InputNumber>%
+                    <InputNumber :min="0" v-model="form.defaultMonthRate" style="width: 100px;" :disabled="form.defaultMonthStatus == false" size="large"></InputNumber>%
                   </span>
                 </Checkbox>
               </div>
               <div class="check-box">
-                <Checkbox v-model="checked" size="large">
-                  罚息上限：本金额的: <InputNumber :min="0" v-model="form.input" style="width: 100px;" :disabled="checked == false" size="large"></InputNumber>%
-                </Checkbox>
+                罚息上限：本金额的: <InputNumber :min="0" v-model="form.defaultMax" style="width: 100px;" size="large"></InputNumber>%
               </div>
               <p style="text-align: left; font-size: 18px;margin-bottom: 10px; color: red;">*按日，按月独立计算，可相互叠加。</p>
             </FormItem>
             <FormItem label="贷款支付给:">
-              <RadioGroup v-model="form.input" size="large">
+              <RadioGroup v-model="form.payFor" size="large">
                 <Radio :label="1">渠道商（消费场景，适用消费分期）</Radio>
                 <Radio :label="2">贷款人（适用现金贷）</Radio>
               </RadioGroup>
             </FormItem>
             <FormItem label="最高放贷金额:">
-              <InputNumber v-model="form.input" :min="0" style="width: 60%;" :formatter="value => `¥ ${value}`.replace(/B(?=(d{3})+(?!d))/g, ',')"
+              <InputNumber v-model="form.payMoneyMax" :min="0" style="width: 60%;" :formatter="value => `¥ ${value}`.replace(/B(?=(d{3})+(?!d))/g, ',')"
                 :parser="value => value.replace(/$s?|(,*)/g, '')" size="large"></InputNumber>元
             </FormItem>
             <FormItem label="放贷须过几级审批:">
@@ -192,27 +188,27 @@
             <!-- <FormItem label="产品申请限制:">
             </FormItem> -->
             <FormItem label="有未还清贷款时继续申请:">
-              <i-switch size="large" v-model="form.input" :true-value="1" :false-value="0">
+              <i-switch size="large" v-model="form.applyAllowDebtStatus" :true-value="1" :false-value="0">
                 <span slot="open">是</span>
                 <span slot="close">否</span>
               </i-switch>
             </FormItem>
             <FormItem label="申请人数配置:">
-              <span>增长系数：<InputNumber :min="0" v-model="form.input" size="large"></InputNumber></span>
-              <span style="margin-left: 50px;">保底数量：<InputNumber :min="0" v-model="form.input" size="large"></InputNumber></span>
+              <span>增长系数：<InputNumber :min="0" v-model="form.applyAddNum" size="large"></InputNumber></span>
+              <span style="margin-left: 50px;">保底数量：<InputNumber :min="0" v-model="form.applyLeastPeopleNum" size="large"></InputNumber></span>
             </FormItem>
             <FormItem label="产品利率显示:">
               <p>产品列表利率文案</p>
-              <Input v-model="form.input" size="large" clearable></Input>
+              <Input v-model="form.rateTxt" size="large" clearable></Input>
               <p>申请表页面是否显示
-                <i-switch  size="large" v-model="form.input" :true-value="1" :false-value="0">
+                <i-switch  size="large" v-model="form.rateShowStatus" :true-value="1" :false-value="0">
                   <span slot="open">是</span>
                   <span slot="close">否</span>
                 </i-switch>
               </p>
             </FormItem>
             <FormItem label="重复查询大数据期限:">
-              <InputNumber :min="0" v-model="form.input" style="width: 60%;" size="large"></InputNumber>天
+              <InputNumber :min="0" v-model="form.againBigdataDays" style="width: 60%;" size="large"></InputNumber>天
             </FormItem>
           </Form>
   </div>
@@ -225,6 +221,25 @@ export default {
   props: {
     form: {
       type: Object
+    },
+    services: {
+      type: Array
+    },
+    interests: {
+      type: Array
+    },
+    images: {
+      type: Array,
+      default: () => [
+        {
+          'name': 'a42bdcc1178e62b4694c830f028db5c0',
+          'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
+        },
+        {
+          'name': 'bc7521e033abdd1e92222d733590f104',
+          'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
+        }
+      ]
     }
   },
   data() {
@@ -248,17 +263,12 @@ export default {
         { value: 16, label: '先息后本 (固定还款日)' },
         { value: 17, label: '等本等息 (固定还款日)' }
       ],
-      checked: false,
-      images: [
-        {
-          'name': 'a42bdcc1178e62b4694c830f028db5c0',
-          'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-        },
-        {
-          'name': 'bc7521e033abdd1e92222d733590f104',
-          'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-        }
-      ]
+      checked: false
+    }
+  },
+  computed: {
+    imgs() {
+      return this.images
     }
   },
   methods: {

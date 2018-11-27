@@ -13,11 +13,11 @@
           <div class="form">
             <Divider>第一步</Divider>
             <p class="title"><Tag color="warning">设置产品基本属性</Tag></p>
-            <newProductOne :form="formProduct" />
+            <newProductOne :form="formProduct" :services="procedureJson" :interests="repayTypeJson" :images="productImages"/>
           </div>
         </div>
         <div class="footer">
-          <Button size="default" type="info" class="btn" @click="handleNext">保存并配置下一步</Button>
+          <Button size="default" type="primary" class="btn" @click="handleNext">保存并配置下一步</Button>
         </div>
       </template>
       <template v-else>
@@ -29,7 +29,7 @@
           </div>
         </div>
         <div class="footer">
-          <Button size="default" type="info" class="btn" @click="handleDone">完成</Button>
+          <Button size="default" type="primary" class="btn" @click="handleDone">完成</Button>
         </div>
       </template>
     </Drawer>
@@ -39,6 +39,7 @@
 <script>
 import newProductOne from '@/components/newProduct1.vue'
 import newProductTwo from '@/components/newProduct2.vue'
+import { addOrUpdateProductMsg } from '@/utils/api'
 export default {
   components: { newProductOne, newProductTwo },
   data() {
@@ -92,8 +93,38 @@ export default {
           }
         }
       ],
-      drawerShow: false,
-      formProduct: {},
+      drawerShow: true,
+      formProduct: {
+        productName: '',
+        description: '',
+        productType: 1,
+        procedureStatus: 0,
+        procedureMax: 1,
+        aheadReypayStatus: 0,
+        aheadReypayInterestType: '',
+        aheadReypayInterestDayRate: '',
+        aheadReypayDeditStatus: 0,
+        aheadReypayDeditRatio: '',
+        defaultDayStatus: 0,
+        defaultDayType: '',
+        defaultDayRate: '',
+        defaultMonthStatus: 0,
+        defaultMonthType: '',
+        defaultMonthRate: '',
+        defaultMax: 0,
+        payFor: '',
+        payMoneyMax: '',
+        auditLevel: '',
+        applyAllowDebtStatus: 0,
+        applyAddNum: 1,
+        applyLeastPeopleNum: 1,
+        rateTxt: '',
+        rateShowStatus: 0,
+        againBigdataDays: 1
+      },
+      repayTypeJson: [],
+      procedureJson: [],
+      productImages: [],
       listProduct: []
     }
   },
@@ -113,6 +144,10 @@ export default {
       this.drawerShow = false
     },
     handleNext() {
+      const params = this.formProduct
+      params.productId = ''
+      params.userId = this.$store.getters.userInfo.userId
+      params.companyId = this.$store.getters.userInfo.companyId
       this.step = 2
     },
     handleAdd() {

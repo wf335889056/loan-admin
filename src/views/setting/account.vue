@@ -220,7 +220,7 @@ export default {
         this.$Message.error('手机号格式不正确, 不可为空')
         return
       }
-      getAccountCode({ phone: this.form.phone }).then(res => {
+      getAccountCode({ phone: this.form.phone, companyId: this.$store.getters.userInfo.companyId }).then(res => {
         if (res.state == 1) {
           this.$Message.success(res.info)
           let time = 60
