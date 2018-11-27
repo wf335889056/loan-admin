@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     <Row>
       <Col span="12">
         <p class="title">套餐余量</p>
@@ -17,16 +17,28 @@
     <Divider />
     <Tabs value="1">
       <TabPane label="入账明细" name="1">
-        <Table :loading="loading" :columns="columns1" :data="list1"></Table>
+        <div class="table">
+          <Table  :columns="columns1" :data="list1"></Table>
+          <Page :current="pageA" :page-size="20" :total="list1len" show-total class="page" @on-change="handleChangeA" />
+        </div>
       </TabPane>
       <TabPane label="套餐使用明细" name="2">
-        <Table :columns="columns2" :data="list3"></Table>
+        <div class="table">
+          <Table :columns="columns2" :data="list3"></Table>
+          <Page :current="pageB" :page-size="20" :total="list2len" show-total class="page" @on-change="handleChangeB" />
+        </div>
       </TabPane>
       <TabPane label="大数据计费" name="3">
-        <Table :columns="columns1" :data="list2"></Table>
+        <div class="table">
+          <Table :columns="columns1" :data="list2"></Table>
+          <Page :current="pageC" :page-size="20" :total="list3len" show-total class="page" @on-change="handleChangeC" />  
+        </div>
       </TabPane>
       <TabPane label="短信计费" name="4">
-        <Table :columns="columns3" :data="list4"></Table>
+        <div class="table">
+          <Table :loading="loading" :columns="columns3" :data="list4"></Table>
+          <Page :current="pageD" :page-size="20" :total="list4len" show-total class="page" @on-change="handleChangeD" />
+        </div>
       </TabPane>
     </Tabs>
     <Modal v-model="modelTopUp" title="查询费充值">
@@ -65,7 +77,7 @@
 </template>
 
 <script>
-import { topUpBillingBalance, buyPurchasePlan } from '@/utils/api'
+import { topUpBillingBalance, buyPurchasePlan, getBillingQuery } from '@/utils/api'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -75,34 +87,38 @@ export default {
       list2: [],
       list3: [],
       list4: [],
+      list1len: 0,
+      list2len: 0,
+      list3len: 0,
+      list4len: 0,
       columns1: [
-        { title: '交易流水号', key: 'name', align: 'center' },
-        { title: '消费ID', key: 'name', align: 'center' },
-        { title: '交易金额', key: 'name', align: 'center' },
-        { title: '操作时间', key: 'name', align: 'center' },
-        { title: '交易类型', key: 'name', align: 'center' },
-        { title: '操作人', key: 'name', align: 'center' },
-        { title: '备注消息', key: 'name', align: 'center' }
+        { title: '交易流水号', key: 'financeCode', align: 'center' },
+        { title: '消费ID', key: 'accountId', align: 'center' },
+        { title: '交易金额', key: 'dealMoney', align: 'center' },
+        { title: '操作时间', key: 'createTime', align: 'center' },
+        { title: '交易类型', key: 'dealType', align: 'center' },
+        { title: '操作人', key: 'userName', align: 'center' },
+        { title: '备注消息', key: 'remark', align: 'center' }
       ],
       columns2: [
-        { title: '交易流水号', key: 'name', align: 'center' },
-        { title: '消费ID', key: 'name', align: 'center' },
-        { title: '套餐编号', key: 'name', align: 'center' },
-        { title: '套餐名称', key: 'name', align: 'center' },
-        { title: '剩余次数', key: 'name', align: 'center' },
-        { title: '操作人', key: 'name', align: 'center' },
-        { title: '备注消息', key: 'name', align: 'center' }
+        { title: '交易流水号', key: 'financeCode', align: 'center' },
+        { title: '消费ID', key: 'accountId', align: 'center' },
+        { title: '套餐编号', key: 'comboScheme', align: 'center' },
+        { title: '套餐名称', key: 'comboBuyCount', align: 'center' },
+        { title: '剩余次数', key: 'remain', align: 'center' },
+        { title: '操作人', key: 'userName', align: 'center' },
+        { title: '备注消息', key: 'remark', align: 'center' }
       ],
       columns3: [
-        { title: '接收手机号', key: 'name', align: 'center' },
-        { title: '发送状态', key: 'name', align: 'center' },
-        { title: '接收状态', key: 'name', align: 'center' },
-        { title: '类型', key: 'name', align: 'center' },
-        { title: '发送内容', key: 'name', align: 'center' },
-        { title: '计费条数', key: 'name', align: 'center' },
-        { title: '消费金额', key: 'name', align: 'center' },
-        { title: '发送时间', key: 'name', align: 'center' },
-        { title: '备注', key: 'name', align: 'center' }
+        { title: '接收手机号', key: 'phone', align: 'center' },
+        { title: '发送状态', key: 'sendType', align: 'center' },
+        { title: '接收状态', key: 'receiveType', align: 'center' },
+        { title: '类型', key: 'type', align: 'center' },
+        { title: '发送内容', key: 'sendContent', align: 'center' },
+        { title: '计费条数', key: 'count', align: 'center' },
+        { title: '消费金额', key: 'cost', align: 'center' },
+        { title: '发送时间', key: 'createTime', align: 'center' },
+        { title: '备注', key: 'remark', align: 'center' }
       ],
       modelTopUp: false,
       modeBuy: false,
@@ -120,13 +136,18 @@ export default {
         { id: 3, value: '10000次/16910.00元', money: 16910, count: 10000 },
         { id: 4, value: '50000次/80100.00元', money: 80100, count: 50000 },
         { id: 5, value: '100000次/156640.00元', money: 156640, count: 100000 },
-      ]
+      ],
+      pageA: 1,
+      pageB: 1,
+      pageC: 1,
+      pageD: 1
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.loading = false
-    }, 1000)
+    this.fetchBillingQueryA()
+    this.fetchBillingQueryB()
+    this.fetchBillingQueryC()
+    this.fetchBillingQueryD()
   },
   computed: {
     ...mapGetters([
@@ -156,6 +177,83 @@ export default {
     },
     handleTopUp() {
       this.modelTopUp = true
+    },
+    handleChangeA(page) {
+      this.pageA = page
+      this.fetchBillingQueryA()
+    },
+    handleChangeB(page) {
+      this.pageB = page
+      this.fetchBillingQueryB()
+    },
+    handleChangeC(page) {
+      this.pageC = page
+      this.fetchBillingQueryC()
+    },
+    handleChangeD(page) {
+      this.pageD = page
+      this.fetchBillingQueryD()
+    },
+    fetchBillingQueryA() {
+      const params = {
+        companyId: this.userInfo.companyId,
+        limit: 20,
+        page: this.pageA,
+        type: 1
+      }
+      getBillingQuery(params).then(res => {
+        if (res.state == 1) {
+          this.list1 = res.info.billQuerys
+          this.balance = res.info.balance
+          this.list1len = res.info.count
+        }
+      })
+    },
+    fetchBillingQueryB() {
+      const params = {
+        companyId: this.userInfo.companyId,
+        limit: 20,
+        page: this.pageB,
+        type: 2
+      }
+      this.loading = true
+      getBillingQuery(params).then(res => {
+        if (res.state == 1) {
+          this.list2 = res.info.billQuerys
+          this.list2len = res.info.count
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+        }
+      })
+    },
+    fetchBillingQueryC() {
+      const params = {
+        companyId: this.userInfo.companyId,
+        limit: 20,
+        page: this.pageC,
+        type: 3
+      }
+      getBillingQuery(params).then(res => {
+        if (res.state == 1) {
+          this.list3 = res.info.billQuerys
+          this.list3len = res.info.count
+        }
+      })
+    },
+    fetchBillingQueryD() {
+      const params = {
+        companyId: this.userInfo.companyId,
+        limit: 20,
+        page: this.pageD,
+        type: 4
+      }
+      getBillingQuery(params).then(res => {
+        if (res.state == 1) {
+          this.list4 = res.info.billQuerys
+          this.list4len = res.info.count
+        }
+      })
     }
   }
 }

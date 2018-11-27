@@ -175,3 +175,43 @@ export function buyPurchasePlan(query) {
     params: query
   })
 }
+// 查询计费 1入账明细，2套餐使用明细，3大数据计费，4短信计费
+export function getBillingQuery(query) {
+  return fetch({
+    url: '/deskManagementController/billQuery',
+    method: 'post',
+    params: query
+  })
+}
+// 查询渠道列表、详细信息
+export function getChannelLisgOrMsg(query) {
+  return fetch({
+    url: '/ChannelManagementController/channelList',
+    method: 'post',
+    params: query
+  })
+}
+// 新增和修改渠道信息
+export function addOrUpdateChannelMsg(query) {
+  return fetch({
+    url: '/ChannelManagementController/insertChannel',
+    method: 'post',
+    params: query
+  })
+}
+// 渠道 启用、禁用 状态
+export function updateChannelStatus(query) {
+  return fetch({
+    url: '/ChannelManagementController/channelStatus',
+    method: 'post',
+    params: query
+  })
+}
+// 修改渠道放款限额
+export function updateChannelMaxLoan(query) {
+  return fetch({
+    url: '/ChannelManagementController/updateLoanLimit',
+    method: 'post',
+    params: query
+  })
+}

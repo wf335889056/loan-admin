@@ -42,15 +42,18 @@
         <Button size="default" type="primary" class="btn" @click="handleSubmit">保存</Button>
       </div>
     </Drawer>
-    <Modal v-model="updateModel" title="重置密码" @on-ok="updatePsswordOk">
+    <Modal v-model="updateModel" title="重置密码">
       <Form :model="updateForm" :label-width="100" label-position="left">
         <FormItem label="姓名:">
-          <Input v-model="updateForm.userName" size="default" ></Input>
+          <Input v-model="updateForm.userName" size="default" clearable ></Input>
         </FormItem>
         <FormItem label="新密码:">
-          <Input v-model="updateForm.password" size="default" ></Input>
+          <Input v-model="updateForm.password" size="default" clearable ></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="primary" size="default" long @click="updatePsswordOk">确定</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -132,6 +135,7 @@ export default {
                   this.id = params.row.userId
                   this.updateForm.userName = params.row.userName
                   this.updateModel = true
+                  
                 }
               }
             }, '重置密码')
@@ -273,10 +277,7 @@ export default {
       }
       getAccountListAndMsg(params).then(res => {
         if (res.state == 1) {
-          for (let i = 0; i < 5; i++) {
-            this.list = this.list.concat(res.info.userList)
-          }
-          // this.list = res.info.userList
+          this.list = res.info.userList
           this.totalnumber = res.info.totalnumber
           setTimeout(() => {
             this.loading = false

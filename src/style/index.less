@@ -52,10 +52,21 @@ html,body,div,p,span,ul,li,input,button,a {
 .wrapper {
   position: relative;
   height: auto;
-  .table .page {
-    position: absolute;
-    bottom: -50px;
-    right: 20px;
+  .row {
+    border: 1px solid #EDEDED;
+    border-radius: 4px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+    line-height: 40px;
+  }
+  .table {
+    padding-bottom: 60px;
+    position: relative;
+    .page {
+      position: absolute;
+      bottom: 0;
+      right: 20px;
+    }
   }
 }
 .ivu-page-total {
@@ -65,17 +76,6 @@ html,body,div,p,span,ul,li,input,button,a {
   bottom: 10px;
   right: 10px;
 }
-
-.wrapper {
-  .row {
-    border: 1px solid #EDEDED;
-    border-radius: 4px;
-    margin-bottom: 30px;
-    padding: 0 20px;
-    line-height: 40px;
-  }
-}
-
 .formInline {
   .ivu-form-item {
     margin-bottom: 10px;

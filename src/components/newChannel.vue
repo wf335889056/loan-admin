@@ -13,10 +13,10 @@
       <FormItem label="业务类型:">
         <Input v-model="form.input" size="large" clearable></Input>
       </FormItem>
-      <!-- <FormItem label="姓名:">
+      <FormItem label="姓名:">
         <Input v-model="form.input" size="large" clearable></Input>
       </FormItem>
-      <FormItem label="身份证:">
+      <!-- <FormItem label="身份证:">
         <Input v-model="form.input" size="large" clearable></Input>
       </FormItem>
       <FormItem label="银行账号:">
@@ -60,7 +60,19 @@ export default {
     form: {
       type: Object,
       default: {}
+    },
+    admins: {
+      type: Array
+    },
+    products: {
+      type: Array
     }
+  },
+  mounted() {
+    
+  },
+  methods: {
+    
   }
 }
 </script>

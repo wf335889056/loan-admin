@@ -36,18 +36,21 @@
         <router-view />
       </col>
     </Row>
-    <Modal v-model="updateModel" title="重置密码" @on-ok="updatePsswordOk">
+    <Modal v-model="updateModel" title="重置密码">
       <Form :model="accountForm" :label-width="100" label-position="left">
         <FormItem label="姓名:">
-          <Input v-model="accountForm.userName" size="default" ></Input>
+          <Input v-model="accountForm.userName" size="default" clearable ></Input>
         </FormItem>
         <FormItem label="旧密码:">
-          <Input v-model="accountForm.password" size="default" ></Input>
+          <Input v-model="accountForm.password" size="default" clearable ></Input>
         </FormItem>
         <FormItem label="新密码:">
-          <Input v-model="accountForm.newPassword" size="default" ></Input>
+          <Input v-model="accountForm.newPassword" size="default" clearable ></Input>
         </FormItem>
       </Form>
+      <div slot="footer"> 
+        <Button type="primary" size="default" long @click="updatePsswordOk">确定</Button>
+      </div>
     </Modal>
   </div>
 </template>
