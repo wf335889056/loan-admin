@@ -77,9 +77,6 @@ export default {
   beforeMount() {
     this.fetchAccountListAndMsg()
   },
-  mounted() {
-    
-  },
   methods: {
     handleAddAdmins() {
       this.admins.push('')

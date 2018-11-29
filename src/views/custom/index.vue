@@ -4,28 +4,19 @@
        <Form ref="formInline" class="formInline" :model="formInline"  inline>
         <Col span="22">
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="客户姓名" />
+              <Input type="text" v-model="formInline.userName" clearable placeholder="客户姓名" />
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="渠道" />
+              <Input type="text" v-model="formInline.channelName" clearable placeholder="渠道" />
             </FormItem>
             <FormItem>
-              <Select v-model="formInline.select" clearable placeholder="贷款状态">
+              <Select v-model="formInline.userStatus" clearable placeholder="贷款状态">
                 <Option :value="0">全部</Option>
                 <Option :value="1">无贷款</Option>
-                <Option :value="2">贷款中</Option>
-                <Option :value="3">审核中</Option>
-                <Option :value="4">逾期</Option>
-                <Option :value="5">拉黑</Option>
-              </Select>
-            </FormItem>
-            <FormItem>
-              <Select v-model="formInline.select" clearable placeholder="会员状态">
-                <Option :value="0">全部</Option>
-                <Option :value="1">未申请</Option>
-                <Option :value="2">待审核</Option>
-                <Option :value="3">通过</Option>
-                <Option :value="4">未通过</Option>
+                <Option :value="2">审核中</Option>
+                <Option :value="3">还款中</Option>
+                <Option :value="9">逾期</Option>
+                <Option :value="15">拉黑</Option>
               </Select>
             </FormItem>
         </Col>
@@ -38,79 +29,93 @@
     </Row>
     <div class="table">
       <Table :loading="loading" :columns="columns" :data="list" @on-row-click="handleClick"></Table>
-      <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" />
+      <Page :current="page" :page-size="20" :total="total" show-total class="page" @on-change="handleChange" />
     </div>
-    <Drawer title="客户详情" v-model="drawerShow" width="60" class="drawer">
-      <div class="detail">
+    <Drawer title="客户详情" v-model="drawerShow" width="60" class="drawer" :mask-closable="false">
+      <Spin fix size="large" v-if="loadDrawer"></Spin>
+      <div class="detail" v-else>
         <p class="title"><Tag color="warning">客户信息</Tag></p>
         <div class="content">
           <p class="info-p">基础信息</p>
           <ul class="info-ul">
             <li>
               <span class="sp1">客户姓名</span>
-              <span class="sp2">叶挺</span>
+              <span class="sp2">{{userOption.customerName}}</span>
             </li>
             <li>
               <span class="sp1">手机号码</span>
-              <span class="sp2">12313213</span>
+              <span class="sp2">{{userOption.userAppPhone}}</span>
             </li>
             <li>
               <span class="sp1">客户身份证号</span>
-              <span class="sp2">4654654654</span>
+              <span class="sp2">{{userOption.userIdcard}}</span>
             </li>
             <li>
               <span class="sp1">客户贷款状态</span>
-              <span class="sp2">审核中</span>
+              <span class="sp2">{{parseUserStatus(userOption.userStatus)}}</span>
             </li>
           </ul>
           <p class="info-p">审核信息</p>
           <p class="line-msg">暂无数据</p>
         </div>
-        <tabView />
+        <tabView :userCustom="userOption" :customInfo="customOption" />
       </div>
       <div class="footer">
-        <Button size="default" type="error" class="btn" @click="handleBlack">拉黑</Button>
+        <Button v-if="userStatus == 15" size="default" type="success" class="btn" @click="handleRelieve">解除黑名单</Button>
+        <Button v-else size="default" type="error" class="btn" @click="handleBlack">拉入黑名单</Button>
         <Button size="default" type="success" class="btn" @click="handleUpdate">备注</Button>
       </div>
     </Drawer>
     <Modal v-model="balckConfirm" title="用户拉黑" @on-ok="handleDelete">
       <p style="padding: 40px 0; font-size: 24px; text-align: center; color: red;">确定将此用户拉黑?</p>
+      <div slot="footer">
+        <Button type="primary" size="default" long @click="handleDelete">确定</Button>
+      </div>
     </Modal>
   </div>
 </template>
 
 <script>
 import tabView from '@/components/tabView16.vue'
-
+import { blackOrNoteCustom, getCustomListOrMsg } from '@/utils/api'
 export default {
   components: { tabView },
   data() {
     return {
-      formInline: {},
-      list: [{ name: 12313 }],
+      formInline: {
+        userName: '',
+        channelName: '',
+        userStatus: 0
+      },
+      list: [],
       loading: true,
+      loadDrawer: true,
       page: 1,
       columns: [
-        { title: '姓名', key: 'name', align: 'center' },
-        { title: '电话号码', key: 'name', align: 'center' },
-        { title: '身份证号码', key: 'name', align: 'center' },
-        { title: '注册时间', key: 'name', align: 'center' },
-        { title: '上次访问时间', key: 'name', align: 'center' },
-        { title: '渠道', key: 'name', align: 'center' },
-        { title: '备注', key: 'name', align: 'center' },
-        { title: '贷款状态', key: 'name', align: 'center' },
-        { title: '会员状态', key: 'name', align: 'center' }
+        { title: '姓名', key: 'customerName', align: 'center' },
+        { title: '电话号码', key: 'userAppPhone', align: 'center' },
+        { title: '身份证号码', key: 'userIdcard', align: 'center' },
+        { title: '注册时间', key: 'registerTime', align: 'center' },
+        { title: '上次访问时间', key: 'loginTime', align: 'center' },
+        { title: '渠道', key: 'channelName', align: 'center' },
+        { title: '备注', key: 'userRemark', align: 'center' },
+        { title: '贷款状态', key: 'userStatus', align: 'center',
+        render: (h, params) => {
+          return h('div', this.parseUserStatus(params.row.userStatus))
+        } }
       ],
-      drawerShow: true,
-      checkId: null,
+      drawerShow: false,
+      id: '',
+      userStatus: 0,
       balckConfirm: false,
-      value: ''
+      value: '',
+      total: 0,
+      userOption: {},
+      customOption: {}
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.loading = false
-    }, 1000)
+    this.fetchCustomListOrMsg()
   },
   methods: {
     handleBlack() {
@@ -124,7 +129,8 @@ export default {
               value: this.value,
               autofocus: true,
               placeholder: '输入客户备注',
-              size: 'default'
+              size: 'default',
+              type: 'textarea'
             },
             on: {
               input: (val) => {
@@ -134,22 +140,118 @@ export default {
           })
         },
         onOk: () => {
-          console.log(this.value)
-          this.value = ''
+          if (this.value == '') {
+            this.$Message.error('请输入备注内容')
+            return
+          }
+          const params = {
+            type: 2,
+            userAppId: this.id,
+            note: this.value,
+            i: 0
+          }
+          blackOrNoteCustom(params).then(res => {
+            if (res.state == 1) {
+              this.$Message.success('备注成功')
+              this.fetchCustomListOrMsg()
+              this.fetchCustomMsg()
+              this.value = ''
+            }
+          })
+        }
+      })
+    },
+    handleRelieve() {
+      const params = {
+        type: 1,
+        userAppId: this.id,
+        note: '',
+        i: 2
+      }
+      blackOrNoteCustom(params).then(res => {
+        if (res.state == 1) {
+          this.$Message.success('解除成功')
+          this.fetchCustomListOrMsg()
+          this.fetchCustomMsg()
         }
       })
     },
     handleDelete() {
-      console.log('删除')
+      const params = {
+        type: 1,
+        userAppId: this.id,
+        note: '',
+        i: 1
+      }
+      blackOrNoteCustom(params).then(res => {
+        if (res.state == 1) {
+          this.$Message.success('拉黑成功')
+          this.balckConfirm = false
+          this.fetchCustomListOrMsg()
+          this.fetchCustomMsg()
+        }
+      })
     },
     handleClick(row) {
-      console.log(row)
+      this.id = row.userAppId
       this.drawerShow = true
+      this.fetchCustomMsg()
     },
     handleSubmit() {
+      this.fetchCustomListOrMsg()
     },
     handleChange(val) {
-      console.log(val)
+      this.page = val
+      this.fetchCustomListOrMsg()
+    },
+    fetchCustomMsg() {
+      const params = {
+        userAppId: this.id,
+        companyId: this.$store.getters.userInfo.companyId,
+        page: 0,
+        limit: 0,
+        userName: '',
+        channelName: '',
+        userStatus: ''
+      }
+      this.loadDrawer = true
+      getCustomListOrMsg(params).then(res => {
+        if (res.state == 1) {
+          this.userStatus = res.info.clientManagementDetails.userStatus
+          this.userOption = res.info.clientManagementDetails
+          // 反欺诈
+          const antiFraud = JSON.parse(res.info.jsonObject)
+          if (antiFraud.code == 200) {
+            this.customOption.antiFraud = antiFraud.data.risk
+          }
+          
+          setTimeout(() => {
+            this.loadDrawer = false
+          }, 1000)
+        }
+      })
+    },
+    fetchCustomListOrMsg() {
+      const params = {
+        ...this.formInline,
+        userAppId: '',
+        companyId: this.$store.getters.userInfo.companyId,
+        page: this.page,
+        limit: 20
+      }
+      this.loading = true
+      getCustomListOrMsg(params).then(res => {
+        if (res.state == 1) {
+          this.list = res.info.clientManagementList
+          this.total = res.info.channelNumber
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+        }
+      })
+    },
+    parseUserStatus(n) {
+      return n == 1? '无贷款' : n == 2? '审核中' : n == 3? '还款中' : n == 9? '逾期' : n == 15? '拉黑' : null
     }
   }
 }

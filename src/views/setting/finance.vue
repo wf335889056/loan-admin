@@ -93,7 +93,7 @@
         <Button type="primary" size="default" long @click="addAccountOk">确定</Button>
       </div>
     </Modal>
-    <Drawer title="账户管理" v-model="drawerShow" width="60" class="drawer">
+    <Drawer title="账户管理" v-model="drawerShow" width="60" class="drawer" :mask-closable="false">
       <div class="detail">
         <div class="content">
           <p v-if="type == 1">放款限额: {{moneyText}} <span class="span" @click="type = 2">编辑</span></p>

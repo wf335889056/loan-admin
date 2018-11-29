@@ -24,10 +24,11 @@
     },
     computed: {
       optionsList() {
+        // console.log(this.checkedList)
         const options = this.options
         for (const o of options) {
           this.checkedList.forEach(it => {
-            if (it.checked && it.id == o.id) {
+            if (it == o.id) {
               o.checked = true
             }
           })
@@ -37,7 +38,11 @@
     },
     methods: {
       handleToggle(item) {
-        item.checked = !item.checked
+        if (item.id == 12 || item.id == 17 || item.id == 2) {
+          this.$Message.warning('前三者为必选项, 不去取消')
+        } else {
+          item.checked = !item.checked
+        }
         const list = this.options.filter(it => it.checked)
         this.$emit('update', list)
       }

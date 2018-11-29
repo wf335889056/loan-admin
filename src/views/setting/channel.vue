@@ -7,7 +7,7 @@
       <Table :loading="loading" :columns="columns" :data="list" @on-row-click="handleClick"></Table>
       <Page :current="page" :page-size="20" :total="listTotal" show-total class="page" @on-change="handleChange" />
     </div>
-    <Drawer title="新增渠道" v-model="drawerShow" width="80" class="drawer">
+    <Drawer title="新增渠道" v-model="drawerShow" width="80" class="drawer" :mask-closable="false">
       <div class="detail">
         <div class="form">
           <Divider>第一步</Divider>

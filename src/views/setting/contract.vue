@@ -6,7 +6,7 @@
     <div class="table">
       <Table :loading="loading" :columns="columns" :data="list" @on-row-click="handleClick"></Table>
     </div>
-    <Drawer :title="drawerTitle" v-model="drawerShow" width="60" class="drawer">
+    <Drawer :title="drawerTitle" v-model="drawerShow" width="60" class="drawer" :mask-closable="false">
       <Spin fix size="large" v-if="loadDrawer"></Spin>
       <div class="detail" v-else>
         <div class="form" style="margin-top: 30px;">
@@ -246,7 +246,7 @@ export default {
     },
     fetchContractList() {
       this.loading = true
-      getContractList().then(res => {
+      getContractList({ companyId: this.$store.getters.userInfo.companyId }).then(res => {
         if (res.state == 1) {
           this.list = res.info.data
           setTimeout(() => {

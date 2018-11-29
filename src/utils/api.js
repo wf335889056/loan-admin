@@ -223,3 +223,67 @@ export function addOrUpdateProductMsg(query) {
     params: query
   })
 }
+// 产品管理-查询产品列表
+export function getProductList(query) {
+  return fetch({
+    url: '/productController/getProductList',
+    method: 'post',
+    params: query
+  })
+}
+// 产品管理-查询产品详情
+export function getProductMsg(query) {
+  return fetch({
+    url: '/productController/getProduct',
+    method: 'post',
+    params: query
+  })
+}
+// 产品管理-修改开启禁用状态
+export function updateProductStatus(query) {
+  return fetch({
+    url: '/productController/updateProductStatus',
+    method: 'post',
+    params: query
+  })
+}
+// 产品管理-保存借款和展期合同
+export function addProductBargain(query) {
+  return fetch({
+    url: '/productController/saveProductBargain',
+    method: 'post',
+    params: query
+  })
+}
+// 产品管理-保存风控项目
+export function saveProductCreditItem(query) {
+  return fetch({
+    url: '/productController/saveCreditItem',
+    method: 'post',
+    params: query
+  })
+}
+// 产品管理-保存产品授权合同
+export function addbargainAccredit(query) {
+  return fetch({
+    url: '/productController/savebargainAccredit',
+    method: 'post',
+    params: query
+  })
+}
+// 客户管理 获取客户列表/详情
+export function getCustomListOrMsg(query) {
+  return fetch({
+    url: '/ClientManagementController/clientManagementList',
+    method: 'post',
+    params: query
+  })
+}
+// 客户管理 拉黑与备注
+export function blackOrNoteCustom(query) {
+  return fetch({
+    url: '/ClientManagementController/blackAndNote',
+    method: 'post',
+    params: query
+  })
+}

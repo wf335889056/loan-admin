@@ -13,7 +13,7 @@ import 'babel-polyfill'
 Vue.config.productionTip = false
 
 Vue.prototype.$baseUrl = baseUrl
-Vue.prototype.$uploadUrl = dev? '/api//deskManagementController/uploadFile' : '/deskManagementController/uploadFile'
+Vue.prototype.$uploadUrl = dev? '/api/deskManagementController/uploadFile' : '/deskManagementController/uploadFile'
 
 Vue.use(iView, {
   transfer: true,

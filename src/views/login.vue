@@ -44,7 +44,9 @@
           if (res.state == 1) {
             this.$Message.success('登录成功')
             this.$store.dispatch('loginByUser', res.info).then(() => {
-              this.$router.push({ path: '/' })
+              setTimeout(() => {
+                this.$router.push({ path: '/' })
+              }, 1000)
             })
           }
         })

@@ -1,15 +1,18 @@
 <template>
   <div>
-    <div class="demo-upload-list" v-for="item in uploadList">
-        <template>
-          <img :src="item.url">
-          <div class="demo-upload-list-cover">
-            <Icon type="ios-eye-outline" size="40" @click.native="handleView(item.name)"></Icon>
-            <Icon type="ios-trash-outline" size="40" @click.native="handleRemove(item)"></Icon>
-          </div>
-        </template>
-    </div>
+    <template v-if="uploadList.length > 0">
+        <div class="demo-upload-list" v-for="item in uploadList">
+            <template>
+              <img :src="item.url">
+              <div class="demo-upload-list-cover">
+                <Icon type="ios-eye-outline" size="40" @click.native="handleView(item.url)"></Icon>
+                <Icon type="ios-trash-outline" size="40" @click.native="handleRemove(item)"></Icon>
+              </div>
+            </template>
+        </div>
+    </template>
     <Upload
+        v-else
         ref="upload"
         :show-upload-list="false"
         :on-success="handleSuccess"
@@ -20,7 +23,7 @@
         :on-exceeded-size="handleMaxSize"
         :before-upload="handleBeforeUpload"
         type="drag"
-        action="//jsonplaceholder.typicode.com/posts/"
+        :action="$uploadUrl"
         style="display: inline-block;width:160px;">
         <div style="width: 160px;height:78px;line-height: 78px;">
             <Icon type="ios-camera" size="40"></Icon>
@@ -43,22 +46,30 @@ export default {
     },
     data () {
         return {
-            defaultList: [],
             imgUrl: '',
             visible: false
         }
     },
     methods: {
         handleView (name) {
-            this.imgName = name;
+            this.imgUrl = name;
             this.visible = true;
         },
         handleRemove (file) {
-            const fileList = this.$refs.upload.fileList;
-            this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            const data = {
+                file,
+                type: 0
+            }
+            this.$emit('upload', data)
         },
         handleSuccess (res, file) {
-            this.$emit('upload', file)
+            if (res.state == 1) {
+                const data = {
+                    file: res.info.imgPath,
+                    type: 1
+                }
+                this.$emit('upload', data)
+            }
         },
         handleFormatError (file) {
             this.$Message.error('不支持该文件格式')

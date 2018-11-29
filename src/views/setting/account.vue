@@ -8,7 +8,7 @@
       <Table :loading="loading" :columns="columns" :data="list" @on-row-click="handleClick"></Table>
       <Page :current="page" :page-size="20" :total="totalnumber" show-total class="page" @on-change="handleChange" />
     </div>
-    <Drawer :title="drawerTitle" v-model="drawerShow" width="60" class="drawer">
+    <Drawer :title="drawerTitle" v-model="drawerShow" width="60" class="drawer" :mask-closable="false">
       <Spin fix size="large" v-if="loadDrawer"></Spin>
       <div class="detail" v-else>
         <div class="form" style="margin-top: 30px;">
