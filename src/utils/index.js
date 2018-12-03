@@ -27,7 +27,7 @@ export function thirdPartyVerification() {
     { id: 8, title: '网贷逾期', checked: false }, 
     // { id: 9, title: '身份证实名认证', checked: false },
     // { id: 10, title: '银行四要素实名验证', checked: false },
-    { id: 11, title: '三网手机二要素验证', checked: false },
+    // { id: 11, title: '三网手机二要素验证', checked: false },
     { id: 13, title: '京东数据', checked: false },
     { id: 14, title: '淘宝数据', checked: false },
     // { id: 15, title: '借*宝借条+米*借条+无*借条+今*借到', checked: false },
@@ -62,4 +62,26 @@ export function format(data){
   var m = date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes()
   //console.log(Y+M+D+h+m)
   return Y+M+D+h+m;
+}
+
+export function repayments() {
+  return [
+    { value: 1, label: '等本等息 (按月还款)' },
+    { value: 2, label: '等本等息 (按周还款)' },
+    { value: 3, label: '等本等息 (自定义周期)' },
+    { value: 4, label: '先息后本 (按月还款)' },
+    { value: 5, label: '先息后本 (按周还款)' },
+    { value: 6, label: '先息后本 (自定义周期)' },
+    { value: 7, label: '等额本息 (按月还款)' },
+    { value: 8, label: '等额本息 (按周还款)' },
+    { value: 9, label: '等额本息 (自定义周期)' },
+    { value: 10, label: '等额本金 (按月还款)' },
+    { value: 11, label: '等额本金 (按周还款)' },
+    { value: 12, label: '等额本金 (自定义周期)' },
+    { value: 13, label: '利随本金 (到期还款)' },
+    { value: 14, label: '等额本金 (固定还款日)' },
+    { value: 15, label: '等额本息 (固定还款日)' },
+    { value: 16, label: '先息后本 (固定还款日)' },
+    { value: 17, label: '等本等息 (固定还款日)' }
+  ]
 }

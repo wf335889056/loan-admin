@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <ul class="info-ul">
+    <ul class="info-ul" v-if="Object.keys(results).length > 0">
       <li>
         <span class="sp1">姓名</span>
         <span class="sp2">{{results.data.name}}</span>
@@ -18,12 +18,18 @@
         <span class="sp2">{{results.timestamp}}</span>
       </li>
     </ul>
+    <p v-else class="line-msg">暂无数据</p>
   </div>
 </template>
 
 <script>
+// 网贷逾期
 export default {
-  props: {},
+  props: {
+    obj: {
+      type: Object
+    }
+  },
   data() {
     return {
       json: {
@@ -48,8 +54,8 @@ export default {
   },
   computed: {
     results() {
-      const json = this.json
-      return json.result
+      const json = this.obj
+      return json
     }
   },
   methods: {

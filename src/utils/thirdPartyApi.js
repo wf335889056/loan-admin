@@ -6,3 +6,11 @@ import fetch from './fetch'
 @url {*} 请求地址 String
 *********
 */
+
+export function getThirdPartyMsg(query) {
+  return fetch({
+    url: '/ClientManagementController/thirdPartyInterface',
+    method: 'post',
+    params: query
+  })
+}

@@ -79,7 +79,7 @@ export default {
       return arrs
     },
     checkPoints() {
-      return this.obj['checkPoints'].length > 0? this.obj['checkPoints'] : []
+      return this.obj['checkPoints'] && this.obj['checkPoints'].length > 0? this.obj['checkPoints'] : []
     }
   },
   mounted() {

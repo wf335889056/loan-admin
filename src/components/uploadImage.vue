@@ -1,18 +1,19 @@
 <template>
   <div>
-    <template v-if="uploadList.length > 0">
+    <template >
         <div class="demo-upload-list" v-for="item in uploadList">
-            <template>
-              <img :src="item.url">
-              <div class="demo-upload-list-cover">
-                <Icon type="ios-eye-outline" size="40" @click.native="handleView(item.url)"></Icon>
-                <Icon type="ios-trash-outline" size="40" @click.native="handleRemove(item)"></Icon>
-              </div>
-            </template>
+            <img :src="item.url">
+            <div class="demo-upload-list-cover">
+              <Icon type="ios-eye-outline" size="30" @click.native="handleView(item.url)"></Icon>
+              <Icon type="ios-trash-outline" size="30" @click.native="handleRemove(item, index)"></Icon>
+            </div>
+            <div class="upload-input">
+                <Input v-model="item.link" clearable placeholder="输入外链, 若没有则不填" />
+            </div>
         </div>
     </template>
     <Upload
-        v-else
+        v-if="uploadList.length < uploadMax"
         ref="upload"
         :show-upload-list="false"
         :on-success="handleSuccess"
@@ -24,12 +25,12 @@
         :before-upload="handleBeforeUpload"
         type="drag"
         :action="$uploadUrl"
-        style="display: inline-block;width:160px;">
-        <div style="width: 160px;height:78px;line-height: 78px;">
+        style="display: inline-block;width:200px;">
+        <div style="width: 200px;height:134px;line-height: 134px;">
             <Icon type="ios-camera" size="40"></Icon>
         </div>
     </Upload>
-    <Modal title="View Image" v-model="visible">
+    <Modal title="预览图片" v-model="visible">
       <img :src="imgUrl" style="width: 100%" alt="预览">
     </Modal>
   </div>
@@ -55,9 +56,10 @@ export default {
             this.imgUrl = name;
             this.visible = true;
         },
-        handleRemove (file) {
+        handleRemove (file, index) {
             const data = {
                 file,
+                index,
                 type: 0
             }
             this.$emit('upload', data)
@@ -90,10 +92,8 @@ export default {
 <style scoped lang="less">
     .demo-upload-list{
         display: inline-block;
-        width: 160px;
-        height: 80px;
+        width: 200px;
         text-align: center;
-        line-height: 80px;
         border: 1px solid transparent;
         border-radius: 4px;
         overflow: hidden;
@@ -104,16 +104,17 @@ export default {
     }
     .demo-upload-list img{
         width: 100%;
-        height: 100%;
+        height: 80px;
     }
     .demo-upload-list-cover{
         display: none;
         position: absolute;
         top: 0;
-        bottom: 0;
+        bottom: 53px;
         left: 0;
         right: 0;
         background: rgba(0,0,0,.6);
+        line-height: 80px;
     }
     .demo-upload-list:hover .demo-upload-list-cover{
         display: block;
@@ -123,5 +124,9 @@ export default {
         font-size: 20px;
         cursor: pointer;
         margin: 0 2px;
+    }
+    .upload-input {
+        width: 100%;
+        height: 40px;
     }
 </style>

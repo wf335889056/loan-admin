@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AppRegister from '@/views/app/register'
 import AppDownload from '@/views/app/download'
+import AppBlank from '@/views/app/blankPage'
 import Common from '@/views/common'
 import Login from '@/views/login'
 import Dashboard from '@/views/dashboard'
@@ -15,7 +16,7 @@ import LoanList from '@/views/loan/list'
 import LoanOrder from '@/views/loan/order'
 import LoanRecord from '@/views/loan/record'
 import OperartionIndex from '@/views/operartion/index'
-import OperartionConversion from '@/views/operartion/conversion'
+import OperartionDetail from '@/views/operartion/detail'
 import SettingAccount from '@/views/setting/account'
 import SettingChannel from '@/views/setting/channel'
 import SettingChannelDetail from '@/views/setting/channelDetail'
@@ -42,6 +43,11 @@ export default new Router({
       path: '/appDownload',
       name: 'appDownLoad',
       component: AppDownload
+    },
+    {
+      path: '/appBlank',
+      name: 'appBlank',
+      component: AppBlank
     },
     {
       path: '/login',
@@ -113,7 +119,7 @@ export default new Router({
       component: Common,
       children: [
         { path: 'index', component: OperartionIndex },
-        { path: 'conversion', component: OperartionConversion }
+        { path: 'detail', component: OperartionDetail }
       ]
     },
     {

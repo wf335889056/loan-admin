@@ -86,15 +86,12 @@
             { name: '产品管理', path: '/setting/product' },
             { name: '渠道管理', path: '/setting/channel' },
             { name: '财务管理', path: '/setting/finance' },
-            { name: '数据管理', path: '/setting/data' },
+            // { name: '数据管理', path: '/setting/data' },
             { name: '合同管理', path: '/setting/contract' },
             { name: '公司信息', path: '/setting/company' },
             { name: '查询计费', path: '/setting/price' }
           ] },
-          { name: '运营数据', path: '/operartion', icon: 'ios-paper-outline', childer: [
-            { name: '用户全部转化数据', path: '/operartion/conversion' },
-            { name: '运营数据', path: '/operartion/index' }
-          ] }
+          { name: '运营数据', path: '/operartion', icon: 'ios-paper-outline' }
         ],
         openNames: [],
         updateModel: false,

@@ -5,15 +5,16 @@
 </template>
 
 <script>
+// 三网手机二要素验证
 export default {
-  data() {
-    return {
-      jsonData: {"code":200,"msg":"成功","data":{"name":"田晓徵","mobile":"13180050758","validateCode":1,"validateMsg":"认证一致"}}
+  props: {
+    obj: {
+      type: Object
     }
   },
   computed: {
     validateMsg() {
-      return this.jsonData.data.validateMsg
+      return this.obj.validateMsg
     }
   }
 }

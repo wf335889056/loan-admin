@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <p class="info-p">记录数</p>
-    <p class="line-msg" style="margin-bottom: 30px;">{{json.data.listNum}}</p>
+    <p class="line-msg" style="margin-bottom: 30px;">{{obj.listNum}}</p>
     <Table :columns="columns" :data="results"></Table>
   </div>
 </template>
@@ -9,10 +9,13 @@
 <script>
 // 失信
 export default {
-  props: {},
+  props: {
+    obj: {
+      type: Object
+    }
+  },
   data() {
     return {
-      json: {"code":200,"msg":"成功","data":{"listNum":0,"result":[]}},
       columns: [
         { title: '姓名', key: 'iname', align: 'center' },
         { title: '年龄', key: 'age', align: 'center' },
@@ -30,12 +33,8 @@ export default {
   },
   computed: {
     results() {
-      return this.json.data.result
+      return this.obj.result
     }
-  },
-  mounted() {
-  },
-  methods: {
   }
 }
 </script>

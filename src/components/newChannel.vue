@@ -28,7 +28,7 @@
         <template v-for="(item, index) in products">
           <div style="margin-bottom: 20px;">
             <Select v-model="item.channelProductId" size="large" style="width: 60%;" >
-              <Option v-for="item in options2" :value="item.userId" :key="item.userId" :label="item.userName"></Option>
+              <Option v-for="item in options2" :value="item.productId" :key="item.productId" :label="item.productName"></Option>
             </Select>
             <Button type="error" shape="circle" icon="ios-trash-outline" @click="handleDelete(products, index)"></Button>
           </div>
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { getAccountListAndMsg } from '@/utils/api'
+import { getAccountListAndMsg, getProductList } from '@/utils/api'
 export default {
   props: {
     form: {
@@ -71,15 +71,20 @@ export default {
   data() {
     return {
       options1: [],
-      options2: []
+      options2: [],
     }
   },
   beforeMount() {
     this.fetchAccountListAndMsg()
   },
+  mounted() {
+    this.fetchProductList()
+  },
   methods: {
     handleAddAdmins() {
-      this.admins.push('')
+      this.admins.push({
+        userId: ''
+      })
     },
     handleAddProducts() {
       this.products.push({
@@ -106,6 +111,18 @@ export default {
       getAccountListAndMsg(params).then(res => {
         if (res.state == 1) {
           this.options1 = res.info.userAccountList
+        }
+      })
+    },
+    fetchProductList() {
+      const params = {
+        companyId: this.$store.getters.userInfo.companyId,
+        limit: 9999,
+        page: 1
+      }
+      getProductList(params).then(res => {
+        if (res.state == 1) {
+          this.options2 = res.info.data.productList
         }
       })
     }

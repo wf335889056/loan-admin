@@ -287,3 +287,99 @@ export function blackOrNoteCustom(query) {
     params: query
   })
 }
+// 客户管理 潜客池
+export function getPotentialCustomers(query) {
+  return fetch({
+    url: '/ClientManagementController/customerPool',
+    method: 'post',
+    params: query
+  })
+}
+// 申请 获取申请列表
+export function getApplyList(query) {
+  return fetch({
+    url: '/ApplyController/getApplyList',
+    method: 'post',
+    params: query
+  })
+}
+// 申请 获取负责人
+export function getApplyPrincipal(query) {
+  return fetch({
+    url: '/ApplyController/getUser',
+    method: 'post',
+    params: query
+  })
+}
+// 申请 保存负责人
+export function saveApplyPrincipal(query) {
+  return fetch({
+    url: '/ApplyController/updatePrincipal',
+    method: 'post',
+    params: query
+  })
+}
+// 申请 申请详情
+export function getApplyMsg(query) {
+  return fetch({
+    url: '/ApplyController/getApplyDetail',
+    method: 'post',
+    params: query
+  })
+}
+// 申请 修改订单状态
+export function updateOrderStatus(query) {
+  return fetch({
+    url: '/ApplyController/updateOrderStatus',
+    method: 'post',
+    params: query
+  })
+}
+// 审核 审核列表
+export function getAuditList(query) {
+  return fetch({
+    url: '/CheckController/getCheckList',
+    method: 'post',
+    params: query
+  })
+}
+// 审核 写备注
+export function remarkAuditPeople(query) {
+  return fetch({
+    url: '/CheckController/updateCustomerRemark',
+    method: 'post',
+    params: query
+  })
+}
+// 审核 获取审核详情
+export function getAuditMsg(query) {
+  return fetch({
+    url: '/CheckController/getCheckDetail',
+    method: 'post',
+    params: query
+  })
+}
+// 审核 拒贷
+export function rejectLoanAudio(query) {
+  return fetch({
+    url: '/CheckController/checkRefuse',
+    method: 'post',
+    params: query
+  })
+}
+// 审核 通过
+export function passLoanAudio(query) {
+  return fetch({
+    url: '/CheckController/checkPass',
+    method: 'post',
+    params: query
+  })
+}
+// 审核 点击审核通过时的弹出框展示内容
+export function getAudioPassMsg(query) {
+  return fetch({
+    url: '/CheckController/getCheckButtomDetail',
+    method: 'post',
+    params: query
+  })
+}

@@ -1,25 +1,11 @@
 <template>
   <div class="wrapper">
-      <Row>
-        <p class="p1">统计</p>
-        <p class="p2">用户全部申请数据</p>
-        <p class="p1">显示注册用户所有申请的转化情况，包括提交审核数、审核通过数、放款数、放款金额、按照渠道和日期显示，数据每日24:00后更新</p>
-      </Row>
-      <Divider />
-     <Row class="row">
-       <Form ref="formInline" class="formInline" :model="formInline"  inline>
-        <Col span="22">
-            <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="渠道" />
-            </FormItem>
-        </Col>
-        <Col span="2">
-          <FormItem>
-            <Button type="success" size="default" @click="handleSubmit">搜索</Button>
-          </FormItem>
-        </Col>
-        </Form>
+    <Row>
+      <p class="p1">统计</p>
+      <p class="p2">用户全部申请数据</p>
+      <p class="p1">显示注册用户所有申请的转化情况，包括提交审核数、审核通过数、放款数、放款金额、按照渠道和日期显示，数据每日24:00后更新</p>
     </Row>
+    <Divider />
     <div class="table">
       <Table :loading="loading" :columns="columns" :data="list"></Table>
       <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" />

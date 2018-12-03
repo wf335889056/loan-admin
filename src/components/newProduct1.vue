@@ -8,7 +8,7 @@
               <Input v-model="form.description" size="large" clearable></Input>
             </FormItem>
             <FormItem label="产品logo:">
-              <uploadImage :uploadList="imgs" @upload="imageSuccess" :uploadMax="1"/>
+              <uploadImage :uploadList="imgs" @upload="imageSuccess" :uploadMax="5"/>
             </FormItem>
             <!-- <p style="text-align: right; font-size: 20px;margin-bottom: 10px;">*相关通知短信会发送至此手机号</p> -->
             <FormItem label="产品类型:">
@@ -220,6 +220,7 @@
 
 <script>
 import uploadImage from './uploadImage.vue'
+import { repayments } from '@/utils'
 export default {
   components: { uploadImage },
   props: {
@@ -238,25 +239,7 @@ export default {
   },
   data() {
     return {
-      options: [
-        { value: 1, label: '等本等息 (按月还款)' },
-        { value: 2, label: '等本等息 (按周还款)' },
-        { value: 3, label: '等本等息 (自定义周期)' },
-        { value: 4, label: '先息后本 (按月还款)' },
-        { value: 5, label: '先息后本 (按周还款)' },
-        { value: 6, label: '先息后本 (自定义周期)' },
-        { value: 7, label: '等额本息 (按月还款)' },
-        { value: 8, label: '等额本息 (按周还款)' },
-        { value: 9, label: '等额本息 (自定义周期)' },
-        { value: 10, label: '等额本金 (按月还款)' },
-        { value: 11, label: '等额本金 (按周还款)' },
-        { value: 12, label: '等额本金 (自定义周期)' },
-        { value: 13, label: '利随本金 (到期还款)' },
-        { value: 14, label: '等额本金 (固定还款日)' },
-        { value: 15, label: '等额本息 (固定还款日)' },
-        { value: 16, label: '先息后本 (固定还款日)' },
-        { value: 17, label: '等本等息 (固定还款日)' }
-      ]
+      options: repayments()
     }
   },
   computed: {
@@ -267,9 +250,9 @@ export default {
   methods: {
     imageSuccess(data) {
       if (data.type == 0) {
-        this.images = []
+        this.images.splice(data.index, 1)
       } else if (data.type == 1) {
-        this.images.push({ url: data.file })
+        this.images.push({ url: data.file, link: '' })
       }
     },
     handleDelete(list, index) {

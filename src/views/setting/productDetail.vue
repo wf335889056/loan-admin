@@ -156,7 +156,7 @@ export default {
         }
       }
       params.repayTypeJson = encodeURI(JSON.stringify(repayTypeJson)) || ''
-      params.pictureUrl = this.productImages[0].url || ''
+      params.pictureUrl = JSON.stringify(this.productImages)
       params.productId = this.id
       console.log(params)
       addOrUpdateProductMsg(params).then(res => {
@@ -240,7 +240,9 @@ export default {
               bargainId: o.bargainId
             })
           }
-          this.productImages.push({ url: res.info.data.productImages })
+          if (res.info.data.productImages != '' && res.info.data.productImages != null) {
+            this.productImages.push({ url: res.info.data.productImages, link: '' })
+          }
           this.repayTypeJson = res.info.data.repayTypeJson
           this.procedureJson = res.info.data.procedureJson
           for (let i = 0; i < this.repayTypeJson.length; i++) {

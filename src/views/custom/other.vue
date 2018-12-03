@@ -4,10 +4,10 @@
        <Form ref="formInline" class="formInline" :model="formInline"  inline>
         <Col span="22">
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="电话号码" />
+              <Input type="text" v-model="formInline.phone" clearable placeholder="电话号码" />
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="客户来源" />
+              <Input type="text" v-model="formInline.channelName" clearable placeholder="客户来源" />
             </FormItem>
         </Col>
         <Col span="2">
@@ -19,23 +19,27 @@
     </Row>
     <div class="table">
       <Table :loading="loading" :columns="columns" :data="list"></Table>
-      <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" />
+      <Page :current="page" :page-size="20" :total="total" show-total class="page" @on-change="handleChange" />
     </div>
   </div>
 </template>
 
 <script>
+import { getPotentialCustomers, blackOrNoteCustom } from '@/utils/api'
 export default {
   data() {
     return {
-      formInline: {},
-      list: [{name: 12313}],
+      formInline: {
+        phone: '',
+        channelName: ''
+      },
+      list: [],
       loading: true,
       page: 1,
       columns: [
-        { title: '电话号码', key: 'name', align: 'center' },
-        { title: '客户来源', key: 'name', align: 'center' },
-        { title: '备注', key: 'name', align: 'center' },
+        { title: '电话号码', key: 'userAppPhone', align: 'center' },
+        { title: '客户来源', key: 'channelName', align: 'center' },
+        { title: '备注', key: 'userRemark', align: 'center' },
         {
           title: '操作',
           key: 'action',
@@ -53,6 +57,7 @@ export default {
               on: {
                 click: (e) => {
                   e.stopPropagation()
+                  this.id = params.row.userAppId
                   this.handleUpdate()
                 }
               }
@@ -60,19 +65,21 @@ export default {
           }
         }
       ],
-      value: ''
+      value: '',
+      total: 0,
+      id: ''
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.loading = false
-    }, 1000)
+    this.fetchPotentialCustomers()
   },
   methods: {
     handleSubmit() {
+      this.fetchPotentialCustomers()
     },
     handleChange(val) {
-      console.log(val)
+      this.page = val
+      this.fetchPotentialCustomers()
     },
     handleUpdate() {
       this.$Modal.confirm({
@@ -82,7 +89,8 @@ export default {
               value: this.value,
               autofocus: true,
               placeholder: '修改备注',
-              size: 'default'
+              size: 'default',
+              type: 'textarea'
             },
             on: {
               input: (val) => {
@@ -92,8 +100,39 @@ export default {
           })
         },
         onOk: () => {
-          console.log(this.value)
-          this.value = ''
+          if (this.value == '') {
+            this.$Message.error('请输入备注内容')
+            return
+          }
+          const params = {
+            type: 2,
+            userAppId: this.id,
+            note: this.value,
+            i: 0
+          }
+          blackOrNoteCustom(params).then(res => {
+            if (res.state == 1) {
+              this.$Message.success('备注成功')
+              this.fetchPotentialCustomers()
+              this.value = ''
+            }
+          })
+        }
+      })
+    },
+    fetchPotentialCustomers() {
+      const params = this.formInline
+      params.companyId = this.$store.getters.userInfo.companyId
+      params.page = this.page
+      params.limit = 20
+      this.loading = true
+      getPotentialCustomers(params).then(res => {
+        if (res.state == 1) {
+          this.list = res.info.customerPool
+          this.total = res.info.channelNumber
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
         }
       })
     }

@@ -139,7 +139,7 @@ export default {
       params.channelLinkman = JSON.stringify(this.channelContacts) || ''
       params.channelId = ''
       params.companyId = this.userInfo.companyId
-      params.userName = this.unseInfo.userName
+      params.userName = this.userInfo.userName
       addOrUpdateChannelMsg(params).then(res => {
         if (res.state == 1) {
           this.$Message.success('保存成功')
@@ -152,6 +152,7 @@ export default {
           this.channelContacts = [{ linkmanName: '', linkmanPhone: '' }]
         }
       })
+      console.log(params)
     },
     fetchChannelLisgOrMsg() {
       const params = {

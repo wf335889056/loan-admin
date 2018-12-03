@@ -54,9 +54,17 @@
               <span class="sp1">客户贷款状态</span>
               <span class="sp2">{{parseUserStatus(userOption.userStatus)}}</span>
             </li>
+            <li>
+              <span class="sp1">身份证是否认证</span>
+              <span class="sp2">{{userOption.idCardCertification == 0? '未认证' : '已认证'}}</span>
+            </li>
+            <li>
+              <span class="sp1">银行卡是否认证</span>
+              <span class="sp2">{{userOption.bankCardFication == 0? '未认证' : '已认证'}}</span>
+            </li>
           </ul>
-          <p class="info-p">审核信息</p>
-          <p class="line-msg">暂无数据</p>
+          <!-- <p class="info-p">审核信息</p>
+          <p class="line-msg">暂无数据</p> -->
         </div>
         <tabView :userCustom="userOption" :customInfo="customOption" />
       </div>
