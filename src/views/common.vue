@@ -59,40 +59,12 @@
   import { mapGetters, mapActions } from 'vuex'
   import logo from '@/assets/logo_xyjr60.png'
   import { updateUserPassword } from '@/utils/api'
+  import { menusList } from '@/utils'
   export default {
     data() {
       return {
         logo,
-        menus: [
-          { name: '概览', path: '/', icon: 'ios-globe' },
-          { name: '申请', path: '/apply', icon: 'ios-person-add-outline' },
-          { name: '审核', path: '/audit', icon: 'ios-document-outline', childer: [
-            { name: '审核管理', path: '/audit/index' },
-            { name: '待签署合同', path: '/audit/other' }
-          ] },
-          { name: '放款管理', path: '/loan', icon: 'logo-yen', childer: [
-            { name: '放款订单', path: '/loan/order' },
-            { name: '账单列表', path: '/loan/list' },
-            { name: '展期记录', path: '/loan/record' }
-          ] },
-          { name: '逾期管理', path: '/overdue', icon: 'ios-time-outline' },
-          { name: '催收管理', path: '/collection', icon: 'ios-alarm-outline' },
-          { name: '客户管理', path: '/custom', icon: 'ios-person-outline', childer: [
-            { name: '客户列表', path: '/custom/index' },
-            { name: '潜客池', path: '/custom/other' }
-          ] },
-          { name: '设置管理', path: '/setting', icon: 'ios-settings-outline', childer: [
-            { name: '账户管理', path: '/setting/account' },
-            { name: '产品管理', path: '/setting/product' },
-            { name: '渠道管理', path: '/setting/channel' },
-            { name: '财务管理', path: '/setting/finance' },
-            // { name: '数据管理', path: '/setting/data' },
-            { name: '合同管理', path: '/setting/contract' },
-            { name: '公司信息', path: '/setting/company' },
-            { name: '查询计费', path: '/setting/price' }
-          ] },
-          { name: '运营数据', path: '/operartion', icon: 'ios-paper-outline' }
-        ],
+        menus: menusList,
         openNames: [],
         updateModel: false,
         accountForm: {

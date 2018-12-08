@@ -7,9 +7,9 @@
               <Icon type="ios-eye-outline" size="30" @click.native="handleView(item.url)"></Icon>
               <Icon type="ios-trash-outline" size="30" @click.native="handleRemove(item, index)"></Icon>
             </div>
-            <div class="upload-input">
+            <!-- <div class="upload-input">
                 <Input v-model="item.link" clearable placeholder="输入外链, 若没有则不填" />
-            </div>
+            </div> -->
         </div>
     </template>
     <Upload
@@ -25,8 +25,8 @@
         :before-upload="handleBeforeUpload"
         type="drag"
         :action="$uploadUrl"
-        style="display: inline-block;width:200px;">
-        <div style="width: 200px;height:134px;line-height: 134px;">
+        style="display: inline-block;width: 94px;">
+        <div style="width: 94px;height: 94px;line-height: 94px;">
             <Icon type="ios-camera" size="40"></Icon>
         </div>
     </Upload>
@@ -92,7 +92,8 @@ export default {
 <style scoped lang="less">
     .demo-upload-list{
         display: inline-block;
-        width: 200px;
+        width: 94px;
+        height: 94px;
         text-align: center;
         border: 1px solid transparent;
         border-radius: 4px;
@@ -104,17 +105,17 @@ export default {
     }
     .demo-upload-list img{
         width: 100%;
-        height: 80px;
+        height: 100%;
     }
     .demo-upload-list-cover{
         display: none;
         position: absolute;
         top: 0;
-        bottom: 53px;
+        bottom: 0;
         left: 0;
         right: 0;
         background: rgba(0,0,0,.6);
-        line-height: 80px;
+        line-height: 94px;
     }
     .demo-upload-list:hover .demo-upload-list-cover{
         display: block;

@@ -39,7 +39,7 @@ export default {
   props: {
     obj: {
       type: Object,
-      default: () => json5dData.data
+      // default: () => json5dData.data
     }
   },
   data() {
@@ -128,7 +128,7 @@ export default {
     }
   },
   mounted() {
-    console.log(json5dData)
+    // console.log(json5dData)
   },
   methods: {
     transitionKey(n) {

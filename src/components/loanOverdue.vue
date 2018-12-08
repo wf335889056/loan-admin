@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+    <p class="info-p">借*宝信息</p>
     <ul class="info-ul" v-if="Object.keys(results).length > 0">
       <li>
         <span class="sp1">姓名</span>
@@ -19,6 +20,12 @@
       </li>
     </ul>
     <p v-else class="line-msg">暂无数据</p>
+    <p class="info-p">米*信息</p>
+    <p class="line-msg">暂无数据</p>
+    <p class="info-p">无*借条信息</p>
+    <p class="line-msg">暂无数据</p>
+    <p class="info-p">今*到信息</p>
+    <p class="line-msg">暂无数据</p>
   </div>
 </template>
 

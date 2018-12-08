@@ -38,23 +38,76 @@
     <Drawer title="借款审核" v-model="drawerShow" width="60" class="drawer" :mask-closable="false">
       <Spin fix size="large" v-if="loadDrawer"></Spin>
       <div class="detail" v-else>
-        <p class="title"><Tag color="warning">审核信息</Tag></p>
-        <div class="content">
-          <ul class="info-ul">
-            <li>
-              <span class="sp1">申请编号</span>
-              <span class="sp2">{{auditInfo.applyCode}}</span>
-            </li>
-            <li>
-              <span class="sp1">审核状态</span>
-              <span class="sp2">{{auditInfo.checkStatus}}</span>
-            </li>
-            <li>
-              <span class="sp1">审核通过时间</span>
-              <span class="sp2">{{auditInfo.orderCheckTime}}</span>
-            </li>
-          </ul>
-        </div>
+        <template v-if="canAudit == 1">
+          <p class="title"><Tag color="warning">审核信息</Tag></p>
+          <div class="content">
+            <ul class="info-ul">
+              <li>
+                <span class="sp1">申请编号</span>
+                <span class="sp2">{{auditInfo.applyCode}}</span>
+              </li>
+              <li>
+                <span class="sp1">审核状态</span>
+                <span class="sp2">{{status.filter(it => it.id == auditInfo.checkStatus)[0].text}}</span>
+              </li>
+              <li>
+                <span class="sp1">审核通过时间</span>
+                <span class="sp2">{{auditInfo.orderCheckTime}}</span>
+              </li>
+            </ul>
+          </div>
+        </template>
+        <template v-else>
+          <p class="title"><Tag color="warning">审核结果</Tag></p>
+          <div class="content">
+            <ul class="info-ul">
+              <li>
+                <span class="sp1">审核状态</span>
+                <span class="sp2">{{allStatus.filter(it => it.id == auditResult.orderStatus)[0].text}}</span>
+              </li>
+              <li>
+                <span class="sp1">操作员</span>
+                <span class="sp2">{{auditResult.userName}}</span>
+              </li>
+              <li>
+                <span class="sp1">还款方式</span>
+                <span class="sp2">{{setRepaymentType(auditResult.productRepaymentType)}}</span>
+              </li>
+              <li>
+                <span class="sp1">利率/日(%)</span>
+                <span class="sp2">{{auditResult.creditRate}}</span>
+              </li>
+              <li>
+                <span class="sp1">手续费(%)</span>
+                <span class="sp2">{{auditResult.procedureRate}}</span>
+              </li>
+              <li>
+                <span class="sp1">产品期数</span>
+                <span class="sp2">{{auditResult.productCycleNum}}</span>
+              </li>
+              <li>
+                <span class="sp1">授信额度</span>
+                <span class="sp2">{{auditResult.creditMoney}}</span>
+              </li>
+              <li>
+                <span class="sp1">合同编号</span>
+                <span class="sp2">{{auditResult.bargainId}}</span>
+              </li>
+              <li>
+                <span class="sp1">签署电子合同</span>
+                <span class="sp2">{{auditResult.electronicBargainStatus == 0? '关闭' : '开启'}}</span>
+              </li>
+              <li>
+                <span class="sp1">手续费支付方式</span>
+                <span class="sp2">{{auditResult.productProcedurePayType == 1? '按期支付' : auditResult.productProcedurePayType == 2? '贷前扣除' : '贷后支付'}}</span>
+              </li>
+              <li>
+                <span class="sp1">资方</span>
+                <span class="sp2">{{auditResult.capitalTitle}}</span>
+              </li>
+            </ul>
+          </div>
+        </template>
         <p class="title"><Tag color="warning">基础信息</Tag></p>
         <div class="content">
           <p class="info-p">客户信息</p>
@@ -65,11 +118,11 @@
             </li>
             <li>
               <span class="sp1">客户手机号</span>
-              <span class="sp2">{{customerInfo.customerName}}</span>
+              <span class="sp2">{{customerInfo.customerPhone}}</span>
             </li>
             <li>
               <span class="sp1">客户身份证号码</span>
-              <span class="sp2">{{customerInfo.customerName}}</span>
+              <span class="sp2">{{customerInfo.customerIdcard}}</span>
             </li>
           </ul>
           <p class="info-p">申请信息</p>
@@ -102,7 +155,7 @@
               <span class="sp1">渠道</span>
               <span class="sp2">{{applyDetail.channelName}}</span>
             </li>
-             <li>
+            <li>
               <span class="sp1">产品标准日利率</span>
               <span class="sp2">{{applyDetail.productCycleRateNormal}}</span>
             </li>
@@ -185,66 +238,92 @@
         <div class="content">
           <Table :columns="columns2" :data="historys"></Table>
         </div>
-        <p class="title"><Tag color="warning">风控信息</Tag></p>
+        <!-- <p class="title"><Tag color="warning">风控信息</Tag></p>
+        <tabView :options="controls" /> -->
         <authorizationAndUpdate :authorizations="creditList" :updates="editLogList" />
       </div>
       <div class="footer">
         <Button v-if="canAudit == 1" size="default" type="success" class="btn" @click="handlePass">审核通过</Button>
         <Button v-if="canAudit == 1" size="default" type="error" class="btn" @click="handleReject">审核被拒</Button>
-        <Button size="default" type="warning" class="btn" @click="handleUpdate">客户备注</Button>
+        <Button size="default" type="success" class="btn" @click="handleUpdate">客户备注</Button>
         <Button size="default" type="primary" class="btn" @click="handleBatch(0)">编辑负责人</Button>
       </div>
     </Drawer>
     <Modal v-model="modelShow" :title="modelTitle">
-      <Form :model="formReject" v-if="modelType == 0">
-        <FormItem label="拒绝原因:">
+      <template v-if="modelType == 0">
+        <ul class="info-ul">
+          <li style="width: 100%;">
+            <span class="sp1">是否拉黑</span>
+            <span class="sp2">
+              <Select v-model="formReject.blackStatus" placeholder="选择支付方式">
+                <Option :value="0">不拉黑</Option>
+                <Option :value="1">拉黑</Option>
+              </Select>
+            </span>
+          </li>
+        </ul>
+        <div style="margin-top: 10px"> 
           <Input v-model="formReject.customerRemark" placeholder="输入拒绝原因" type="textarea"></Input>
-        </FormItem>
-        <FormItem label="是否拉黑:">
-          <Select v-model="formReject.blackStatus" placeholder="选择支付方式">
-            <Option :value="0">不拉黑</Option>
-            <Option :value="1">拉黑</Option>
-          </Select>
-        </FormItem>
-      </Form>
-      <Form :model="formPass" v-if="modelType == 1" inline>
-        <FormItem label="授信额度(元):" style="width: 40%; margin-right: 5%">
-          <Input v-model="formPass.creditMoney"></Input>
-        </FormItem>
-        <FormItem label="还款方式:" style="width: 40%">
-          <Input v-model="formPass.productRepaymentType" :disabled="true" ></Input>
-        </FormItem>
-        <FormItem label="授信期数:" style="width: 40%; margin-right: 5%">
-          <Input v-model="formPass.productCycleNum" :disabled="true"></Input>
-        </FormItem>
-        <FormItem label="利率/日(单位: %):" style="width: 40%">
-          <Input v-model="formPass.creditRate"></Input>
-        </FormItem>
-        <FormItem label="手续费支付方式:" style="width: 40%; margin-right: 5%">
-          <Input v-model="formPass.productProcedurePayType" :disabled="true"></Input>
-        </FormItem>
-        <FormItem label="手续费/平台费(%):" style="width: 40%">
-          <Input v-model="formPass.procedureRate"></Input>
-        </FormItem>
-        <FormItem label="资方:" style="width: 40%; margin-right: 5%">
-          <Input v-model="formPass.capitalTitle" :disabled="true"></Input>
-        </FormItem>
-        <FormItem label="选择合同:" style="width: 40%">
-          <Input v-model="formPass.bargainName" :disabled="true"></Input>
-        </FormItem>
-        <FormItem label="风控措施:" style="width: 100%">
-          <Input v-model="formPass.riskControl" type="textarea"></Input>
-        </FormItem>
-        <FormItem label="贷后管理建议:" style="width: 100%">
-          <Input v-model="formPass.loansSuggest" type="textarea"></Input>
-        </FormItem>
-        <FormItem label="签署电子合同:" style="width: 100%">
-          <i-switch size="large" v-model="formPass.electronicBargainStatus" :true-value="1" :false-value="0">
-            <span slot="open">是</span>
-            <span slot="close">否</span>
-          </i-switch>
-          <p style="text-align: left; font-size: 18px;color: red;">*开启后会要求客户签署电子合同, 客户签署后生成放款订单, 在平台生成具有法律意义的借款凭证。 若通过借款平台放款, 则无需开启</p>
-        </FormItem>
+        </div>
+      </template>
+        <template v-if="modelType == 1">
+          <ul class="info-ul">
+            <li>
+              <span class="sp1">授信额度(元)</span>
+              <span class="sp2">
+                <Input v-model="formPass.creditMoney"></Input>
+              </span>
+            </li>
+            <li>
+              <span class="sp1">还款方式</span>
+              <span class="sp2">{{formPass.productRepaymentType}}</span>
+            </li>
+            <li>
+              <span class="sp1">授信期数</span>
+              <span class="sp2">{{formPass.productCycleNum}}</span>
+            </li>
+            <li>
+              <span class="sp1">利率/日(%)</span>
+              <span class="sp2">
+                <Input v-model="formPass.creditRate"></Input>
+              </span>
+            </li>
+            <li>
+              <span class="sp1">手续费支付方式</span>
+              <span class="sp2">{{formPass.productProcedurePayType}}</span>
+            </li>
+            <!-- <li>
+              <span class="sp1">手续费/平台费(%)</span>
+              <span class="sp2">
+                 <Input v-model="formPass.procedureRate"></Input>
+              </span>
+            </li> -->
+            <li>
+              <span class="sp1">资方</span>
+              <span class="sp2">{{formPass.capitalTitle}}</span>
+            </li>
+            <li>
+              <span class="sp1">合同名称</span>
+              <span class="sp2">{{formPass.bargainName}}</span>
+            </li>
+            <li style="width: 100%;">
+              <span class="sp1">签署电子合同</span>
+              <span class="sp2">
+                <i-switch size="large" v-model="formPass.electronicBargainStatus" :true-value="1" :false-value="0">
+                  <span slot="open">是</span>
+                  <span slot="close">否</span>
+                </i-switch>
+              </span>
+            </li>
+          </ul>
+          <div style="margin-top: 10px"> 
+            <Input v-model="formPass.riskControl" type="textarea" placeholder="输入风控措施"></Input>
+          </div>
+          <div style="margin-top: 10px"> 
+            <Input v-model="formPass.loansSuggest" type="textarea"  placeholder="贷后管理建议"></Input>
+          </div>
+          <p style="text-align: left; font-size: 16px;color: red;">*开启后会要求客户签署电子合同, 客户签署后生成放款订单, 在平台生成具有法律意义的借款凭证。 若通过借款平台放款, 则无需开启</p>
+        </template>
       </Form>
       <div slot="footer">
         <Button v-if="modelType == 0" type="primary" size="default" long @click="handleRejectSubmit">提交</Button>
@@ -255,11 +334,13 @@
 </template>
 
 <script>
+import tabView from '@/components/tabView16'
 import authorizationAndUpdate from '@/components/authorizationAndUpdate.vue'
-import { getAuditList, saveApplyPrincipal, getApplyPrincipal, remarkAuditPeople, getAuditMsg, getAudioPassMsg, passLoanAudio, rejectLoanAudio } from '@/utils/api'
-import { repayments } from '@/utils'
+import { getAuditList, saveApplyPrincipal, getApplyPrincipal, remarkAuditPeople, 
+getAuditMsg, getAudioPassMsg, passLoanAudio, rejectLoanAudio } from '@/utils/api'
+import { repayments, producOrderAllStatus } from '@/utils'
 export default {
-  components: { authorizationAndUpdate },
+  components: { authorizationAndUpdate, tabView },
   data() {
     return {
       formInline: {
@@ -272,35 +353,6 @@ export default {
       loading: true,
       loadDrawer: true,
       page: 1,
-      columns: [
-        { type: 'selection', width: 60, align: 'center' },
-        { title: '产品名称', key: 'productName', align: 'center' },
-        { title: '客户姓名', key: 'customerName', align: 'center' },
-        { title: '申请金额', key: 'loanAmount', align: 'center' },
-        { title: '申请状态', key: 'checkStatus', align: 'center',
-        render: (h, params) => {
-          return h('div', this.status.filter(it => it.id == params.row.checkStatus)[0].text)
-        } },
-        { title: '提交时间', key: 'applyCommitTime', align: 'center' },
-        { title: '申请次数', key: 'applyCount', align: 'center' },
-        { title: '下单时间', key: 'orderTime', align: 'center' },
-        { title: '渠道', key: 'channelName', align: 'center' },
-        { title: '业务经理', key: 'businessAdmin', align: 'center' },
-        { title: '负责人', key: 'userName', align: 'center' },
-        { title: '资方名称', key: 'capitalTitle', align: 'center' }
-      ],
-      columns2: [
-        { title: '申请时间', key: 'applyTime', align: 'center' },
-        { title: '姓名', key: 'customerName', align: 'center' },
-        { title: '手机号', key: 'customerPhone', align: 'center' },
-        { title: '审核状态', key: 'checkStatus', align: 'center',
-        render: (h, params) => {
-          return h('div', this.status.filter(it => it.id == params.row.checkStatus)[0].text)
-        } },
-        { title: '授信额度(元)', key: 'loanAmount', align: 'center' },
-        { title: '放款订单状态', key: 'orderStatus', align: 'center' },
-        { title: '还款进度', key: 'repaySchedule', align: 'center' }
-      ],
       status: [
         { id: 1, text: '一审中' },
         { id: 2, text: '二审中' },
@@ -308,11 +360,13 @@ export default {
         { id: 10, text: '授信审核通过' },
         { id: 0, text: '资料审核未通过' }
       ],
+      allStatus: producOrderAllStatus(),
       drawerShow: false,
       checkId: null,
       selection: [],
       options: [],
       value: '',
+      batchs: [],
       total: 0,
       id: '',
       customStatus: '',
@@ -348,7 +402,37 @@ export default {
       canAudit: 0,
       repayments: repayments(),
       historys: [],
-      controls: []
+      controls: [],
+      auditResult: {},
+      columns: [
+        { type: 'selection', width: 60, align: 'center' },
+        { title: '产品名称', key: 'productName', align: 'center' },
+        { title: '客户姓名', key: 'customerName', align: 'center' },
+        { title: '申请金额', key: 'loanAmount', align: 'center' },
+        { title: '申请状态', key: 'checkStatus', align: 'center',
+        render: (h, params) => {
+          return h('div', this.status.filter(it => it.id == params.row.checkStatus)[0].text)
+        } },
+        { title: '提交时间', key: 'applyCommitTime', align: 'center' },
+        { title: '申请次数', key: 'applyCount', align: 'center' },
+        { title: '下单时间', key: 'orderTime', align: 'center' },
+        { title: '渠道', key: 'channelName', align: 'center' },
+        { title: '业务经理', key: 'businessAdmin', align: 'center' },
+        { title: '负责人', key: 'userName', align: 'center' },
+        { title: '资方名称', key: 'capitalTitle', align: 'center' }
+      ],
+      columns2: [
+        { title: '申请时间', key: 'applyTime', align: 'center' },
+        { title: '姓名', key: 'customerName', align: 'center' },
+        { title: '手机号', key: 'customerPhone', align: 'center' },
+        { title: '审核状态', key: 'checkStatus', align: 'center',
+        render: (h, params) => {
+          return h('div', this.status.filter(it => it.id == params.row.checkStatus)[0].text)
+        } },
+        { title: '授信额度(元)', key: 'loanAmount', align: 'center' },
+        { title: '放款订单状态', key: 'orderStatus', align: 'center' },
+        { title: '还款进度', key: 'repaySchedule', align: 'center' }
+      ],
     }
   },
   mounted() {
@@ -370,7 +454,7 @@ export default {
         render: (h) => {
           return h('Select', {
             props: {
-              value: this.value,
+              value: this.batchs,
               autofocus: true,
               size: 'default',
               placeholder: '更换负责人',
@@ -379,7 +463,7 @@ export default {
             },
             on: {
               input: (val) => {
-                this.value = val
+                this.batchs = val
               }
             }
           }, this.options.map(item => {
@@ -514,12 +598,15 @@ export default {
       }
       const params = {
         customerIdString: ids.join(','),
-        userIdString: this.value.join(',')
+        userIdString: this.batchs.join(',')
       }
       saveApplyPrincipal(params).then(res => {
         if (res.state == 1) {
+          this.$Message.success('更换成功')
+          this.batchs.splice(0, this.batchs.length)
           this.fetchAuditList()
           if (type == 0) {
+            this.fetchAuditMsg()
           }
         }
       })
@@ -543,6 +630,7 @@ export default {
           this.jobInfo = res.info.data.professionInfo
           this.linkman = res.info.data.urgencyPeopleInfo
           this.historys = res.info.data.idcardApplyList
+          this.auditResult = res.info.data.checkResult
           this.controls = res.info.data.riskControlInfo.creditItemType.split(',')
           setTimeout(() => {
             this.loadDrawer = false

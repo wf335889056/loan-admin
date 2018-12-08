@@ -14,3 +14,11 @@ export function getThirdPartyMsg(query) {
     params: query
   })
 }
+
+export function getThirdPartyVerify(query) {
+  return fetch({
+    url: '/ClientManagementController/thirdPartyInterfaces',
+    method: 'post',
+    params: query
+  })
+}

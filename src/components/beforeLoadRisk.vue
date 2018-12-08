@@ -58,7 +58,13 @@ export default {
           key: 'hit', 
           align: 'center',
           render: (h, params) => {
-            return h('div', params.row.hit? '是' : '否')
+            const isHit = h('div', {
+              style: {
+                color: 'red'
+              }
+            }, '是')
+            const noHit = h('div', '否')
+            return params.row.hit? isHit : noHit
           }
         }
       ]

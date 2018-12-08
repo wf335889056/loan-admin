@@ -8,7 +8,7 @@
               <Input v-model="form.description" size="large" clearable></Input>
             </FormItem>
             <FormItem label="产品logo:">
-              <uploadImage :uploadList="imgs" @upload="imageSuccess" :uploadMax="5"/>
+              <uploadImage :uploadList="imgs" @upload="imageSuccess" :uploadMax="1"/>
             </FormItem>
             <!-- <p style="text-align: right; font-size: 20px;margin-bottom: 10px;">*相关通知短信会发送至此手机号</p> -->
             <FormItem label="产品类型:">
@@ -55,13 +55,13 @@
                 <p>设置期数&利率:
                   <ul v-if="item.repaymentType != 13 && item.repayCycle">
                     <li v-for="(it, i) in item.repayCycle" style="margin-bottom: 10px;">
-                      <span style="margin-right: 30px;"><InputNumber :min="0" v-model="it.cycleNum" style="width: 100px;"size="large"></InputNumber>  期  </span>
-                      <span style="margin-right: 30px;"><InputNumber :min="0" v-model="it.cycleRateNormal" style="width: 150px;" size="large" placeholder="标准月利率"></InputNumber>% (月)</span>
-                      <span style="margin-right: 30px;"><InputNumber :min="0" v-model="it.cycleRateLeast" style="width: 150px;" size="large" placeholder="最低月利率"></InputNumber>% (月)</span>
+                      <span style="margin-right: 30px;"><InputNumber :min="0" v-model="it.cycleNum" style="width: 100px;"size="large"></InputNumber> 期</span>
+                      <span style="margin-right: 30px;">标准月利率: <InputNumber :min="0" v-model="it.cycleRateNormal" style="width: 150px;" size="large"></InputNumber>%</span>
+                      <!-- <span style="margin-right: 30px;"><InputNumber :min="0" v-model="it.cycleRateLeast" style="width: 150px;" size="large" placeholder="最低月利率"></InputNumber>% (月)</span> -->
                       <Button type="error" shape="circle" icon="ios-trash-outline" @click.stop.prevent="handleDelete(item.repayCycle, i)"></Button>
                     </li>
                     <button class="btn-add" @click.stop.prevent="handleAddRepayCycle(item.repayCycle, index)">添加</button>
-                    <p style="text-align: left; font-size: 18px;margin-bottom: 10px; color: red;">*等本等息形式每月还款额为： 贷款额/期数 + 贷款额*费率。</p>
+                    <!-- <p style="text-align: left; font-size: 18px;margin-bottom: 10px; color: red;">*等本等息形式每月还款额为： 贷款额/期数 + 贷款额*费率。</p> -->
                   </ul>
                   <div v-if="item.repaymentType == 13" class="dd">
                     <div class="ddd">日息(利息):
@@ -100,16 +100,16 @@
                   <RadioGroup v-model="form.procedurePayType" size="large" style="margin-left: 50px;">
                     <Radio :label="1">按期支付</Radio>
                     <Radio :label="2">贷前扣除</Radio>
-                    <Radio :label="2">贷后支付</Radio>
+                    <Radio :label="3">贷后支付</Radio>
                   </RadioGroup>
-                  <span style="float:right;">最大手续费：<InputNumber :min="0" v-model="form.procedureMax" style="width: 100px;" size="large"></InputNumber>元</span>
+                  <!-- <span style="float:right;">最大手续费：<InputNumber :min="0" v-model="form.procedureMax" style="width: 100px;" size="large"></InputNumber>元</span> -->
                 </div>
                 <ul>
                   <li style="margin-bottom: 10px;margin-top: 10px;" v-for="(item, index) in services" :key="index">
                     <span style="margin-right: 20px;">手续费名称: <Input v-model="item.procedureName" size="large" style="width: 200px;"></Input></span>
                     <span style="margin-right: 20px;">收取方式: 
                       <Select v-model="item.procedureChargeType" size="large" clearable style="width: 200px;">
-                        <Option :value="1">固定费用(元)</Option>
+                        <!-- <Option :value="1">固定费用(元)</Option> -->
                         <Option :value="2">按借款金额比例(%)</Option>
                       </Select>
                       <InputNumber :min="0" v-model="item.procedureMoney" style="width: 100px;" size="large"></InputNumber>
@@ -211,9 +211,9 @@
                 </i-switch>
               </p>
             </FormItem>
-            <FormItem label="重复查询大数据期限:">
+            <!-- <FormItem label="重复查询大数据期限:">
               <InputNumber :min="0" v-model="form.againBigdataDays" style="width: 60%;" size="large"></InputNumber>天
-            </FormItem>
+            </FormItem> -->
           </Form>
   </div>
 </template>
@@ -252,7 +252,7 @@ export default {
       if (data.type == 0) {
         this.images.splice(data.index, 1)
       } else if (data.type == 1) {
-        this.images.push({ url: data.file, link: '' })
+        this.images.push({ url: data.file })
       }
     },
     handleDelete(list, index) {
@@ -270,13 +270,13 @@ export default {
       this.services.push({ 
         procedureId: '', 
         procedureName: '', 
-        procedureChargeType: 1, 
+        procedureChargeType: 2, 
         procedureMoney: 0 
       })
     },
     handleAddInterests() {
       this.interests.push({
-        repaymentId: '',
+        repaymentId: 0,
         repaymentType: '',
         repaymentDays: 0,
         interestType: 1,
@@ -285,9 +285,9 @@ export default {
         cycleDays: 0,
         repayDayEvryMonth: 0,
         repayLastCycleDay: 0,
-        yearChangeRate: '',
+        yearChangeRate: 0,
         repayCycle: [{
-          cycleRateId: '',
+          cycleRateId: 0,
           cycleNum: 0,
           cycleRateNormal: 0,
           cycleRateLeast: 0

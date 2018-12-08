@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Row>
       <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="handleAdd">新增账号</Button>
-      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="handleRole">角色权限</Button>
+      <!-- <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="handleRole">角色权限</Button> -->
     </Row>
     <div class="table">
       <Table :loading="loading" :columns="columns" :data="list" @on-row-click="handleClick"></Table>
@@ -31,8 +31,18 @@
                 <Checkbox label="3">3级</Checkbox>
               </CheckboxGroup>
             </FormItem>
-            <FormItem label="角色权限:">
+            <FormItem label="角色名称:">
               <Input v-model="form.roleId" size="large" clearable></Input>
+            </FormItem>
+            <FormItem label="权限选择:">
+              <CheckboxGroup v-model="roles">
+                <Checkbox v-for="(item, index) in menus"  :label="item.name" :key="index"></Checkbox>
+              </CheckboxGroup>
+            </FormItem>
+            <FormItem label="设置管理权限选择:" v-if="roles.includes('设置管理')">
+              <CheckboxGroup v-model="rolesChilder">
+                <Checkbox v-for="(item, index) in childer" :label="item.name" :key="index"></Checkbox>
+              </CheckboxGroup>
             </FormItem>
             <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*该手机号第一次创建账号时，默认姓名和密码为手机号</p>
           </Form>
@@ -60,6 +70,7 @@
 
 <script>
 import { getAccountListAndMsg, getAccountCode, addAndUpdateAccountMsg, updateAccountStatus, updateAccountPassword } from '@/utils/api'
+import { menusList } from '@/utils'
 export default {
   data() {
     return {
@@ -69,6 +80,9 @@ export default {
       page: 1,
       list: [],
       totalnumber: 0,
+      menus: menusList,
+      roles: [],
+      rolesChilder: [],
       columns: [
         { title: '用户名', key: 'userName', align: 'center' },
         { title: '角色名称', key: 'roleId', align: 'center' },
@@ -157,6 +171,27 @@ export default {
   },
   mounted() {
     this.fetchAccountListAndMsg()
+  },
+  computed: {
+    childer() {
+      let arrs = []
+      for (const o of this.menus) {
+        if (o.name == '设置管理') {
+          arrs = o.childer
+        }
+      }
+      return arrs
+    },
+    disabled() {
+      if (this.rolesChilder.length > 0) return true
+    }
+  },
+  watch: {
+    roles(newVal, oldVal) {
+      if (!newVal.includes('设置管理')) {
+        this.rolesChilder.splice(0, this.rolesChilder.length)
+      }
+    }
   },
   methods: {
     updatePsswordOk() {

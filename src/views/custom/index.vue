@@ -71,7 +71,7 @@
       <div class="footer">
         <Button v-if="userStatus == 15" size="default" type="success" class="btn" @click="handleRelieve">解除黑名单</Button>
         <Button v-else size="default" type="error" class="btn" @click="handleBlack">拉入黑名单</Button>
-        <Button size="default" type="success" class="btn" @click="handleUpdate">备注</Button>
+        <Button size="default" type="success" class="btn" @click="handleUpdate">客户备注</Button>
       </div>
     </Drawer>
     <Modal v-model="balckConfirm" title="用户拉黑" @on-ok="handleDelete">
@@ -119,7 +119,11 @@ export default {
       value: '',
       total: 0,
       userOption: {},
-      customOption: {}
+      customOption: {
+        operator: {},
+        antiFraud: {},
+        addressBook: {}
+      }
     }
   },
   mounted() {
@@ -227,12 +231,12 @@ export default {
         if (res.state == 1) {
           this.userStatus = res.info.clientManagementDetails.userStatus
           this.userOption = res.info.clientManagementDetails
-          // 反欺诈
-          const antiFraud = JSON.parse(res.info.jsonObject)
-          if (antiFraud.code == 200) {
-            this.customOption.antiFraud = antiFraud.data.risk
-          }
-          
+          // 运营商
+          // const operator = JSON.parse(res.info.jsonObject)
+          // if (operator.code == 200) {
+          //   this.customOption.operator = operator.data
+          // }
+          // 通讯录
           setTimeout(() => {
             this.loadDrawer = false
           }, 1000)

@@ -23,7 +23,7 @@ export default {
   top: 0;
   bottom: 0;
   overflow-x: hidden;
-  background: url('./assets/xy_bg.png') center no-repeat;
+  background: url('http://www.xiaoyoujr.com:8091/wenjian/admin/xy_bg.50597b5.png') center no-repeat;
   background-size: 100%;
 }
 </style>

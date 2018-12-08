@@ -383,3 +383,187 @@ export function getAudioPassMsg(query) {
     params: query
   })
 }
+// 放款管理 放款订单列表
+export function getLoanOrderList(query) {
+  return fetch({
+    url: '/LoanController/getLoanList',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 平台外放款，确认放款详情弹出框内容
+export function getLoanAlertMsg(query) {
+  return fetch({
+    url: '/LoanController/getOutPlatformLoan',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 订单详情页
+export function getLoanOrderMsg(query) {
+  return fetch({
+    url: '/LoanController/getLoanDetail',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 平台内放款（第三方支付）详情页
+export function getLoanMsgthirdParty(query) {
+  return fetch({
+    url: '/LoanController/getInPlatformLoan',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 平台内放款（第三方支付）
+export function confirmPassLoanInPlatform(query) {
+  return fetch({
+    url: '/deskManagementController/paymentBehalf',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 取消放款
+export function cancelLoan(query) {
+  return fetch({
+    url: '/LoanController/cancelLoan',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 平台外确认放款
+export function confirmPassLoanOutPlatform(query) {
+  return fetch({
+    url: '/LoanController/passOutPlatformLoan',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 放款订单-修改罚息
+export function updatePenaltyLoanOrder(query) {
+  return fetch({
+    url: '/LoanController/updatePenalty',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 放款订单-结清账单详情
+export function getCleanBillMsg(query) {
+  return fetch({
+    url: '/LoanController/cleanBillDetail',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 放款订单-结清账单
+export function confirmCleanBillMsg(query) {
+  return fetch({
+    url: '/LoanController/cleanBill',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 放款订单-获取展期详情
+export function getExhibitionLoanMsg(query) {
+  return fetch({
+    url: '/LoanController/getDeferDetail',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 放款订单-获取展期详情
+export function confirmExhibitionLoanMsg(query) {
+  return fetch({
+    url: '/LoanController/passDefer',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 放款订单-退还费用详情
+export function getRerurnLoanOrderMsg(query) {
+  return fetch({
+    url: '/LoanController/sendBackMoneyDetail',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 放款订单-委派催收详情页
+export function getEntrustLoanOrderMsg(query) {
+  return fetch({
+    url: '/LoanController/collectionDetail',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 放款订单-委派催收，放弃催收
+export function entrustOrCancelLoanOrderMsg(query) {
+  return fetch({
+    url: '/LoanController/sendCollection',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 账单列表
+export function getBillLianList(query) {
+  return fetch({
+    url: '/LoanController/getBillList',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 展期列表
+export function getExhibitionRecordList(query) {
+  return fetch({
+    url: '/LoanController/getDeferList',
+    method: 'post',
+    params: query
+  })
+}
+// 放款管理 展期列表详情
+export function getExhibitionRecordMsg(query) {
+  return fetch({
+    url: '/LoanController/getDeferListDetail',
+    method: 'post',
+    params: query
+  })
+}
+// 逾期管理 获取列表
+export function getOverdueList(query) {
+  return fetch({
+    url: '/ClientManagementController/overdueList',
+    method: 'post',
+    params: query
+  })
+}
+// 催收管理 获取列表
+export function getCollectionList(query) {
+  return fetch({
+    url: '/deskManagementController/collectionManage',
+    method: 'post',
+    params: query
+  })
+}
+// 催收管理 添加记录
+export function addCollectionRecordMsg(query) {
+  return fetch({
+    url: '/deskManagementController/modificationRecord',
+    method: 'post',
+    params: query
+  })
+}
+// 催收管理 催收详情
+export function getCollectionMsg(query) {
+  return fetch({
+    url: '/deskManagementController/collectionDetails',
+    method: 'post',
+    params: query
+  })
+}
+// 催收管理 修改客户备注
+export function updadateRemarkCollection(query) {
+  return fetch({
+    url: '/deskManagementController/updateUserRemark',
+    method: 'post',
+    params: query
+  })
+}

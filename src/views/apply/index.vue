@@ -40,7 +40,7 @@
             <ul class="info-ul">
               <li>
                 <span class="sp1">申请编号</span>
-                <span class="sp2">116820181122131524284620159255</span>
+                <span class="sp2">{{items.applyCode}}</span>
               </li>
               <li>
                 <span class="sp1">申请状态</span>
@@ -112,7 +112,7 @@
               </span>
             </div>
           </div>
-          <div class="content">
+          <div class="content" v-if="items.orderStatus != 1" >
             <p class="info-p">申请信息</p>
             <ul class="info-ul">
               <li>
@@ -138,14 +138,41 @@
             </ul>
           </div>
           <div class="content">
-            <p class="info-p">风控信息</p>
-            <div class="controls">
-              <span v-for="item in controls">{{item.title}}</span>
-            </div>
+            <p class="info-p">认证信息</p>
+            <ul class="info-ul">
+              <li>
+                <span class="sp1">实名认证</span>
+                <span class="sp2" :class="{'red': !authentications.includes(9)}">{{authentications.includes(9)? '已认证' : '未认证'}}</span>
+              </li>
+              <li>
+                <span class="sp1">人脸识别</span>
+                <span class="sp2" :class="{'red': !authentications.includes(18)}">{{authentications.includes(18)? '已认证' : '未认证'}}</span>
+              </li>
+              <li>
+                <span class="sp1">银行卡认证</span>
+                <span class="sp2" :class="{'red': !authentications.includes(10)}">{{authentications.includes(10)? '已认证' : '未认证'}}</span>
+              </li>
+              <li>
+                <span class="sp1">运营商</span>
+                <span class="sp2" :class="{'red': !authentications.includes(12)}">{{authentications.includes(12)? '已认证' : '未认证'}}</span>
+              </li>
+              <li>
+                <span class="sp1">京东</span>
+                <span class="sp2" :class="{'red': !authentications.includes(13)}">{{authentications.includes(13)? '已认证' : '未认证'}}</span>
+              </li>
+              <li>
+                <span class="sp1">淘宝</span>
+                <span class="sp2" :class="{'red': !authentications.includes(14)}">{{authentications.includes(14)? '已认证' : '未认证'}}</span>
+              </li>
+              <li>
+                <span class="sp1">支付宝</span>
+                <span class="sp2" :class="{'red': !authentications.includes(16)}">{{authentications.includes(16)? '已认证' : '未认证'}}</span>
+              </li>
+            </ul>
           </div>
         </div>
       <div class="footer">
-        <Button v-if="items.orderStatus == 1" size="default" type="success" class="btn" @click="handleUpdate(2)">提交审核</Button>
+        <Button v-if="items.orderStatus == 1" size="default" type="success" class="btn" @click="handleUpdate">提交审核</Button>
         <Button v-if="items.orderStatus == 1" size="default" type="error" class="btn" @click="handleUpdate(7)">放弃申请</Button>
         <Button size="default" type="primary" class="btn" @click="handleBatch(0)">编辑负责人</Button>
       </div>
@@ -158,7 +185,7 @@
 
 <script>
 import { getApplyList, getApplyPrincipal, saveApplyPrincipal, getApplyMsg, updateOrderStatus } from '@/utils/api'
-import { repayments, thirdPartyVerification } from '@/utils'
+import { repayments, thirdPartyVerification, producOrderAllStatus } from '@/utils'
 export default {
   data() {
     return {
@@ -190,34 +217,17 @@ export default {
       drawerShow: false,
       selection: [],
       value: '',
+      batchs: [],
       total: 0,
       options: [],
-      status: [
-        { id: 0, text: '全部' },
-        { id: 1, text: '资料填写中' },
-        { id: 2, text: '审核中' },
-        { id: 3, text: '还款中' },
-        { id: 4, text: '待签署合同' },
-        { id: 5, text: '放款中' },
-        { id: 6, text: '未通过' },
-        { id: 7, text: '放弃申请' },
-        { id: 8, text: '还款完成' },
-        { id: 9, text: '还款有逾期' },
-        { id: 10, text: '订单生成' },
-        { id: 11, text: '订单取消' },
-        { id: 12, text: '等待审核' },
-        { id: 13, text: '审核被拒' },
-        { id: 14, text: '审核通过' },
-        { id: 15, text: '拉黑' },
-        { id: 16, text: '催收中' }
-      ],
+      status: producOrderAllStatus(),
       id: '',
       loadDrawer: true,
       items: {},
-      controls: [],
       sfzImgs: [],
       imgUrl: '',
-      visible: false
+      visible: false,
+      authentications: []
     }
   },
   mounted() {
@@ -238,8 +248,8 @@ export default {
     handleSelectChange(selection) {
       this.selection = selection
     },
-    handleUpdate(type) {
-      updateOrderStatus({ customerId: this.id, status: type }).then(res => {
+    handleUpdate() {
+      updateOrderStatus({ customerId: this.id, status: 21 }).then(res => {
         if (res.state == 1) {
           this.$Message.success('更改成功')
           this.fetchApplyList()
@@ -252,7 +262,7 @@ export default {
         render: (h) => {
           return h('Select', {
             props: {
-              value: this.value,
+              value: this.batchs,
               autofocus: true,
               size: 'default',
               placeholder: '更换负责人',
@@ -261,7 +271,7 @@ export default {
             },
             on: {
               input: (val) => {
-                this.value = val
+                this.batchs = val
               }
             }
           }, this.options.map(item => {
@@ -304,28 +314,23 @@ export default {
     },
     fetchApplyMsg() {
       this.loadDrawer = true
-      this.controls.splice(0, this.controls.length)
       this.sfzImgs.splice(0, this.sfzImgs.length)
+      this.authentications.splice(0, this.authentications.length)
       getApplyMsg({ customerId: this.id }).then(res => {
         if (res.state == 1) {
-          this.items = res.info.data
-          const arrs = []
-          const temps = res.info.data.creditItemType.split(',')
-          const controls = thirdPartyVerification()
-          for (const o of temps) {
-            for (let i = 0; i < controls.length; i++) {
-              if (o == controls[i].id) {
-                arrs.push(controls[i])
-              }
+          this.items = res.info.data.appleyDetail
+          if (this.items.idCardPhotoPositiveNegative != '' && this.items.idCardPhotoPositiveNegative != null) {
+            this.sfzImgs.push(this.items.idCardPhotoPositive)
+          }
+          if (this.items.idCardPhotoPositiveNegative != '' && this.items.idCardPhotoPositiveNegative != null) {
+            this.sfzImgs.push(this.items.idCardPhotoPositiveNegative)
+          }
+          if (res.info.data.userAttestation && res.info.data.userAttestation.length > 0) {
+            for (const o of res.info.data.userAttestation) {
+              this.authentications.push(o.creditItemId)
             }
           }
-          this.controls = arrs
-          if (res.info.data.idCardPhotoPositiveNegative != '' && res.info.data.idCardPhotoPositiveNegative != null) {
-            this.sfzImgs.push(res.info.data.idCardPhotoPositive)
-          }
-          if (res.info.data.idCardPhotoPositiveNegative != '' && res.info.data.idCardPhotoPositiveNegative != null) {
-            this.sfzImgs.push(res.info.data.idCardPhotoPositiveNegative)
-          }
+          // console.log(this.authentications)
           setTimeout(() => {
             this.loadDrawer = false
           }, 1000)
@@ -343,10 +348,11 @@ export default {
       }
       const params = {
         customerIdString: ids.join(','),
-        userIdString: this.value.join(',')
+        userIdString: this.batchs.join(',')
       }
       saveApplyPrincipal(params).then(res => {
         if (res.state == 1) {
+          this.batchs.splice(0, this.batchs.length)
           this.fetchApplyList()
           if (type == 0) {
             this.fetchApplyMsg()

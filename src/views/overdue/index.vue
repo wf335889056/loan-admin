@@ -4,16 +4,24 @@
        <Form ref="formInline" class="formInline" :model="formInline"  inline>
         <Col span="22">
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="客户姓名" />
+              <Input type="text" v-model="formInline.userName" clearable placeholder="客户姓名" />
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="负责人" />
+              <Input type="text" v-model="formInline.principal" clearable placeholder="负责人" />
             </FormItem>
             <FormItem>
-              <Select v-model="formInline.select" clearable placeholder="当前状态">
+              <Select v-model="formInline.state" clearable placeholder="当前状态">
                 <Option :value="0">全部</Option>
-                <Option :value="1">还款有逾期</Option>
-                <Option :value="2">催收中</Option>
+                <Option :value="9">还款有逾期</Option>
+                <Option :value="16">催收中</Option>
+              </Select>
+            </FormItem>
+            <FormItem>
+              <Select v-model="formInline.type" clearable placeholder="逾期时间">
+                <Option :value="1">今日逾期</Option>
+                <Option :value="2">昨日逾期</Option>
+                <Option :value="3">逾期7天</Option>
+                <Option :value="4">逾期30天以上</Option>
               </Select>
             </FormItem>
         </Col>
@@ -24,51 +32,59 @@
         </Col>
         </Form>
     </Row>
-    <Tabs value="1">
-      <TabPane label="今日逾期" name="1">
-        <Table :loading="loading" :columns="columns" :data="list1"></Table>
-      </TabPane>
-      <TabPane label="昨日逾期" name="2">
-        <Table :columns="columns" :data="list2"></Table>
-      </TabPane>
-      <TabPane label="逾期30天" name="3">
-        <Table :columns="columns" :data="list3"></Table>
-      </TabPane>
-    </Tabs>
-    
+    <div class="table">
+      <Table :loading="loading" :columns="columns" :data="list"></Table>
+    </div>
   </div>
 </template>
 
 <script>
+import { getOverdueList } from '@/utils/api'
 export default {
   data() {
     return {
-      formInline: {},
-      list1: [],
-      list2: [],
-      list3: [],
+      formInline: {
+        type: 1,
+        userName: '',
+        principal: '',
+        state: 0
+      },
+      list: [],
       loading: true,
       columns: [
-        { title: '产品名称', key: 'name', align: 'center' },
-        { title: '客户来源', key: 'name', align: 'center' },
-        { title: '申请金额', key: 'name', align: 'center' },
-        { title: '当前状态', key: 'name', align: 'center' },
-        { title: '下单时间', key: 'name', align: 'center' },
-        { title: '渠道', key: 'name', align: 'center' },
-        { title: '业务经理', key: 'name', align: 'center' },
-        { title: '负责人', key: 'name', align: 'center' },
-        { title: '资方名称', key: 'name', align: 'center' }
-      ],
-      value: ''
+        { title: '产品名称', key: 'productName', align: 'center' },
+        { title: '客户来源', key: 'customerName', align: 'center' },
+        { title: '申请金额', key: 'loanAmount', align: 'center' },
+        { title: '当前状态', key: 'orderStatus', align: 'center',
+        render: (h, params) => {
+          return h('div', params.row.orderStatus == 9? '还款有逾期' : '催收中')
+        } },
+        { title: '下单时间', key: 'orderTime', align: 'center' },
+        { title: '渠道', key: 'channelName', align: 'center' },
+        { title: '业务经理', key: 'businessAdmin', align: 'center' },
+        { title: '负责人', key: 'userName', align: 'center' },
+        { title: '资方名称', key: 'capitalTitle', align: 'center' }
+      ]
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.loading = false
-    }, 1000)
+    this.fetchOverdueList()
   },
   methods: {
     handleSubmit() {
+      this.fetchOverdueList()
+    },
+    fetchOverdueList() {
+      const params = this.formInline
+      this.loading = true
+      getOverdueList(params).then(res => {
+        if (res.state == 1) {
+          this.list = res.info.overdueList
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+        }
+      })
     }
   }
 }

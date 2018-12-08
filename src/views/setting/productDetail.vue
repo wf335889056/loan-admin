@@ -141,11 +141,20 @@ export default {
       })
     },
     handleSubmitA() {
+      this.formProduct.procedureMax = this.formProduct.payMoneyMax
+      for (const i in this.formProduct) {
+        if (typeof this.formProduct[i] == 'boolean') {
+          this.formProduct[i] = this.formProduct[i]? 1 : 0
+        }
+      }
       const params = this.formProduct
-      params.productId = ''
       params.userId = this.$store.getters.userInfo.userId
       params.companyId = this.$store.getters.userInfo.companyId
-      params.procedureJson = this.procedureJson.length > 0? JSON.stringify(this.procedureJson) : ''
+      if (this.procedureJson.length > 0) {
+        params.procedureJson = JSON.stringify(this.procedureJson)
+      } else {
+        params.procedureJson = ''
+      }
       const repayTypeJson = this.repayTypeJson
       for (let i = 0; i < repayTypeJson.length; i++) {
         if (repayTypeJson[i].supportCycle && repayTypeJson[i].supportCycle.length > 0) {
@@ -156,9 +165,8 @@ export default {
         }
       }
       params.repayTypeJson = encodeURI(JSON.stringify(repayTypeJson)) || ''
-      params.pictureUrl = JSON.stringify(this.productImages)
+      params.pictureUrl = encodeURI(JSON.stringify(this.productImages)) || ''
       params.productId = this.id
-      console.log(params)
       addOrUpdateProductMsg(params).then(res => {
         if (res.state == 1) {
           this.$Message.success('保存成功')
@@ -240,8 +248,8 @@ export default {
               bargainId: o.bargainId
             })
           }
-          if (res.info.data.productImages != '' && res.info.data.productImages != null) {
-            this.productImages.push({ url: res.info.data.productImages, link: '' })
+          if (res.info.data.pictureUrl != '') {
+            this.productImages = JSON.parse(res.info.data.pictureUrl)
           }
           this.repayTypeJson = res.info.data.repayTypeJson
           this.procedureJson = res.info.data.procedureJson

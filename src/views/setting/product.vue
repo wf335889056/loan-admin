@@ -131,10 +131,10 @@ export default {
         applyLeastPeopleNum: 1,
         rateTxt: '',
         rateShowStatus: 0,
-        againBigdataDays: 1
+        againBigdataDays: 365
       },
       repayCycleJson: [{
-        repaymentId: '',
+        repaymentId: 0,
         repaymentType: '',
         repaymentDays: 0,
         interestType: 1,
@@ -142,16 +142,16 @@ export default {
         supportCycle: [],
         cycleDays: 0,
         repayDayEvryMonth: 0,
-        repayLastCycleDay: '',
-        yearChangeRate: '',
+        repayLastCycleDay: 0,
+        yearChangeRate: 0,
         repayCycle: [{
-          cycleRateId: '',
+          cycleRateId: 0,
           cycleNum: 0,
           cycleRateNormal: 0,
           cycleRateLeast: 0
-        }]
+        }] // 还款方式
       }],
-      procedureJson: [],
+      procedureJson: [], // 手续费
       productImages: [],
       listProduct: [],
       total: 0,
@@ -188,11 +188,16 @@ export default {
       })
     },
     handleNext() {
+      this.formProduct.procedureMax = this.formProduct.payMoneyMax
       const params = this.formProduct
       params.productId = ''
       params.userId = this.$store.getters.userInfo.userId
       params.companyId = this.$store.getters.userInfo.companyId
-      params.procedureJson = this.procedureJson.length > 0? JSON.stringify(this.procedureJson) : ''
+      if (this.procedureJson.length > 0) {
+        params.procedureJson = JSON.stringify(this.procedureJson)
+      } else {
+        params.procedureJson = ''
+      }
       const repayCycleJson = this.repayCycleJson
       for (let i = 0; i < repayCycleJson.length; i++) {
         if (repayCycleJson[i].supportCycle && repayCycleJson[i].supportCycle.length > 0) {
@@ -201,8 +206,9 @@ export default {
           repayCycleJson[i].supportCycle = ''
         }
       }
+
       params.repayTypeJson = encodeURI(JSON.stringify(repayCycleJson)) || ''
-      params.pictureUrl = JSON.stringify(this.productImages)
+      params.pictureUrl = encodeURI(JSON.stringify(this.productImages)) || ''
       for (const i in this.formProduct) {
         if (typeof this.formProduct[i] == 'boolean') {
           params[i] = this.formProduct[i] == true? 1 : 0

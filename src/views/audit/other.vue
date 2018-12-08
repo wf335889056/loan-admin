@@ -7,16 +7,13 @@
        <Form ref="formInline" class="formInline" :model="formInline"  inline>
         <Col span="22">
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="客户姓名" />
+              <Input type="text" v-model="formInline.customerName" clearable placeholder="客户姓名" />
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="渠道" />
+              <Input type="text" v-model="formInline.channelName" clearable placeholder="渠道" />
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="产品名称" />
-            </FormItem>
-            <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="负责人" />
+              <Input type="text" v-model="formInline.productName" clearable placeholder="产品名称" />
             </FormItem>
         </Col>
         <Col span="2">
@@ -27,10 +24,10 @@
         </Form>
     </Row>
     <div class="table">
-      <Table :loading="loading" :columns="columns" :data="list" @on-row-click="handleClick" @on-selection-change="handleSelectChange"></Table>
-      <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" />
+      <Table :loading="loading" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+      <Page :current="page" :page-size="20" :total="total" show-total class="page" @on-change="handleChange" />
     </div>
-    <Drawer title="借款审核" v-model="drawerShow" width="60" class="drawer">
+    <!-- <Drawer title="借款审核" v-model="drawerShow" width="60" class="drawer">
       <div class="detail">
         
       </div>
@@ -38,41 +35,52 @@
         <Button size="default" type="success" class="btn" @click="handleUpdate">客户备注</Button>
         <Button size="default" type="warning" class="btn" @click="handleEdit">编辑负责人</Button>
       </div>
-    </Drawer>
+    </Drawer> -->
   </div>
 </template>
 
 <script>
+import { getAuditList, saveApplyPrincipal, getApplyPrincipal } from '@/utils/api'
 export default {
   data() {
     return {
-      formInline: {},
-      list: [{ name: 12313 }],
+      formInline: {
+        channelName: '',
+        customerName: '',
+        productName: '',
+        orderStatus: 4
+      },
+      list: [],
       loading: true,
       page: 1,
       columns: [
         { type: 'selection', width: 60, align: 'center' },
-        { title: '产品名称', key: 'name', align: 'center' },
-        { title: '姓名', key: 'name', align: 'center' },
-        { title: '申请金额', key: 'name', align: 'center' },
-        { title: '申请状态', key: 'name', align: 'center' },
-        { title: '提交时间', key: 'name', align: 'center' },
-        { title: '渠道', key: 'name', align: 'center' },
-        { title: '业务经理', key: 'name', align: 'center' },
-        { title: '负责人', key: 'name', align: 'center' },
-        { title: '资方名称', key: 'name', align: 'center' }
+        { title: '产品名称', key: 'productName', align: 'center' },
+        { title: '客户姓名', key: 'customerName', align: 'center' },
+        { title: '申请金额', key: 'loanAmount', align: 'center' },
+        { title: '申请状态', key: 'checkStatus', align: 'center',
+        render: (h, params) => {
+          return h('div', '待签署合同')
+        } },
+        { title: '提交时间', key: 'applyCommitTime', align: 'center' },
+        { title: '申请次数', key: 'applyCount', align: 'center' },
+        { title: '下单时间', key: 'orderTime', align: 'center' },
+        { title: '渠道', key: 'channelName', align: 'center' },
+        { title: '业务经理', key: 'businessAdmin', align: 'center' },
+        { title: '负责人', key: 'userName', align: 'center' },
+        { title: '资方名称', key: 'capitalTitle', align: 'center' }
       ],
       drawerShow: false,
-      checkId: null,
       selection: [],
       options: [],
-      value: ''
+      value: '',
+      batchs: [],
+      total: 0
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.loading = false
-    }, 1000)
+    this.fetchAuditList()
+    this.fetchApplyPrincipal()
   },
   computed: {
     isDisabled() {
@@ -81,10 +89,7 @@ export default {
     }
   },
   methods: {
-    handleNext() {
-    },
     handleSelectChange(selection) {
-      console.log(selection)
       this.selection = selection
     },
     handleBatch() {
@@ -92,29 +97,30 @@ export default {
         render: (h) => {
           return h('Select', {
             props: {
-              value: this.value,
+              value: this.batchs,
               autofocus: true,
               size: 'default',
               placeholder: '更换负责人',
-              clearable: true
+              clearable: true,
+              multiple: true
             },
             on: {
               input: (val) => {
-                this.value = val
+                this.batchs = val
               }
             }
           }, this.options.map(item => {
             return h('Option', {
               props: {
-                value: item,
-                label: item,
-                key: item
+                value: item.userId,
+                label: item.userName,
+                key: item.userId
               }
             })
           }))
         },
         onOk: () => {
-          console.log(this.value)
+          this.editApplyPrincipal()
         }
       })
     },
@@ -142,17 +148,60 @@ export default {
         }
       })
     },
-    handleEdit() {
+    editApplyPrincipal() {
+      const ids = []
+      if (type == 0) {
+        ids.push(this.id)
+      } else if (type == 1) {
+        for (const o of this.selection) {
+          ids.push(o.customerId)
+        }
+      }
+      const params = {
+        customerIdString: ids.join(','),
+        userIdString: this.batchs.join(',')
+      }
+      saveApplyPrincipal(params).then(res => {
+        if (res.state == 1) {
+          this.fetchAuditList()
+          this.batchs.splice(0, this.batchs.length)
+        }
+      })
     },
     handleClick(row) {
-      console.log(row)
       this.drawerShow = true
     },
     handleSubmit() {
+      this.fetchAuditList()
     },
     handleChange(val) {
-      console.log(val)
-    }
+      this.page = val
+      this.fetchAuditList()
+    },
+    fetchApplyPrincipal() {
+      getApplyPrincipal({ companyId: this.$store.getters.userInfo.companyId }).then(res => {
+        if (res.state == 1) {
+          this.options = res.info.data
+        }
+      })
+    },
+    fetchAuditList() {
+      const params = this.formInline
+      params.companyId = this.$store.getters.userInfo.companyId
+      params.userId = this.$store.getters.userInfo.userId
+      params.limit = 20
+      params.page = this.page
+      this.loading = true
+      getAuditList(params).then(res => {
+        if (res.state == 1) {
+          this.list = res.info.data.checkList
+          this.total = res.info.data.count
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+        }
+      })
+    },
   }
 }
 </script>
