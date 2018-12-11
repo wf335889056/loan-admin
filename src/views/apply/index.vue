@@ -173,7 +173,7 @@
         </div>
       <div class="footer">
         <Button v-if="items.orderStatus == 1" size="default" type="success" class="btn" @click="handleUpdate">提交审核</Button>
-        <Button v-if="items.orderStatus == 1" size="default" type="error" class="btn" @click="handleUpdate(7)">放弃申请</Button>
+        <!-- <Button v-if="items.orderStatus == 1" size="default" type="error" class="btn" @click="handleUpdate(7)">放弃申请</Button> -->
         <Button size="default" type="primary" class="btn" @click="handleBatch(0)">编辑负责人</Button>
       </div>
     </Drawer>
@@ -249,7 +249,7 @@ export default {
       this.selection = selection
     },
     handleUpdate() {
-      updateOrderStatus({ customerId: this.id, status: 21 }).then(res => {
+      updateOrderStatus({ customerId: this.id, status: 2 }).then(res => {
         if (res.state == 1) {
           this.$Message.success('更改成功')
           this.fetchApplyList()

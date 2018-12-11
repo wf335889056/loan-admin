@@ -1,8 +1,9 @@
 <template>
   <div class="wrapper">
     <Row>
+      <Button class="pageBack" type="info" size="large" icon="md-arrow-back" @click="() => $router.go(-1)">返回</Button>
       <p class="p1">统计</p>
-      <p class="p2">用户全部申请数据</p>
+      <p class="p2">单个渠道用户全部申请数据</p>
       <p class="p1">显示注册用户所有申请的转化情况，包括提交审核数、审核通过数、放款数、放款金额、按照渠道和日期显示，数据每日24:00后更新</p>
     </Row>
     <Divider />
@@ -14,6 +15,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {

@@ -1,13 +1,13 @@
 <template>
   <div class="wrapper">
     <Row>
-      <Col span="12">
+      <!-- <Col span="12">
         <p class="title">套餐余量</p>
         <div class="buy-box" @click="handleBuy">
           <Icon type="md-add" />购买套餐
         </div>
-      </col>
-      <Col span="12">
+      </col> -->
+      <Col span="24">
         <p class="title">计费余额 <span>{{balance.toFixed(2)}}</span>元</p>
         <div class="buy-box" @click="handleTopUp">
           <Icon type="logo-yen" />充值
@@ -22,12 +22,12 @@
           <Page :current="pageA" :page-size="20" :total="list1len" show-total class="page" @on-change="handleChangeA" />
         </div>
       </TabPane>
-      <TabPane label="套餐使用明细" name="2">
+      <!-- <TabPane label="套餐使用明细" name="2">
         <div class="table">
           <Table :columns="columns2" :data="list3"></Table>
           <Page :current="pageB" :page-size="20" :total="list2len" show-total class="page" @on-change="handleChangeB" />
         </div>
-      </TabPane>
+      </TabPane> -->
       <TabPane label="大数据计费" name="3">
         <div class="table">
           <Table :columns="columns1" :data="list2"></Table>
@@ -123,7 +123,7 @@ export default {
       modelTopUp: false,
       modeBuy: false,
       formInline1: {
-        money: 1000,
+        money: 0.01,
         payWay: 1
       },
       formInline2: {

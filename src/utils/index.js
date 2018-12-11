@@ -17,6 +17,9 @@ export function thirdPartyVerification() {
   return [
     { id: 12, title: '运营商', checked: true },
     { id: 17, title: '通讯录', checked: true },
+    { id: 13, title: '京东数据', checked: true },
+    { id: 14, title: '淘宝数据', checked: true },
+    { id: 16, title: '支付宝数据', checked: true },
     { id: 2, title: '信贷反欺诈核查', checked: false },
     // { id: 1, title: '手机风险评分', checked: false },
     { id: 3, title: '贷前综合风险报告', checked: false },
@@ -28,10 +31,7 @@ export function thirdPartyVerification() {
     // { id: 9, title: '身份证实名认证', checked: false }, === 实名认证
     // { id: 10, title: '银行四要素实名验证', checked: false }, == 银行卡认证
     // { id: 11, title: '三网手机二要素验证', checked: false },
-    { id: 13, title: '京东数据', checked: false },
-    { id: 14, title: '淘宝数据', checked: false },
     // { id: 15, title: '借*宝借条+米*借条+无*借条+今*借到', checked: false },
-    { id: 16, title: '支付宝数据', checked: false },
     // { id: 18, title: '人脸识别', checked: false },
   ]
 }

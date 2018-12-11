@@ -1,6 +1,7 @@
 <template>
   <div>
     <Row style="position: relative;">
+      <Button class="pageBack" type="info" size="large" icon="md-arrow-back" @click="() => $router.go(-1)">返回</Button>
       <p class="p">产品详情</p>
     </Row>
     <Divider />

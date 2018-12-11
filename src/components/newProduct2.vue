@@ -38,8 +38,8 @@
     },
     methods: {
       handleToggle(item) {
-        if (item.id == 12 || item.id == 17) {
-          this.$Message.warning('前二者为必选项, 不去取消')
+        if (item.id == 12 || item.id == 17 || item.id == 13 || item.id == 14 || item.id == 16) {
+          this.$Message.warning('前5项为必选项, 不可取消')
         } else {
           item.checked = !item.checked
         }

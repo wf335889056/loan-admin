@@ -1,6 +1,7 @@
 <template>
   <div> 
     <Row style="position: relative;">
+      <Button class="pageBack" type="info" size="large" icon="md-arrow-back" @click="() => $router.go(-1)">返回</Button>
       <p class="p">渠道详情</p>
       <!-- <div class="btn-box">
         <Button type="primary" size="large" @click="handleStart">启动</Button>

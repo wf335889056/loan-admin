@@ -432,7 +432,7 @@ export default {
         { title: '授信额度(元)', key: 'loanAmount', align: 'center' },
         { title: '放款订单状态', key: 'orderStatus', align: 'center' },
         { title: '还款进度', key: 'repaySchedule', align: 'center' }
-      ],
+      ]
     }
   },
   mounted() {

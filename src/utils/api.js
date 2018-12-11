@@ -31,6 +31,30 @@ export function getAccountCode(query) {
     params: query
   })
 }
+// 概览 客户信息，当前数据，待收和逾期，回款数据
+export function getDashboardMsg(query) {
+  return fetch({
+    url: '/StatisticsDataController/getOverview',
+    method: 'post',
+    params: query
+  })
+}
+// 概览 回款数据列表
+export function getDashboardList(query) {
+  return fetch({
+    url: '/StatisticsDataController/getReturnedMoneyList',
+    method: 'post',
+    params: query
+  })
+}
+// 概览 获取放款图表
+export function getDashboardChart(query) {
+  return fetch({
+    url: '/StatisticsDataController/getloanGraph',
+    method: 'post',
+    params: query
+  })
+}
 // 获取公司信息
 export function getCompanyMsg(query) {
   return fetch({

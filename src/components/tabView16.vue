@@ -97,7 +97,7 @@ export default {
     handleClick(name) {
       const index = Number(name)
       const id = this.tabs[index].id
-      if (id == 17 || id == 12) return
+      if (id == 17 || id == 12 || id == 13 || id == 14 || id == 16) return
       if (id == 4 && Object.keys(this.id4Data).length != 0) return
       if (id == 5 && Object.keys(this.id5Data).length != 0) return
       if (id == 11 && Object.keys(this.id11Data).length != 0) return

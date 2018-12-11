@@ -125,7 +125,7 @@ export default {
         defaultMax: 0,
         payFor: '',
         payMoneyMax: 0,
-        auditLevel: '',
+        auditLevel: 1,
         applyAllowDebtStatus: 0,
         applyAddNum: 1,
         applyLeastPeopleNum: 1,
@@ -226,6 +226,7 @@ export default {
             productType: 1,
             procedureStatus: 0,
             procedureMax: 1,
+            procedurePayType: 1,
             aheadReypayStatus: 0,
             aheadReypayInterestType: '',
             aheadReypayInterestDayRate: 0,
@@ -240,18 +241,18 @@ export default {
             defaultMax: 0,
             payFor: '',
             payMoneyMax: 0,
-            auditLevel: '',
+            auditLevel: 1,
             applyAllowDebtStatus: 0,
             applyAddNum: 1,
             applyLeastPeopleNum: 1,
             rateTxt: '',
             rateShowStatus: 0,
-            againBigdataDays: 1
+            againBigdataDays: 365
           }
           this.productImages = []
           this.procedureJson = []
-          this.repayCycleJson = {
-            repaymentId: '',
+          this.repayCycleJson = [{
+            repaymentId: 0,
             repaymentType: '',
             repaymentDays: 0,
             interestType: 1,
@@ -259,15 +260,15 @@ export default {
             supportCycle: [],
             cycleDays: 0,
             repayDayEvryMonth: 0,
-            repayLastCycleDay: '',
-            yearChangeRate: '',
+            repayLastCycleDay: 0,
+            yearChangeRate: 0,
             repayCycle: [{
-              cycleRateId: '',
+              cycleRateId: 0,
               cycleNum: 0,
               cycleRateNormal: 0,
               cycleRateLeast: 0
             }]
-          }
+          }]
         }
       })
     },

@@ -8,19 +8,19 @@
         <div class="content account">
           <div>
             <p class="p1">账户余额(元)</p>
-            <p class="p2">2.07</p>
+            <p class="p2">{{accounts.thirdPartyBalance.toFixed(2)}}</p>
           </div>
           <div>
             <p class="p1">可用余额(元)</p>
-            <p class="p2">2.07</p>
+            <p class="p2">{{accounts.thirdPartyCanuseBalance.toFixed(2)}}</p>
           </div>
           <div>
             <p class="p1">查询费余额(元)</p>
-            <p class="p2">500.00</p>
+            <p class="p2">{{accounts.balance.toFixed(2)}}</p>
           </div>
           <div>
             <p class="p1">打款中余额(元)</p>
-            <p class="p2">0.00</p>
+            <p class="p2">{{accounts.loanAmount.toFixed(2)}}</p>
           </div>
         </div>
       </div>
@@ -40,16 +40,16 @@
         <div class="content overdue">
           <div>
             <p><span style="background-color: rgb(254, 182, 62)"></span>代收笔数</p>
-            <span class="sp">笔数: 123笔</span>
-            <span class="sp">本金: 100元</span>
-            <span class="sp">利息: 1231313.1231元</span>
+            <span class="sp">笔数: {{waitMap.waitBillCount}}笔</span>
+            <span class="sp">本金: {{waitMap.billMoneyCount.toFixed(2)}}元</span>
+            <span class="sp">利息: {{waitMap.interestCount.toFixed(2)}}元</span>
           </div>
           <div>
             <p><span></span>逾期数据</p>
-            <span class="sp">笔数: 123笔</span>
-            <span class="sp">本金: 100元</span>
-            <span class="sp">利息: 1231313.1231元</span>
-            <span class="sp">罚息: 1231231.1元</span>
+            <span class="sp">笔数: {{overdueMap.overdueBillCount}}笔</span>
+            <span class="sp">本金: {{overdueMap.billMoneyCount.toFixed(2)}}元</span>
+            <span class="sp">利息: {{overdueMap.interestCount.toFixed(2)}}元</span>
+            <span class="sp">罚息: {{overdueMap.penaltyCount.toFixed(2)}}元</span>
           </div>
         </div>
       </div>
@@ -58,19 +58,28 @@
       <div>
         <div class="title">回款数据</div>
         <div class="content returned">
-          <p>笔数: <span>1笔</span> 金额: 3590.00元</p>
-          <p>本金: 125.00元, 利息: 3465.00元, 罚息: 0.00元, 手续费: 0.00元</p>
-          <p>已回款1笔, 共计3590.00元, 其中本金125.00元, 利息3456.00元, 罚息0.00元, 手续费0.00元</p>
+          <p>笔数: <span>{{totalMoneyMap.totalBillCount}}笔</span> 
+            金额: {{totalMoneyMap.totalMoney.toFixed(2)}}元</p>
+          <p>本金: {{totalMoneyMap.billMoneyCount.toFixed(2)}}元, 
+            利息: {{totalMoneyMap.interestCount.toFixed(2)}}元, 
+            罚息: {{totalMoneyMap.penaltyCount.toFixed(2)}}元, 
+            手续费: {{totalMoneyMap.serviceMoney.toFixed(2)}}元</p>
+          <p>已回款{{returnedMoneyMap.returnedBillCount}}笔, 
+            共计{{returnedMoneyMap.totalMoney.toFixed(2)}}元, 
+            其中本金{{returnedMoneyMap.billMoneyCount.toFixed(2)}}元, 
+            利息{{returnedMoneyMap.interestCount.toFixed(2)}}元, 
+            罚息{{returnedMoneyMap.penaltyCount.toFixed(2)}}元, 
+            手续费{{returnedMoneyMap.serviceMoney.toFixed(2)}}元</p>
           <div class="table">
             <Table :loading="loading" :columns="columns" :data="returneds"></Table>
-            <Page :current="returnedsPage" size="small" :page-size="5" :total="returneds.length" show-total class="page" @on-change="handleChange" />
+            <Page :current="returnedsPage" size="small" :page-size="5" :total="total" show-total class="page" @on-change="handleChange" />
           </div>
         </div>
       </div>
       <div>
         <div class="title">放款数据</div>
         <div class="content loan">
-          <echarts />
+          <echarts :datas="echartsDatas" />
         </div>
       </div>
     </div>
@@ -80,63 +89,112 @@
 
 <script>
   import echarts from '@/components/echarts.vue'
+  import { getDashboardMsg, getDashboardList, getDashboardChart } from '@/utils/api'
   export default {
     components: { echarts },
     data() {
       return {
         loadDrawer: true,
         datas: [
-          { title: '等待审核', number: 800, color: 'rgb(84, 174, 248)' },
-          { title: '代收款', number: 800, color: 'rgb(254, 182, 62)' },
-          { title: '待签署合同', number: 800, color: 'rgb(122, 213, 19)' },
-          { title: '填写资料', number: 800, color: '#666666' },
-          { title: '审核拒绝', number: 800, color: '#666666' },
-          { title: '取消放款', number: 800, color: '#666666' },
-          { title: '还款中', number: 800, color: '#666666' },
-          { title: '还款完成', number: 800, color: '#666666' },
-          { title: '已逾期', number: 800, color: 'red' },
+          { title: '等待审核', color: 'rgb(84, 174, 248)', key: 'waitCheckCount' },
+          { title: '待放款', color: 'rgb(254, 182, 62)', key: 'waitLoanCount' },
+          { title: '待签署合同', color: 'rgb(122, 213, 19)', key: 'waitBargainCount' },
+          { title: '填写资料', color: '#666666', key: 'writingInfoCount' },
+          { title: '审核拒绝', color: '#666666', key: 'checkRefuseCount' },
+          { title: '取消放款', color: '#666666', key: 'cancelLoanCount' },
+          { title: '还款中', color: '#666666', key: 'repayCount' },
+          { title: '还款完成', color: '#666666', key: 'repayCompleteCount' },
+          { title: '已逾期', color: 'red', key: 'overdueCount' }
         ],
         columns: [
-          { title: '客户', key: 'name', align: 'center' },
-          { title: '手机号码', key: 'name', align: 'center' },
-          { title: '账单金额', key: 'name', align: 'center' },
-          {
-            title: '状态',
-            key: 'name',
-            align: 'center',
+          { title: '客户', key: 'customerName', align: 'center' },
+          { title: '手机号码', key: 'phone', align: 'center' },
+          { title: '账单金额', key: 'totalMoney', align: 'center' },
+          { title: '状态', key: 'repaymentStatus', align: 'center',
             filters: [
               { label: '未还款', value: 1 },
-              { label: '已还款', value: 2 }
+              { label: '已还款', value: 2 },
+              { label: '逾期', value: 3 },
+              { label: '还款中', value: 4 }
             ],
             filterMultiple: false,
             filterMethod (value, row) {
-              if (value === 1) {
-                // return row.show > 4000;
-              } else if (value === 2) {
-                // return row.show < 4000;
-              }
-              console.log(row)
+              return row.repaymentStatus == value
             }
           },
-          { title: '本金', key: 'name', align: 'center' },
-          { title: '利息', key: 'name', align: 'center' },
-          { title: '罚息', key: 'name', align: 'center' },
-          { title: '手续费', key: 'name', align: 'center' }
+          { title: '本金', key: 'billMoneyCount', align: 'center' },
+          { title: '利息', key: 'interestCount', align: 'center' },
+          { title: '罚息', key: 'penaltyCount', align: 'center' },
+          { title: '手续费', key: 'serviceMoney', align: 'center' }
         ],
-        returneds: [{name: '123'}, {name: '123'}, {name: '123'}, {name: '123'}, {name: '123'}],
+        returneds: [],
+        total: 0,
         loading: true,
-        returnedsPage: 1
+        returnedsPage: 1,
+        page: 1,
+        accounts: {},
+        overdueMap: {},
+        waitMap: {},
+        totalMoneyMap: {},
+        returnedMoneyMap: {},
+        echartsDatas: {}
       }
     },
     mounted() {
-      setTimeout(() => {
-        this.loading = false
-        this.loadDrawer = false
-      }, 1000)
+      this.fetchDashboardMsg()
+      this.fetchDashboardList()
+      this.fetchDashboardChart()
     },
     methods: {
       handleChange(val) {
-        console.log(val)
+        this.page = val
+        this.fetchDashboardList()
+      },
+      fetchDashboardMsg() {
+        getDashboardMsg({ companyId: this.$store.getters.userInfo.companyId }).then(res => {
+          if (res.state == 1) {
+            this.accounts = res.info.data.accountInfoMap
+            const nowdataMap = res.info.data.nowdataMap
+            for (const i in nowdataMap) {
+              for (const o of this.datas) {
+                if (i == o.key) {
+                  o.number = nowdataMap[i]
+                }
+              }
+            }
+            this.overdueMap = res.info.data.waitAndOverdueMap.overdueMap
+            this.waitMap = res.info.data.waitAndOverdueMap.waitMap
+            this.totalMoneyMap = res.info.data.returnedDataMap.totalMoneyMap
+            this.returnedMoneyMap = res.info.data.returnedDataMap.returnedMoneyMap
+            setTimeout(() => {
+              this.loadDrawer = false
+            }, 1000)
+          }
+        })
+      },
+      fetchDashboardList() {
+        const params = {
+          companyId: this.$store.getters.userInfo.companyId,
+          limit: 20,
+          page: this.page
+        }
+        this.loading = true
+        getDashboardList(params).then(res => {
+          if (res.state == 1) {
+            this.returneds = res.info.data.returnedMoneyList
+            this.total = res.info.data.count
+            setTimeout(() => {
+              this.loading = false
+            }, 1500)
+          }
+        })
+      },
+      fetchDashboardChart() {
+        getDashboardChart({ companyId: this.$store.getters.userInfo.companyId }).then(res => {
+          if (res.state == 1) {
+            this.echartsDatas = res.info.data
+          }
+        })
       }
     }
   }
@@ -167,7 +225,7 @@
     justify-content: center;
     height: 500px;
     > div {
-      flex: 1;
+      width: 50%;
       margin: 0 12px;
       border: 1px solid #e9e9e9;
       border-radius: 4px;
