@@ -29,6 +29,7 @@
 import topImage from '@/assets/top@2x.png'
 import btnImage from '@/assets/button_cked@2x.png'
 import partnerImage from '@/assets/foot@2x.png'
+import { sendH5Code, h5Register } from '@/utils/api'
 export default {
   data() {
     return {
@@ -41,26 +42,48 @@ export default {
       timer: null
     }
   },
-  mounted() {
+  beforeMount() {
     document.title = '小优金融 - 小额贷服务'
+    this.companyId = this.$route.query.companyId || 0
+    this.channelId = this.$route.query.channelId || 0
   },
   methods: {
     handleSubmit() {
-      console.log('register')
-      this.$router.push({ path: '/appDownload' })
+      const params = {
+        companyId: this.companyId,
+        channelId: this.channelId,
+        userAppPhone: this.phone,
+        msgCode: this.code
+      }
+      h5Register(params).then(res => {
+        if (res.state == 1) {
+          this.$Message.success('注册成功')
+          this.$router.push({ path: '/appDownload' })
+        }
+      })
     },
     handleCode() {
       if (this.time != '获取验证码') return
-      let time = 60
-      this.timer = setInterval(() => {
-        if (time <= 1) {
-          this.time = '获取验证码'
-          clearInterval(this.timer)
-          return
+      const param = {
+        companyId: this.companyId,
+        userAppPhone: this.phone,
+        type: 1
+      }
+      sendH5Code(params).then(res => {
+        if (res.state == 1) {
+          this.$Message.success('发送成功')
+          let time = 60
+          this.timer = setInterval(() => {
+          if (time <= 1) {
+            this.time = '获取验证码'
+            clearInterval(this.timer)
+            return
+          }
+          time--
+          this.time = time + 's'
+          }, 1000)
         }
-        time--
-        this.time = time + 's'
-      }, 1000)
+      })
     }
   },
   beforeDestroy() {

@@ -11,10 +11,10 @@
         <breakFaith v-if="item.id == 7" :obj="id7Data" />
         <loanOverdue v-if="item.id == 8" :obj="id8Data" />
         <publicSecurity v-if="item.id == 6" :obj="id6Data" />
-        <taoBao v-if="item.id == 14" :obj="id14Data" />
-        <jingDong v-if="item.id == 13" :obj="id13Data" />
-        <addressBook v-if="item.id == 17" />
-        <zhiFuBao  v-if="item.id == 16"/>
+        <taoBao v-if="item.id == 14" :obj="customInfo.taoBao" />
+        <jingDong v-if="item.id == 13" :obj="customInfo.jingDong" />
+        <addressBook v-if="item.id == 17" :list="customInfo.addressBook" />
+        <zhiFuBao v-if="item.id == 16" :obj="customInfo.zhiFuBao" />
       </TabPane>
     </Tabs>
   </div>
@@ -108,7 +108,12 @@ export default {
       if (id == 14 && Object.keys(this.id14Data).length != 3) return
       const params = {
         id,
-        userAppId: this.userCustom.userAppId
+        userAppId: this.userCustom.userAppId,
+        phone: this.userCustom.phone,
+        idcard: this.userCustom.idcard,
+        userName: this.userCustom.customerName,
+        companyId: this.$store.getters.userInfo.companyId,
+        userId: this.$store.getters.userInfo.userId
       }
       getThirdPartyVerify(params).then(res => {
         if (res.state == 1) {
@@ -135,10 +140,6 @@ export default {
               this.id7Data = data.data
             } else if (id == 8) {
               this.id8Data = typeof data.result == 'object'? data.result : {}
-            } else if (id == 13) {
-              this.id13Data = data.data
-            } else if (id == 14) {
-              this.id14Data = data.data
             } else if (id == 2) {
               this.id2Data = data.data
             } else if (id ==6) {
@@ -178,10 +179,6 @@ export default {
             this.id7Data = data.data
           } else if (id == 8) {
             this.id8Data = typeof data.result == 'object'? data.result : {}
-          } else if (id == 13) {
-            this.id13Data = data.data
-          } else if (id == 14) {
-            this.id14Data = data.data
           } else if (id == 2) {
             this.id2Data = data.data
           } else if (id ==6) {

@@ -106,25 +106,46 @@ export default {
   },
   computed: {
     userInfo() {
-      return this.obj.user_basic
+      if (this.obj.hasOwnProperty('user_basic')) {
+        return this.obj.user_basic
+      }
+      return []
     },
     phoneInfo() {
-      return this.obj.cell_phone
+      if ('cell_phone' in this.obj) {
+        return this.obj.cell_phone
+      }
+      return []
     },
     cellBehaviors() {
-      return this.obj.cell_behavior[0].behavior
+      if ('cell_behavior' in this.obj) {
+        return this.obj.cell_behavior[0].behavior
+      }
+      return []
     },
     summary() {
-      return this.obj.friend_circle.summary
+      if ('friend_circle' in this.obj) {
+        return this.obj.friend_circle.summary
+      }
+      return []
     },
     peerNumlist() {
-      return this.obj.friend_circle.peer_num_top_list[1].top_item
+      if ('friend_circle' in this.obj) {
+        return this.obj.friend_circle.peer_num_top_list[1].top_item
+      }
+      return []
     },
     locationToplist() {
-      return this.obj.friend_circle.location_top_list[1].top_item
+      if ('friend_circle' in this.obj) {
+        return this.obj.friend_circle.location_top_list[1].top_item
+      }
+      return []
     },
     callContactDetail() {
-      return this.obj.call_contact_detail
+      if ('call_contact_detail' in this.obj) {
+        return this.obj.call_contact_detail
+      }
+      return []
     }
   },
   mounted() {

@@ -51,12 +51,14 @@ export default {
   computed: {
     wealthInfo() {
       const arrs = []
-      const totalssets = this.obj.wealthInfo.totalssets != 'undefined'? this.obj.wealthInfo.totalssets : []
-      for (const i in totalssets) {
-        arrs.push({
-          key: this.transitionKey(i),
-          value: totalssets[i]
-        })
+      if (this.obj.hasOwnProperty('wealthInfo')) {
+        const totalssets = this.obj.wealthInfo.totalssets
+        for (const i in totalssets) {
+          arrs.push({
+            key: this.transitionKey(i),
+            value: totalssets[i]
+          })
+        }
       }
       return arrs
     },

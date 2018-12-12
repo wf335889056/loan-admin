@@ -51,39 +51,49 @@ export default {
   computed: {
     wealthInfo() {
       const arrs = []
-      const totalssets = this.obj.wealthInfo.totalssets != 'undefined'? this.obj.wealthInfo.totalssets : []
-      for (const i in totalssets) {
-        arrs.push({
-          key: this.transitionKey(i),
-          value: totalssets[i]
-        })
+      if (this.obj.hasOwnProperty('wealthInfo')) {
+        const totalssets = this.obj.wealthInfo.totalssets
+        for (const i in totalssets) {
+          arrs.push({
+            key: this.transitionKey(i),
+            value: totalssets[i]
+          })
+        }
       }
       return arrs
     },
     addressAnalysis() {
       const arrs = []
-      const temp = this.obj.addressAnalysis
-      for (const i in temp.fundamentalPointAnalysis) {
-        arrs.push({
-          key: this.transitionKey(i),
-          value: temp.fundamentalPointAnalysis[i]
-        })
+      if (this.obj.hasOwnProperty('addressAnalysis')) {
+        const temp = this.obj.addressAnalysis
+        for (const i in temp.fundamentalPointAnalysis) {
+          arrs.push({
+            key: this.transitionKey(i),
+            value: temp.fundamentalPointAnalysis[i]
+          })
+        }
+        return {
+          fommonlyUsedAddress: temp.commonlyUsedAddress && temp.commonlyUsedAddress.length > 0? temp.commonlyUsedAddress.length : [],
+          fundamentalPointAnalysis: arrs
+        }
       }
       return {
-        fommonlyUsedAddress: temp.commonlyUsedAddress && temp.commonlyUsedAddress.length > 0? temp.commonlyUsedAddress.length : [],
+        fommonlyUsedAddress: [],
         fundamentalPointAnalysis: arrs
       }
     },
     consumptionAnalysis() {
       const arrs = []
-      const temp = this.obj.consumptionAnalysis.totalConsumption
-      if (temp && temp.totalConsumAmt) {
-        for (const i in temp.totalConsumAmt) {
-          if (i != 'sum') {
-            arrs.push({
-              key: i,
-              value: temp.totalConsumAmt[i]
-            })
+      if (this.obj.hasOwnProperty('consumptionAnalysis')) {
+        const temp = this.obj.consumptionAnalysis.totalConsumption
+        if (temp && temp.totalConsumAmt) {
+          for (const i in temp.totalConsumAmt) {
+            if (i != 'sum') {
+              arrs.push({
+                key: i,
+                value: temp.totalConsumAmt[i]
+              })
+            }
           }
         }
       }

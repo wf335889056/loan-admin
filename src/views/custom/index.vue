@@ -121,8 +121,10 @@ export default {
       userOption: {},
       customOption: {
         operator: {},
-        antiFraud: {},
-        addressBook: {}
+        addressBook: [],
+        jingDong: {},
+        taoBao: {},
+        zhiFuBao: {}
       }
     }
   },
@@ -232,11 +234,38 @@ export default {
           this.userStatus = res.info.clientManagementDetails.userStatus
           this.userOption = res.info.clientManagementDetails
           // 运营商
-          // const operator = JSON.parse(res.info.jsonObject)
-          // if (operator.code == 200) {
-          //   this.customOption.operator = operator.data
-          // }
+          if (res.info.yys != '' && res.info.yys !== null) {
+            const operator = JSON.parse(res.info.yys)
+            if (operator.code == 200) {
+              this.customOption.operator = operator.data
+            }
+          } 
           // 通讯录
+          if (res.info.tx != '' && res.info.tx !== null) {
+            const addressBook = JSON.parse(res.info.tx)
+            this.customOption.addressBook = operator.data
+          }
+          // 京东
+          if (res.info.jd != '' && res.info.jd !== null) {
+            const jd = JSON.parse(res.info.jd)
+            if (jd.code == 200) {
+              this.customOption.jingDong = jd.data
+            }
+          }
+          // 淘宝
+          if (res.info.tb != '' && res.info.tb !== null) {
+            const tb = JSON.parse(res.info.tb)
+            if (tb.code == 200) {
+              this.customOption.taoBao = tb.data
+            }
+          }
+          // 支付宝
+          if (res.info.zfb != '' && res.info.zfb !== null) {
+            const zfb = JSON.parse(res.info.zfb)
+            if (zfb.code == 200) {
+              this.customOption.zhiFuBao = zfb.data
+            }
+          }
           setTimeout(() => {
             this.loadDrawer = false
           }, 1000)

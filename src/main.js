@@ -28,7 +28,7 @@ iView.Message.config({
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
   const token = window.sessionStorage.getItem('adminToken')
-  if (to.path == '/appRegister' || to.path == '/appDownLoad' || to.path == '/appBlank' || to.path == '/login') {
+  if (to.path == '/appRegister' || to.path == '/appDownload' || to.path == '/appBlank' || to.path == '/login') {
     next()
   } else {
     if (!token) {

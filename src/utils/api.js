@@ -7,6 +7,31 @@ import fetch from './fetch'
 *********
 */
 
+// 分享页面h5注册
+export function h5Register(query) {
+  return fetch({
+    url: '/deskManagementController/mobileSms',
+    method: 'post',
+    params: query
+  })
+}
+// 分享页面h5短信码
+export function sendH5Code(query) {
+  return fetch({
+    url: '/deskManagementController/mobileSms',
+    method: 'post',
+    params: query
+  })
+}
+
+
+/*
+*
+*  贷款后台管理 
+*
+*/
+
+
 // 登录
 export function accountLogin(query) {
   return fetch({
