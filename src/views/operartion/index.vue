@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       formInline: {},
-      list: [{name: 12313}],
+      list: [],
       loading: true,
       page: 1,
       columns: [
