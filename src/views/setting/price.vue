@@ -204,7 +204,7 @@ export default {
       getBillingQuery(params).then(res => {
         if (res.state == 1) {
           this.list1 = res.info.billQuerys
-          this.balance = res.info.balance
+          this.balance = res.info.balance == ''? 0 : res.info.balance
           this.list1len = res.info.count
         }
       })
