@@ -1,5 +1,12 @@
 <template>
-  <div>通讯录</div>  
+  <div class="content">
+    <ul class="info-ul">
+      <li v-for="item in list">
+        <span class="sp1">{{item.name}}</span>
+        <span class="sp2">{{item.phone}}</span>
+      </li>
+    </ul>
+  </div>  
 </template>
 
 <script>

@@ -36,7 +36,7 @@
             </FormItem>
             <FormItem label="权限选择:">
               <CheckboxGroup v-model="roles">
-                <Checkbox v-for="(item, index) in menus"  :label="item.name" :key="index"></Checkbox>
+                <Checkbox v-for="(item, index) in menus"  :label="item.name" :key="index" :disabled="index == 0"></Checkbox>
               </CheckboxGroup>
             </FormItem>
             <FormItem label="设置管理权限选择:" v-if="roles.includes('设置管理')">
@@ -81,7 +81,7 @@ export default {
       list: [],
       totalnumber: 0,
       menus: menusList,
-      roles: [],
+      roles: ['概览'],
       rolesChilder: [],
       columns: [
         { title: '用户名', key: 'userName', align: 'center' },
@@ -237,6 +237,8 @@ export default {
         params.userId = this.id
       }
       params.approvalLevel = this.form.approvalLevel.join(',')
+      params.permission = this.roles.join(',')
+      params.adminPermission = this.rolesChilder.join(',')
       addAndUpdateAccountMsg(params).then(res => {
         if (res.state == 1) {
           this.$Message.success('保存成功')
@@ -287,6 +289,8 @@ export default {
         if (res.state == 1) {
           this.form = res.info.user
           this.form.approvalLevel = this.form.userApproveLevel.split(',')
+          this.roles = []
+          this.rolesChilder = []
           setTimeout(() => {
             this.loadDrawer = false
           }, 1000)

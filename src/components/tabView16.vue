@@ -95,6 +95,7 @@ export default {
   },
   methods: {
     handleClick(name) {
+      console.log(this.userCustom)
       const index = Number(name)
       const id = this.tabs[index].id
       if (id == 17 || id == 12 || id == 13 || id == 14 || id == 16) return
@@ -141,7 +142,7 @@ export default {
             } else if (id == 8) {
               this.id8Data = typeof data.result == 'object'? data.result : {}
             } else if (id == 2) {
-              this.id2Data = data.data
+              this.id2Data = data.data.risk
             } else if (id ==6) {
               this.id6Data = data.data
             }
@@ -180,7 +181,7 @@ export default {
           } else if (id == 8) {
             this.id8Data = typeof data.result == 'object'? data.result : {}
           } else if (id == 2) {
-            this.id2Data = data.data
+            this.id2Data = data.data.risk
           } else if (id ==6) {
             this.id6Data = data.data
           }

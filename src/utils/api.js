@@ -616,3 +616,19 @@ export function updadateRemarkCollection(query) {
     params: query
   })
 }
+// 运营数据 获取全部申请列表
+export function getOperartionList(query) {
+  return fetch({
+    url: '/StatisticsDataController/getAllApplyDataList',
+    method: 'post',
+    params: query
+  })
+}
+// 运营数据 获取全部申请详情
+export function getOperartionMsg(query) {
+  return fetch({
+    url: '/StatisticsDataController/getAllApplyDataDetail',
+    method: 'post',
+    params: query
+  })
+}

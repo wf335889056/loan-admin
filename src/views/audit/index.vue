@@ -302,7 +302,7 @@
               <span class="sp1">资方</span>
               <span class="sp2">{{formPass.capitalTitle}}</span>
             </li>
-            <li>
+            <li style="width: 100%;">
               <span class="sp1">合同名称</span>
               <span class="sp2">{{formPass.bargainName}}</span>
             </li>
@@ -389,7 +389,7 @@ export default {
         bargainName: '',
         riskControl: '',
         loansSuggest: '',
-        electronicBargainStatus: 0,
+        electronicBargainStatus: 0
       },
       editLogList: [],
       creditList: [],
@@ -663,8 +663,12 @@ export default {
       })
     },
     setRepaymentType(n) {
-      const str = this.repayments.filter(it => it.value == n)[0].label
-      return str
+      try {
+        const str = this.repayments.filter(it => it.value == n)[0].label
+        return str
+      } catch(e) {
+        return n
+      }
     }
   }
 }

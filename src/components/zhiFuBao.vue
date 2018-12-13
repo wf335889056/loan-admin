@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     zfbInfo() {
-      return this.json.alipay_user_info_share_response || {}
+      return this.obj || {}
     }
   }
 }

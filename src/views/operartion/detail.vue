@@ -9,42 +9,53 @@
     <Divider />
     <div class="table">
       <Table :loading="loading" :columns="columns" :data="list"></Table>
-      <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" />
+      <!-- <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" /> -->
     </div>
   </div>
 </template>
 
 <script>
-
+import { getOperartionMsg } from '@/utils/api'
 export default {
   data() {
     return {
-      formInline: {},
-      list: [{name: 12313}],
+      list: [],
       loading: true,
       page: 1,
       columns: [
-        { title: '渠道名称', key: 'name', align: 'center' },
-        { title: '日期', key: 'name', align: 'center' },
-        { title: '注册用户数', key: 'name', align: 'center' },
-        { title: '申请数', key: 'name', align: 'center' },
-        { title: '提交审核数', key: 'name', align: 'center' },
-        { title: '审核通过数', key: 'name', align: 'center' },
-        { title: '放款数', key: 'name', align: 'center' },
-        { title: '放款订单金额', key: 'name', align: 'center' }
+        { title: '渠道名称', key: 'channelName', align: 'center' },
+        { title: '日期', key: 'apDate', align: 'center' },
+        { title: '注册用户数', key: 'registerNum', align: 'center' },
+        { title: '申请数', key: 'applyNum', align: 'center' },
+        { title: '提交审核数', key: 'applyCommitNum', align: 'center' },
+        { title: '审核通过数', key: 'checkPassNum', align: 'center' },
+        { title: '放款数', key: 'loanNum', align: 'center' },
+        { title: '放款订单金额', key: 'loanMoney', align: 'center' }
       ]
     }
   },
+  beforeMount() {
+    this.id = this.$route.query.id
+  },
   mounted() {
-    setTimeout(() => {
-      this.loading = false
-    }, 1000)
+    this.fetchOperartionMsg()
   },
   methods: {
-    handleSubmit() {
-    },
     handleChange(val) {
       console.log(val)
+    },
+    fetchOperartionMsg() {
+      const params = {
+        companyId: this.$store.getters.userInfo.companyId,
+        channelId: this.id
+      }
+      this.loading = true
+      getOperartionMsg(params).then(res => {
+        this.list = res.info.data
+        setTimeout(() => {
+          this.loading = false
+        }, 1000)
+      })
     }
   }
 }

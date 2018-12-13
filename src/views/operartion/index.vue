@@ -10,7 +10,7 @@
        <Form ref="formInline" class="formInline" :model="formInline"  inline>
         <Col span="22">
             <FormItem>
-              <Input type="text" v-model="formInline.name" clearable placeholder="渠道" />
+              <Input type="text" v-model="formInline.channelName" clearable placeholder="渠道" />
             </FormItem>
         </Col>
         <Col span="2">
@@ -22,46 +22,61 @@
     </Row>
     <div class="table">
       <Table :loading="loading" :columns="columns" :data="list" @on-row-click="handleClick"></Table>
-      <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" />
+      <!-- <Page :current="page" :page-size="20" :total="list.length" show-total class="page" @on-change="handleChange" /> -->
     </div>
   </div>
 </template>
 
 <script>
+import { getOperartionList } from '@/utils/api'
 export default {
   data() {
     return {
-      formInline: {},
+      formInline: {
+        channelName: ''
+      },
       list: [],
       loading: true,
       page: 1,
       columns: [
-        { title: '渠道名称', key: 'name', align: 'center' },
-        { title: '日期', key: 'name', align: 'center' },
-        { title: '注册用户数', key: 'name', align: 'center' },
-        { title: '申请数', key: 'name', align: 'center' },
-        { title: '提交审核数', key: 'name', align: 'center' },
-        { title: '审核通过数', key: 'name', align: 'center' },
-        { title: '放款数', key: 'name', align: 'center' },
-        { title: '放款订单金额', key: 'name', align: 'center' }
+        { title: '渠道名称', key: 'channelName', align: 'center' },
+        { title: '日期', key: 'apDate', align: 'center' },
+        { title: '注册用户数', key: 'registerNum', align: 'center' },
+        { title: '申请数', key: 'applyNum', align: 'center' },
+        { title: '提交审核数', key: 'applyCommitNum', align: 'center' },
+        { title: '审核通过数', key: 'checkPassNum', align: 'center' },
+        { title: '放款数', key: 'loanNum', align: 'center' },
+        { title: '放款订单金额', key: 'loanMoney', align: 'center' }
       ]
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.loading = false
-    }, 1000)
+    this.fetchOperartionList()
   },
   methods: {
     handleSubmit() {
+      this.fetchOperartionList()
     },
     handleChange(val) {
-      console.log(val)
+      this.page = val
     },
     handleClick(row) {
       this.$router.push({
         path: '/operartion/detail',
-        query: { id: row.id }
+        query: { id: row.channelId }
+      })
+    },
+    fetchOperartionList() {
+      const params = this.formInline
+      params.companyId = this.$store.getters.userInfo.companyId
+      this.loading = true
+      getOperartionList(params).then(res => {
+        if (res.state == 1) {
+          this.list = res.info.data
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+        }
       })
     }
   }

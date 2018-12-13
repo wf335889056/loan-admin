@@ -64,7 +64,7 @@
     data() {
       return {
         logo,
-        menus: menusList,
+        menus: [],
         openNames: [],
         updateModel: false,
         accountForm: {
@@ -72,6 +72,47 @@
           password: '',
           newPassword: ''
         }
+      }
+    },
+    created() {
+      const menuArrs = []
+      const menuAllArrs = menusList
+      if (this.userInfo.permission != '') {
+        const permission = this.userInfo.permission.split(',')
+        for (const o of permission) {
+          for (const q of menuAllArrs) {
+            if (o == q.name) {
+              if (o.name == '设置管理') {
+                menuArrs.push({
+                  ...q,
+                  childer: []
+                })
+              } else {
+                menuArrs.push(q)
+              }
+            }
+          }
+        }
+        if (this.userInfo.adminPermission != '') {
+          const adminPermission = this.userInfo.adminPermission.split(',')
+          const adminMenus = menusList[7]
+          const childers = []
+          for (const z of adminPermission) {
+            for (const y of adminMenus) {
+              if (z == y.name) {
+                childers.push(y)
+              }
+            }
+          }
+          for (const a of menuArrs) {
+            if (a.name == '设置管理') {
+              a.childer = childers
+            } 
+          }
+        }
+        this.menus = menuArrs
+      } else {
+        this.menus = menuAllArrs
       }
     },
     beforeMount() {

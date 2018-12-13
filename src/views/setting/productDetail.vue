@@ -166,7 +166,7 @@ export default {
         }
       }
       params.repayTypeJson = encodeURI(JSON.stringify(repayTypeJson)) || ''
-      params.pictureUrl = encodeURI(JSON.stringify(this.productImages)) || ''
+      params.pictureUrl = this.productImages[0].url || ''
       params.productId = this.id
       addOrUpdateProductMsg(params).then(res => {
         if (res.state == 1) {
@@ -231,6 +231,7 @@ export default {
       })
     },
     fetchProductMsg() {
+      this.productImages.splice(0, this.productImages.length)
       getProductMsg({ productId: this.id }).then(res => {
         if (res.state == 1) {
           for (const i in this.formProduct) {
@@ -250,7 +251,7 @@ export default {
             })
           }
           if (res.info.data.pictureUrl != '') {
-            this.productImages = JSON.parse(res.info.data.pictureUrl)
+            this.productImages.push({ url: res.info.data.pictureUrl })
           }
           this.repayTypeJson = res.info.data.repayTypeJson
           this.procedureJson = res.info.data.procedureJson

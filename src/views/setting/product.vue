@@ -208,7 +208,7 @@ export default {
       }
 
       params.repayTypeJson = encodeURI(JSON.stringify(repayCycleJson)) || ''
-      params.pictureUrl = encodeURI(JSON.stringify(this.productImages)) || ''
+      params.pictureUrl = this.productImages[0].url || ''
       for (const i in this.formProduct) {
         if (typeof this.formProduct[i] == 'boolean') {
           params[i] = this.formProduct[i] == true? 1 : 0

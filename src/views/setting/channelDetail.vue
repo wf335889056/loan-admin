@@ -20,7 +20,7 @@
         <div slot="content">
           <div class="channel-box">
             <div class="d3">
-              <div class="qr-image"><img  :src="formChannel.qrCode" alt="qrCode"></div>
+              <div class="qr-image"><img :src="formChannel.qrCode" alt="qrCode"></div>
               <p>【{{formChannel.channelNameShort}}】</p>
               <p>扫描申请贷款</p>
             </div>
@@ -71,12 +71,12 @@
       </Panel>
       <Panel name="6">合作产品
         <div slot="content">
-         <Table :columns="columns1" :data="lsit1"></Table>
+         <Table :columns="columns1" :data="list1"></Table>
         </div>
       </Panel>
       <Panel name="7">修改记录
         <div slot="content">
-          <Table :columns="columns2" :data="lsit2"></Table>
+          <Table :columns="columns2" :data="list2"></Table>
         </div>
       </Panel>
     </Collapse>
@@ -95,14 +95,16 @@ export default {
         channelName: '',
         channelNameShort: '',
         channelCompanyName: '',
-        channelBusinessType: ''
+        channelBusinessType: '',
+        qrCode: '',
+        channelUrl: ''
       },
       channelAdminList: [],
       channelProduct: [],
       channelContacts: [],
       collapse: '1',
-      lsit1: [],
-      lsit2: [],
+      list1: [],
+      list2: [],
       columns1: [
         { title: '产品编号', key: 'channelProductId', align: 'center' },
         { title: '状态', key: 'productStatus', align: 'center',
@@ -189,8 +191,8 @@ export default {
       }
       getChannelLisgOrMsg(params).then(res => {
         if (res.state == 1) {
-          this.lsit1 = res.info.channelProductList
-          this.lsit2 = res.info.channelEditLogList
+          this.list1 = res.info.channelProductList
+          this.list2 = res.info.channelEditLogList
           for (const i in this.formChannel) {
             this.formChannel[i] = res.info.channelDetails[i]
           }
@@ -199,7 +201,7 @@ export default {
               userId: o.userId
             })
           }
-          for (const o of this.lsit1) {
+          for (const o of this.list1) {
             this.channelProduct.push({ channelProductId: o.channelProductId })
           }
           this.channelContacts = res.info.channelLinkmanList
