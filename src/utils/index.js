@@ -106,6 +106,8 @@ export function producOrderAllStatus() {
     { id: 14, text: '审核通过' },
     { id: 15, text: '拉黑' },
     { id: 16, text: '催收中' },
+    { id: 19, text: '催收完成' },
+    { id: 20, text: '放弃催收' },
     { id: 21, text: '待App用户确认放款金额' }
   ]
 }

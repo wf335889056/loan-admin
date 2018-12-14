@@ -116,22 +116,22 @@ export default {
         { title: '操作', width: 200, key: 'action', align: 'center',
           render: (h, params) => {
             return h('div', [
-              h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
-                style: {
-                  color: '#2db7f5',
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.id = params.row.customerId
-                    this.handleReturn()
-                  }
-                }
-              }, '退还费用'),
+              // h('Button', {
+              //   props: {
+              //     type: 'text',
+              //     size: 'small'
+              //   },
+              //   style: {
+              //     color: '#2db7f5',
+              //     marginRight: '5px'
+              //   },
+              //   on: {
+              //     click: () => {
+              //       this.id = params.row.customerId
+              //       this.handleReturn()
+              //     }
+              //   }
+              // }, '退还费用'),
               h('Button', {
                 props: {
                   type: 'text',

@@ -27,7 +27,7 @@
       <FormItem label="产品ID:">
         <template v-for="(item, index) in products">
           <div style="margin-bottom: 20px;">
-            <Select v-model="item.channelProductId" size="large" style="width: 60%;" >
+            <Select v-model="item.productId" size="large" style="width: 60%;" >
               <Option v-for="item in options2" :value="item.productId" :key="item.productId" :label="item.productName"></Option>
             </Select>
             <Button type="error" shape="circle" icon="ios-trash-outline" @click="handleDelete(products, index)"></Button>
@@ -88,7 +88,7 @@ export default {
     },
     handleAddProducts() {
       this.products.push({
-        channelProductId: ''
+        productId: ''
       })
     },
     handleAddContacts() {

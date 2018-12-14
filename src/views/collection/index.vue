@@ -104,6 +104,7 @@
 
 <script>
 import { getCollectionList, addCollectionRecordMsg, getCollectionMsg, updadateRemarkCollection } from '@/utils/api'
+import { producOrderAllStatus } from '@/utils'
 export default {
   data() {
     return {
@@ -117,10 +118,15 @@ export default {
       loadDrawer: false,
       page: 1,
       total: 0,
+      allStatus: producOrderAllStatus(),
       columns: [
         { title: '交易编号', key: 'orderCode', align: 'center' },
         { title: '客户姓名', key: 'customerName', align: 'center' },
-        { title: '催收状态', key: 'collectionStatus', align: 'center' },
+        { title: '催收状态', key: 'collectionStatus', align: 'center',
+        render: (h, params) => {
+          const str = this.allStatus.filter(it => it.id == params.row.collectionStatus)[0].text
+          return h('div', str)
+        } },
         { title: '最新催收记录', key: 'collectionContent', align: 'center' },
         { title: '上次访问时间', key: 'loginTime', align: 'center' },
         { title: '委派催收时间', key: 'createTime', align: 'center' },

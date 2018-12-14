@@ -74,7 +74,7 @@
                 <span class="sp2">{{setRepaymentType(auditResult.productRepaymentType)}}</span>
               </li>
               <li>
-                <span class="sp1">利率/日(%)</span>
+                <span class="sp1">利率/期(%)</span>
                 <span class="sp2">{{auditResult.creditRate}}</span>
               </li>
               <li>
@@ -156,7 +156,7 @@
               <span class="sp2">{{applyDetail.channelName}}</span>
             </li>
             <li>
-              <span class="sp1">产品标准日利率</span>
+              <span class="sp1">产品标准期利率</span>
               <span class="sp2">{{applyDetail.productCycleRateNormal}}</span>
             </li>
             <li>
@@ -222,7 +222,7 @@
             </li>
             <li>
               <span class="sp1">还款方式</span>
-              <span class="sp2">{{applyInfo.productRepaymentType}}</span>
+              <span class="sp2">{{setRepaymentType(applyInfo.productRepaymentType)}}</span>
             </li>
             <li>
               <span class="sp1">分期期数</span>
@@ -243,7 +243,7 @@
         <authorizationAndUpdate :authorizations="creditList" :updates="editLogList" />
       </div>
       <div class="footer">
-        <Button v-if="canAudit == 1" size="default" type="success" class="btn" @click="handlePass">审核通过</Button>
+        <Button v-if="canAudit == 1 && auditInfo.checkStatus != 10" size="default" type="success" class="btn" @click="handlePass">审核通过</Button>
         <Button v-if="canAudit == 1" size="default" type="error" class="btn" @click="handleReject">审核被拒</Button>
         <Button size="default" type="success" class="btn" @click="handleUpdate">客户备注</Button>
         <Button size="default" type="primary" class="btn" @click="handleBatch(0)">编辑负责人</Button>
@@ -255,7 +255,7 @@
           <li style="width: 100%;">
             <span class="sp1">是否拉黑</span>
             <span class="sp2">
-              <Select v-model="formReject.blackStatus" placeholder="选择支付方式">
+              <Select v-model="formReject.blackStatus" placeholder="选择">
                 <Option :value="0">不拉黑</Option>
                 <Option :value="1">拉黑</Option>
               </Select>
@@ -276,21 +276,21 @@
             </li>
             <li>
               <span class="sp1">还款方式</span>
-              <span class="sp2">{{formPass.productRepaymentType}}</span>
+              <span class="sp2">{{setRepaymentType(formPass.productRepaymentType)}}</span>
             </li>
             <li>
               <span class="sp1">授信期数</span>
               <span class="sp2">{{formPass.productCycleNum}}</span>
             </li>
             <li>
-              <span class="sp1">利率/日(%)</span>
+              <span class="sp1">利率/期(%)</span>
               <span class="sp2">
                 <Input v-model="formPass.creditRate"></Input>
               </span>
             </li>
             <li>
               <span class="sp1">手续费支付方式</span>
-              <span class="sp2">{{formPass.productProcedurePayType}}</span>
+              <span class="sp2">{{formPass.productProcedurePayType == 1? '按期值' : formPass.productProcedurePayType == 2? '贷前扣除' : '贷后支付'}}</span>
             </li>
             <!-- <li>
               <span class="sp1">手续费/平台费(%)</span>
@@ -558,6 +558,7 @@ export default {
       passLoanAudio(params).then(res => {
         if (res.state == 1) {
           this.$Message.success('审核通过')
+          this.modelShow = false
           this.fetchAuditList()
           this.fetchAuditMsg()
         }
@@ -582,6 +583,7 @@ export default {
       rejectLoanAudio(params).then(res => {
         if (res.state == 1) {
           this.$Message.success('拒贷成功')
+          this.modelShow = false
           this.fetchAuditList()
           this.fetchAuditMsg()
         }

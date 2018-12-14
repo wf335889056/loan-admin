@@ -37,7 +37,7 @@ export default {
         channelBusinessType: ''
       },
       channelAdminList: [{ userId: '' }],
-      channelProduct: [{ channelProductId: '' }],
+      channelProduct: [{ productId: '' }],
       channelContacts: [{ linkmanName: '', linkmanPhone: '' }],
       list: [],
       listTotal: 0,
@@ -128,7 +128,7 @@ export default {
       const params = this.formChannel
       const products = []
       for (const o of this.channelProduct) {
-        products.push(o.channelProductId)
+        products.push(o.productId)
       }
       const admins = []
       for (const o of this.channelAdminList) {
@@ -148,7 +148,7 @@ export default {
             this.formChannel[i] = ''
           }
           this.channelAdminList = [{ userId: '' }]
-          this.channelProduct = [{ channelProductId: '' }]
+          this.channelProduct = [{ productId: '' }]
           this.channelContacts = [{ linkmanName: '', linkmanPhone: '' }]
         }
       })

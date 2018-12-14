@@ -148,7 +148,7 @@ export default {
       const params = this.formChannel
       const products = []
       for (const o of this.channelProduct) {
-        products.push(o.channelProductId)
+        products.push(o.productId)
       }
       const admins = []
       for (const o of this.channelAdminList) {
@@ -202,7 +202,7 @@ export default {
             })
           }
           for (const o of this.list1) {
-            this.channelProduct.push({ channelProductId: o.channelProductId })
+            this.channelProduct.push({ productId: o.productId })
           }
           this.channelContacts = res.info.channelLinkmanList
           this.form.depositMoney = res.info.channelDetails.depositMoney

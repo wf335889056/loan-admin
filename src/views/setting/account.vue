@@ -34,7 +34,13 @@
             <FormItem label="角色名称:">
               <Input v-model="form.roleId" size="large" clearable></Input>
             </FormItem>
-            <FormItem label="权限选择:">
+            <FormItem label="管理员身份:">
+              <Select v-model="form.superAdmin" size="large">
+                <Option :value="1">超级管理员</Option>
+                <Option :value="0">普通管理员</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="权限选择:" v-if="form.superAdmin == 0">
               <CheckboxGroup v-model="roles">
                 <Checkbox v-for="(item, index) in menus"  :label="item.name" :key="index" :disabled="index == 0"></Checkbox>
               </CheckboxGroup>
@@ -45,6 +51,7 @@
               </CheckboxGroup>
             </FormItem>
             <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*该手机号第一次创建账号时，默认姓名和密码为手机号</p>
+            <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*若登录者修改的是自身信息，请重新登录</p>
           </Form>
         </div>
       </div>
@@ -214,7 +221,8 @@ export default {
         code: '',
         position: '',
         approvalLevel: [],
-        roleId: ''
+        roleId: '',
+        superAdmin: 0
       }
       this.drawerShow = true
     },
@@ -288,9 +296,12 @@ export default {
       getAccountListAndMsg(params).then(res => {
         if (res.state == 1) {
           this.form = res.info.user
-          this.form.approvalLevel = this.form.userApproveLevel.split(',')
-          this.roles = []
-          this.rolesChilder = []
+          const approvalLevel = this.form.userApproveLevel.split(',')
+          this.form.approvalLevel = approvalLevel.length > 0? approvalLevel : []
+          const permission = res.info.user.permission
+          this.roles = permission != ''? permission.split(',') : []
+          const adminPermission = res.info.user.adminPermission
+          this.rolesChilder = adminPermission != ''? adminPermission.split(',') : []
           setTimeout(() => {
             this.loadDrawer = false
           }, 1000)

@@ -206,7 +206,6 @@ export default {
           repayCycleJson[i].supportCycle = ''
         }
       }
-
       params.repayTypeJson = encodeURI(JSON.stringify(repayCycleJson)) || ''
       params.pictureUrl = this.productImages[0].url || ''
       for (const i in this.formProduct) {

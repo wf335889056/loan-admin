@@ -18,9 +18,11 @@
             <FormItem>
             <Select v-model="formInline.orderStatus" clearable placeholder="当前状态">
                 <Option :value="0">全部</Option>
-                <Option :value="2">审核中</Option>
-                <Option :value="13">审核被拒</Option>
-                <Option :value="14">审核通过</Option>
+                <Option :value="3">还款中</Option>
+                <Option :value="8">还款完成</Option>
+                <Option :value="10">订单生成</Option>
+                <Option :value="11">订单取消</Option>
+                <!-- <Option :value="16">催收中</Option> -->
               </Select>
           </FormItem>
         </Col>
@@ -47,7 +49,7 @@
               <span class="sp2">{{orderStatusInfo.shouldLoanMoney}}</span>
             </li>
             <li>
-              <span class="sp1">利率/日(%)</span>
+              <span class="sp1">利率/期(%)</span>
               <span class="sp2">{{orderStatusInfo.creditRate}}</span>
             </li>
             <li>
@@ -69,11 +71,11 @@
             </li>
             <li>
               <span class="sp1">审核时间</span>
-              <span class="sp2">{{orderStatusInfo.orderCheckTime == 1? '按期支付' : orderStatusInfo.orderCheckTime == 2? '贷前扣除' : '贷后支付'}}</span>
+              <span class="sp2">{{orderStatusInfo.orderCheckTime}}</span>
             </li>
             <li>
               <span class="sp1">手续费支付方式</span>
-              <span class="sp2">{{orderStatusInfo.productProcedurePayType}}</span>
+              <span class="sp2">{{orderStatusInfo.productProcedurePayType == 1? '按期支付' : orderStatusInfo.productProcedurePayType == 2? '贷前扣除' : '贷后支付'}}</span>
             </li>
             <li>
               <span class="sp1">申请金额</span>
@@ -140,24 +142,24 @@
           </ul>
           <p class="info-p">产品信息</p>
           <ul class="info-ul">
-            <li>
+            <li style="width: 100%;">
               <span class="sp1">产品名</span>
               <span class="sp2">{{productInfo.productName}}</span>
             </li>
-            <li>
+            <li style="width: 100%;">
               <span class="sp1">用途</span>
               <span class="sp2">{{productInfo.productPayFor}}</span>
             </li>
-            <li>
+            <li style="width: 100%;">
               <span class="sp1">产品还款方式</span>
               <span class="sp2">{{repayments.filter(it => it.value == productInfo.productRepaymentType)[0].label}}</span>
               <!-- <span class="sp2">{{productInfo.productRepaymentType}}</span> -->
             </li>
-            <li>
+            <li style="width: 100%;">
               <span class="sp1">提前还款</span>
               <span class="sp2">{{productInfo.aheadRepay}}</span>
             </li>
-            <li>
+            <li style="width: 100%;">
               <span class="sp1">罚息</span>
               <span class="sp2">{{productInfo.defaultType}}</span>
             </li>
@@ -205,12 +207,12 @@
       </div>
       <div class="footer">
         <!-- <Button size="default" type="success" class="btn" @click="handleReturn">退还费用</Button> -->
-        <Button size="default" type="warning" class="btn" @click="handleEntrust">委托催收</Button>
-        <Button size="default" type="warning" class="btn" @click="handleEntrustCancel">放弃催收</Button>
+        <Button v-if="orderStatusInfo.orderStatus == 3" size="default" type="warning" class="btn" @click="handleEntrust">委托催收</Button>
+        <Button v-if="orderStatusInfo.orderStatus == 16" size="default" type="warning" class="btn" @click="handleEntrustCancel">放弃催收</Button>
         <!-- <Button size="default" type="warning" class="btn" @click="handleEdit">修改银行卡</Button> -->
         <Button size="default" type="success" class="btn" @click="handleUpdate">客户备注</Button>
-        <Button size="default" type="error" class="btn" @click="handleCance">取消放款</Button>
-        <Button size="default" type="success" class="btn" @click="modalShow = true">确认放款</Button>
+        <Button v-if="orderStatusInfo.orderStatus == 10" size="default" type="error" class="btn" @click="handleCance">取消放款</Button>
+        <Button v-if="orderStatusInfo.orderStatus == 10" size="default" type="success" class="btn" @click="modalShow = true">确认放款</Button>
       </div>
     </Drawer>
     <Modal v-model="modalShow" title="确认放款">
@@ -223,7 +225,7 @@
             </li>
             <li>
               <span class="sp1">收款人</span>
-              <span clasa="sp2">啊实</span>
+              <span clasa="sp2">{{customInfo.customerName}}</span>
             </li>
             <li>
               <span class="sp1">可使用金额(元)</span>
@@ -452,7 +454,7 @@ export default {
       formReturn: {
         balance: 0,
         bankCard: '',
-        serviceMoney: ''
+        serviceMoney: 0
       },
       formEntrust: {
         creditItemType: '',
@@ -582,6 +584,7 @@ export default {
         customerId: this.id,
         companyId: this.$store.getters.userInfo.companyId
       }
+  
       getRerurnLoanOrderMsg(params).then(res => {
         if (res.state == 1) {
           for (const i in this.formReturn) {
@@ -768,15 +771,17 @@ export default {
     },
     handleLoanSubmit() {
       // console.log(this.tabIndex)
+      // console.log(this.replaceOptions.serviceMoney)
       const params = {
         companyId: this.$store.getters.userInfo.companyId,
         customerId: this.id,
         transactionAmount: this.platformInLoanMoney,
-        serviceCharge: this.replaceOptions.serviceCharge
+        serviceCharge: this.replaceOptions.serviceMoney
       }
       confirmPassLoanInPlatform(params).then(res => {
         if (res.state == 1) {
           this.$Message.success('放款成功')
+          this.modalShow = false
           this.fetchLoanMsg()
           this.fetchLoanOrderList()
         }
@@ -798,9 +803,9 @@ export default {
     handleClick(row) {
       this.id = row.customerId
       this.drawerShow = true
+      this.fetchLoanMsgthirdParty()
       this.fetchLoanMsg()
       // this.fetchLoanAlertMsg()
-      this.fetchLoanMsgthirdParty()
     },
     handleSubmit() {
       this.fetchLoanOrderList()
@@ -835,10 +840,10 @@ export default {
           this.editLogList = res.info.data.editLogList
           this.creditList = res.info.data.creditList
           this.customInfo = res.info.data.customerInfo
-          this.loanInfo = res.info.data.remitInfo
+          this.loanInfo = res.info.data.remitInfo !== null? res.info.data.remitInfo : {}
           this.productInfo = res.info.data.productInfo
           this.channelInfo = res.info.data.channelInfo
-          this.orderStatusInfo = res.info.data.orderStatusInfo
+          this.orderStatusInfo = res.info.data.orderStatusInfo !== null? res.info.data.orderStatusInfo : {}
           this.billList = res.info.data.detailBillList
           this.controls = res.info.data.riskControlInfo.creditItemType.split(',')
           setTimeout(() => {

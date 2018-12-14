@@ -98,7 +98,9 @@ export default {
     right: 0;
     top: 0;
     left: 0;
-    height: 100%;
+    bottom: 0;
+    overflow-y: auto;
+    height: auto;
     background-color: #fff;
   }
   .top-image {
