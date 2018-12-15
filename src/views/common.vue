@@ -108,16 +108,17 @@
         //   this.menus = menuAllArrs
         //   return
         // }
-        // if (this.userInfo.permission != '') {
+        // if (this.userInfo.permission != '' && this.userInfo.superAdmin == 0) {
         //   const permission = this.userInfo.permission.split(',')
         //   for (const o of permission) {
         //     for (const q of menuAllArrs) {
         //       if (o == q.name) {
-        //         if (o.name == '设置管理') {
-        //           menuArrs.push({
+        //         if (o == '设置管理') {
+        //           const obj = {
         //             ...q,
         //             childer: []
-        //           })
+        //           }
+        //           menuArrs.push(obj)
         //         } else {
         //           menuArrs.push(q)
         //         }
@@ -126,7 +127,7 @@
         //   }
         //   if (this.userInfo.adminPermission != '') {
         //     const adminPermission = this.userInfo.adminPermission.split(',')
-        //     const adminMenus = menusList[7]
+        //     const adminMenus = menusList[7].childer
         //     const childers = []
         //     for (const z of adminPermission) {
         //       for (const y of adminMenus) {
@@ -142,8 +143,6 @@
         //     }
         //   }
         //   this.menus = menuArrs
-        // } else {
-        //   this.menus = menuAllArrs
         // }
       },
       handleSelect(name) {

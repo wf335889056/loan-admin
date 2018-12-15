@@ -309,10 +309,14 @@
             <li style="width: 100%;">
               <span class="sp1">签署电子合同</span>
               <span class="sp2">
-                <i-switch size="large" v-model="formPass.electronicBargainStatus" :true-value="1" :false-value="0">
+                <!-- <i-switch size="large" v-model="formPass.electronicBargainStatus" :true-value="1" :false-value="0">
                   <span slot="open">是</span>
                   <span slot="close">否</span>
-                </i-switch>
+                </i-switch> -->
+                <RadioGroup v-model="formPass.electronicBargainStatus">
+                  <Radio :label="0">否</Radio>
+                  <Radio :label="1">是</Radio>
+                </RadioGroup>
               </span>
             </li>
           </ul>

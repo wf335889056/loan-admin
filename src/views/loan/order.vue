@@ -210,7 +210,7 @@
         <Button v-if="orderStatusInfo.orderStatus == 3" size="default" type="warning" class="btn" @click="handleEntrust">委托催收</Button>
         <Button v-if="orderStatusInfo.orderStatus == 16" size="default" type="warning" class="btn" @click="handleEntrustCancel">放弃催收</Button>
         <!-- <Button size="default" type="warning" class="btn" @click="handleEdit">修改银行卡</Button> -->
-        <Button size="default" type="success" class="btn" @click="handleUpdate">客户备注</Button>
+        <!-- <Button size="default" type="success" class="btn" @click="handleUpdate">客户备注</Button> -->
         <Button v-if="orderStatusInfo.orderStatus == 10" size="default" type="error" class="btn" @click="handleCance">取消放款</Button>
         <Button v-if="orderStatusInfo.orderStatus == 10" size="default" type="success" class="btn" @click="modalShow = true">确认放款</Button>
       </div>
@@ -296,7 +296,7 @@
             <span class="sp2">{{totalMoneyExhibition}}</span>  
           </li>
           <li style="width: 100%;">
-            <span class="sp1">展期期间日利率(%)</span>
+            <span class="sp1">展期期间期利率(%)</span>
             <span class="sp2">
               <Input v-model="formExhibition.dayRate" ></Input>  
             </span>  
@@ -328,7 +328,7 @@
         </div>
       </template>
       <!-- 退还费用 -->
-      <template v-if="modalType == 4">
+      <!-- <template v-if="modalType == 4">
         <ul class="info-ul">
           <li style="width: 100%">
             <span class="sp1">客户银行卡</span>
@@ -362,7 +362,7 @@
         <div style="margin-top: 10px">
           <Input type="textarea" v-model="formReturn.remark" placeholder="输入备注信息"></Input>
         </div>
-      </template>
+      </template> -->
       <!-- 委托催收 -->
       <template v-if="modalType == 5">
         <ul class="info-ul">
@@ -558,7 +558,7 @@ export default {
                   })
                 }
               }
-            }, '结息')
+            }, '结清')
             return h('div', params.row.repaymentStatus == 1? [exhibition, interest] : '')
           }
         }
@@ -599,7 +599,7 @@ export default {
       })
     },
     handleEntrustCancel() {
-      const params = this.formExhibition
+      const params = this.formEntrust
       params.customerId = this.id
       params.collectionStatus = 19
       params.userId = this.$store.getters.userInfo.userId
@@ -669,15 +669,15 @@ export default {
       } else if (this.modalType == 4) {
         return
       } else if (this.modalType == 5) {
-        const params = this.formExhibition
+        const params = this.formEntrust
         params.customerId = this.id
         params.collectionStatus = 16
         params.userId = this.$store.getters.userInfo.userId
         entrustOrCancelLoanOrderMsg(params).then(res => {
           if (res.state == 1) {
             this.$Message.success('委托成功')
-            for (const i in this.formExhibition) {
-              this.formCleanBill[i] = ''
+            for (const i in this.formEntrust) {
+              this.formEntrust[i] = ''
             }
             this.fetchLoanMsg()
           }

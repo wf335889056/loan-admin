@@ -95,6 +95,12 @@
     data() {
       return {
         loadDrawer: true,
+        status: [
+          { label: '未还款', value: 1 },
+          { label: '已还款', value: 2 },
+          { label: '逾期', value: 3 },
+          { label: '还款中', value: 4 }
+        ],
         datas: [
           { title: '等待审核', color: 'rgb(84, 174, 248)', key: 'waitCheckCount' },
           { title: '待放款', color: 'rgb(254, 182, 62)', key: 'waitLoanCount' },
@@ -111,15 +117,9 @@
           { title: '手机号码', key: 'phone', align: 'center' },
           { title: '账单金额', key: 'totalMoney', align: 'center' },
           { title: '状态', key: 'repaymentStatus', align: 'center',
-            filters: [
-              { label: '未还款', value: 1 },
-              { label: '已还款', value: 2 },
-              { label: '逾期', value: 3 },
-              { label: '还款中', value: 4 }
-            ],
-            filterMultiple: false,
-            filterMethod (value, row) {
-              return row.repaymentStatus == value
+            render: (h, params) => {
+              // console.log(this.status.filter(it => it.value == params.row.repaymentStatus)[0].label)
+              return h('div', this.status.filter(it => it.value == params.row.repaymentStatus)[0].label)
             }
           },
           { title: '本金', key: 'billMoneyCount', align: 'center' },
@@ -337,6 +337,27 @@
         overflow: auto;
         height: 300px;
         position: relative;
+      }
+    }
+  }
+  @media (max-width: 1500px) {
+    .d2 {
+      display: block;
+      overflow: hidden;
+      height: auto;
+      > div {
+        width: 100%;
+        float: left;
+        margin: 0 12px;
+        border: 1px solid #e9e9e9;
+        border-radius: 4px;
+        &:hover {
+          box-shadow: 0 1px 6px rgba(0,0,0,.2);
+          border-color: rgba(0,0,0,.2);
+        }
+        .content {
+          height: 452px;
+        }
       }
     }
   }

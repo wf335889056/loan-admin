@@ -1,5 +1,5 @@
 <template>
-  <div ref="myChart" style="height: 400px;"></div>
+  <div ref="myChart" class="chart"></div>
 </template>
 
 <script>
@@ -53,3 +53,15 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+  .chart {
+    height: 400px;
+  }
+  @media (max-width: 1500px) {
+    .chart {
+      width: 100%;
+      height: auto;
+    }
+  }
+</style>

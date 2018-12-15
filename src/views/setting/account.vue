@@ -286,6 +286,9 @@ export default {
       this.drawerTitle = '账户详情'
       this.loadDrawer = true
       this.drawerShow = true
+      this.fetchAccountMsg()
+    },
+    fetchAccountMsg() {
       const params = {
         companyId: '',
         type: 1,
@@ -297,9 +300,19 @@ export default {
         if (res.state == 1) {
           this.form = res.info.user
           const approvalLevel = this.form.userApproveLevel.split(',')
+          for (let i = 0; i < approvalLevel.length; i++) {
+            if (approvalLevel[i] == '') approvalLevel.splice(i, 1)
+          }
           this.form.approvalLevel = approvalLevel.length > 0? approvalLevel : []
           const permission = res.info.user.permission
-          this.roles = permission != ''? permission.split(',') : []
+          if (permission != '') {
+            this.roles = permission.split(',')
+          } else {
+            this.roles.splice(0, this.roles.length)
+          }
+          if (!this.roles.includes('概览')) {
+            this.roles.push('概览')
+          }
           const adminPermission = res.info.user.adminPermission
           this.rolesChilder = adminPermission != ''? adminPermission.split(',') : []
           setTimeout(() => {

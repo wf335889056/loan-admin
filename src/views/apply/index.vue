@@ -92,16 +92,16 @@
               </li>
               <li>
                 <span class="sp1">职位</span>
-                <span class="sp2">{{items.customerPosition == 1? '企业主' : items.customerPosition == 2? '高级管理' : items.customerPosition == 3? '管理' : '普通职员'}}</span>
+                <span class="sp2">{{items.customerPosition == 1? '企业主' : items.customerPosition == 2? '高级管理' : items.customerPosition == 3? '管理' : items.customerPosition == 4? '普通职员' : ''}}</span>
               </li>
               <li>
                 <span class="sp1">收入(元)</span>
-                <span class="sp2">{{items.customerEarning == 1? '2000-4000' : items.customerEarning == 2? '4000-6000' : items.customerEarning == 3? '5000-8000' : items.customerEarning == 4? '8000-15000' : '15000及以上' }}</span>
+                <span class="sp2">{{items.customerEarning == 1? '2000-4000' : items.customerEarning == 2? '4000-6000' : items.customerEarning == 3? '5000-8000' : items.customerEarning == 4? '8000-15000' : items.customerEarning == 5 ?'15000及以上' : '' }}</span>
               </li>
             </ul>
           </div>
           <div class="content">
-            <p class="info-p">身份证照片</p>
+            <p class="info-p">身份证照片、人脸识别</p>
             <p v-if="sfzImgs.length == 0" class="line-msg">暂无上传</p>
             <div v-else class="sfz-img">
               <span v-for="item in sfzImgs">

@@ -15,7 +15,6 @@
             <FormItem>
               <Select v-model="formInline.repaymentStatus" clearable placeholder="当前状态">
                 <Option :value="0">全部</Option>
-                <Option :value="1">未还款</Option>
                 <Option :value="2">还款完成</Option>
                 <Option :value="3">逾期</Option>
                 <Option :value="4">还款中</Option>
@@ -108,7 +107,7 @@ export default {
         { title: '账单金额', key: 'TotalBillMoney', align: 'center' },
         { title: '当前状态', key: 'repaymentStatus', align: 'center',
         render: (h, params) => {
-          return h('div', params.row.repaymentStatus == 1? '未还款' : params.row.repaymentStatus == 2? '还款完成' : params.row.repaymentStatus == 3? '逾期' : '还款中')
+          return h('div', params.row.repaymentStatus == 2? '还款完成' : params.row.repaymentStatus == 3? '逾期' : '还款中')
         } },
         { title: '账单日期', key: 'billDate', align: 'center' },
         { title: '展期次数', key: 'deferCount', align: 'center' },
