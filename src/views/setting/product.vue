@@ -188,6 +188,10 @@ export default {
       })
     },
     handleNext() {
+      if (this.productImages.length <= 0) {
+        this.$Message.error('请上传产品图片')
+        return 
+      }
       this.formProduct.procedureMax = this.formProduct.payMoneyMax
       const params = this.formProduct
       params.productId = ''

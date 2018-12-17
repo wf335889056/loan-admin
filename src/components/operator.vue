@@ -48,7 +48,10 @@ export default {
         { title: '月份', key: 'cell_mth', align: 'center' },
         { title: '短信次数', key: 'sms_cnt', align: 'center' },
         { title: '流量使用', key: 'net_flow', align: 'center' },
-        { title: '消费金额', key: 'total_amount', align: 'center' },
+        { title: '消费金额', key: 'total_amount', align: 'center',
+        render: (h, params) => {
+          return h('div', parseInt(Number(params.row.total_amount) / 100))
+        } },
         { title: '通话次数', key: 'call_cnt', align: 'center' },
         { title: '通话时长(秒)', key: 'call_time', align: 'center' },
         { title: '主叫次数', key: 'dial_cnt', align: 'center' },
@@ -56,7 +59,10 @@ export default {
         { title: '被叫次数', key: 'dialed_cnt', align: 'center' },
         { title: '被叫时长(秒)', key: 'dialed_time', align: 'center' },
         { title: '充值次数', key: 'rechange_cnt', align: 'center' },
-        { title: '充值金额()', key: 'rechange_amount', align: 'center' }
+        { title: '充值金额(元)', key: 'rechange_amount', align: 'center',
+        render: (h, params) => {
+          return h('div', parseInt(Number(params.row.rechange_amount) / 100))
+        } }
       ],
       columns2: [
         { title: '对方号码', key: 'peer_number', align: 'center' },

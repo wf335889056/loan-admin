@@ -38,7 +38,7 @@
     <Drawer title="借款审核" v-model="drawerShow" width="60" class="drawer" :mask-closable="false">
       <Spin fix size="large" v-if="loadDrawer"></Spin>
       <div class="detail" v-else>
-        <template v-if="canAudit == 1">
+        <template>
           <p class="title"><Tag color="warning">审核信息</Tag></p>
           <div class="content">
             <ul class="info-ul">
@@ -57,7 +57,7 @@
             </ul>
           </div>
         </template>
-        <template v-else>
+        <template v-if="auditResult !== null">
           <p class="title"><Tag color="warning">审核结果</Tag></p>
           <div class="content">
             <ul class="info-ul">
@@ -285,7 +285,8 @@
             <li>
               <span class="sp1">利率/期(%)</span>
               <span class="sp2">
-                <Input v-model="formPass.creditRate"></Input>
+                <!-- <Input v-model="formPass.creditRate"></Input> -->
+                <span class="sp2">{{formPass.creditRate}}</span>
               </span>
             </li>
             <li>
@@ -306,19 +307,19 @@
               <span class="sp1">合同名称</span>
               <span class="sp2">{{formPass.bargainName}}</span>
             </li>
-            <li style="width: 100%;">
+            <!-- <li style="width: 100%;">
               <span class="sp1">签署电子合同</span>
               <span class="sp2">
-                <!-- <i-switch size="large" v-model="formPass.electronicBargainStatus" :true-value="1" :false-value="0">
+                <i-switch size="large" v-model="formPass.electronicBargainStatus" :true-value="1" :false-value="0">
                   <span slot="open">是</span>
                   <span slot="close">否</span>
-                </i-switch> -->
+                </i-switch>
                 <RadioGroup v-model="formPass.electronicBargainStatus">
                   <Radio :label="0">否</Radio>
                   <Radio :label="1">是</Radio>
                 </RadioGroup>
               </span>
-            </li>
+            </li> -->
           </ul>
           <div style="margin-top: 10px"> 
             <Input v-model="formPass.riskControl" type="textarea" placeholder="输入风控措施"></Input>
@@ -393,6 +394,7 @@ export default {
         bargainName: '',
         riskControl: '',
         loansSuggest: '',
+        productCycleRateNormal: '',
         electronicBargainStatus: 0
       },
       editLogList: [],

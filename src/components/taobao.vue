@@ -1,5 +1,12 @@
 <template>
   <div class="content">
+    <p class="info-p">基本信息</p>
+    <ul class="info-ul">
+      <li v-for="item in accountInfo">
+        <span class="sp1">{{item.key}}</span>
+        <span class="sp2">{{item.value}}</span>
+      </li>
+    </ul>
     <p class="info-p">财富信息</p>
     <ul class="info-ul">
       <li v-for="item in wealthInfo">
@@ -14,8 +21,8 @@
         <span class="sp2">{{item.value}}</span>
       </li>
     </ul>
-    <!-- <p class="info-p">常用地址</p>
-    <Table :columns="columns" :data="addressAnalysis.fommonlyUsedAddress"></Table> -->
+    <p class="info-p">最近一次常用地址</p>
+    <Table :columns="columns" :data="addressAnalysis.fommonlyUsedAddress"></Table>
     <p class="info-p">总体消费</p>
     <ul class="info-ul">
       <li v-for="item in consumptionAnalysis">
@@ -49,6 +56,19 @@ export default {
     }
   },
   computed: {
+    accountInfo() {
+      const arrs = []
+      if (this.obj.hasOwnProperty('basicInfo')) {
+        const account = this.obj.basicInfo.userAndAccountBasicInfo
+        for (const i in account) {
+          arrs.push({
+            key: this.transitionKey(i),
+            value: account[i]
+          })
+        }
+      }
+      return arrs
+    },
     wealthInfo() {
       const arrs = []
       if (this.obj.hasOwnProperty('wealthInfo')) {
@@ -72,8 +92,15 @@ export default {
             value: temp.fundamentalPointAnalysis[i]
           })
         }
+        const commonlyUsedAddress = temp.commonlyUsedAddress && Object.keys(temp.commonlyUsedAddress).length > 0? temp.commonlyUsedAddress : []
+        const commonlyUsedAddressArrs = []
+        const commonlyUsedAddressObj = {}
+        for (const i in commonlyUsedAddress) {
+          commonlyUsedAddressObj[i] = commonlyUsedAddress[i].top1
+        }
+        commonlyUsedAddressArrs.push(commonlyUsedAddressObj)
         return {
-          fommonlyUsedAddress: temp.commonlyUsedAddress && temp.commonlyUsedAddress.length > 0? temp.commonlyUsedAddress.length : [],
+          fommonlyUsedAddress: commonlyUsedAddressArrs,
           fundamentalPointAnalysis: arrs
         }
       }
@@ -131,6 +158,24 @@ export default {
         return '收货人姓名不是其本人的订单中，不同地址的数量'
         case 'avgNonselfAddressCnt': 
         return '非本人收货订单数量/非本人收件人使用地址数量'
+        case 'taobaoName':
+        return '淘宝中该用户的真实姓名'
+        case 'taobaoEmail':
+        return '淘宝中该用户绑定的邮箱'
+        case 'taobaoPhoneNumber':
+        return '淘宝中该用户绑定的手机号码'
+        case 'alipayAccount':
+        return '淘宝中该用户绑定的支付宝账户'
+        case 'taobaoVipLevel':
+        return '该用户的淘宝等级'
+        case 'taobaoVipCount':
+        return '该用户的淘宝VIP值'
+        case 'tmallLevel':
+        return '该用户的天猫等级'
+        case 'tmallVipCount':
+        return '该用户的天猫VIP值'
+        case 'tmallApass':
+        return '该用户的天猫信誉'
         default: 
         return ''
       }

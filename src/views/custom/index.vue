@@ -239,11 +239,15 @@ export default {
             if (operator.code == 200) {
               this.customOption.operator = operator.data
             }
-          } 
+          } else {
+            this.customOption.operator = {}
+          }
           // 通讯录
           if (res.info.tx != '' && res.info.tx !== null) {
             const addressBook = JSON.parse(res.info.tx)
             this.customOption.addressBook = addressBook
+          } else {
+            this.customOption.addressBook = []
           }
           // 京东
           if (res.info.jd != '' && res.info.jd !== null) {
@@ -258,6 +262,8 @@ export default {
             if (tb.code == 200) {
               this.customOption.taoBao = tb.data
             }
+          } else {
+            this.customOption.taoBao = {}
           }
           // 支付宝
           if (res.info.zfb != '' && res.info.zfb !== null) {
@@ -265,6 +271,8 @@ export default {
             if (zfb.alipay_user_info_share_response.code == 10000) {
               this.customOption.zhiFuBao = zfb.alipay_user_info_share_response
             }
+          } else {
+            this.customOption.zhiFuBao = {}
           }
           setTimeout(() => {
             this.loadDrawer = false

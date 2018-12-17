@@ -8,19 +8,19 @@
         <div class="content account">
           <div>
             <p class="p1">账户余额(元)</p>
-            <p class="p2">{{accounts.thirdPartyBalance.toFixed(2)}}</p>
+            <p class="p2">{{accounts.thirdPartyBalance || 0}}</p>
           </div>
           <div>
             <p class="p1">可用余额(元)</p>
-            <p class="p2">{{accounts.thirdPartyCanuseBalance.toFixed(2)}}</p>
+            <p class="p2">{{accounts.thirdPartyCanuseBalance|| 0}}</p>
           </div>
           <div>
             <p class="p1">查询费余额(元)</p>
-            <p class="p2">{{accounts.balance.toFixed(2)}}</p>
+            <p class="p2">{{accounts.balance || 0}}</p>
           </div>
           <div>
             <p class="p1">打款中余额(元)</p>
-            <p class="p2">{{accounts.loanAmount.toFixed(2)}}</p>
+            <p class="p2">{{accounts.loanAmount || 0}}</p>
           </div>
         </div>
       </div>
@@ -30,7 +30,7 @@
           <ul>
             <li v-for="(item, index) in datas" :key="index">
               <p class="p1"><span :style="{'background-color': item.color}"></span>{{item.title}}</p>
-              <p class="p2">{{item.number}}单</p>
+              <p class="p2">{{item.number || 0}}单</p>
             </li>
           </ul>
         </div>
@@ -40,16 +40,16 @@
         <div class="content overdue">
           <div>
             <p><span style="background-color: rgb(254, 182, 62)"></span>代收笔数</p>
-            <span class="sp">笔数: {{waitMap.waitBillCount}}笔</span>
-            <span class="sp">本金: {{waitMap.billMoneyCount.toFixed(2)}}元</span>
-            <span class="sp">利息: {{waitMap.interestCount.toFixed(2)}}元</span>
+            <span class="sp">笔数: {{waitMap.waitBillCount || 0}}笔</span>
+            <span class="sp">本金: {{waitMap.billMoneyCount.toFixed(2) || 0}}元</span>
+            <span class="sp">利息: {{waitMap.interestCount.toFixed(2) || 0}}元</span>
           </div>
           <div>
             <p><span></span>逾期数据</p>
-            <span class="sp">笔数: {{overdueMap.overdueBillCount}}笔</span>
-            <span class="sp">本金: {{overdueMap.billMoneyCount.toFixed(2)}}元</span>
-            <span class="sp">利息: {{overdueMap.interestCount.toFixed(2)}}元</span>
-            <span class="sp">罚息: {{overdueMap.penaltyCount.toFixed(2)}}元</span>
+            <span class="sp">笔数: {{overdueMap.overdueBillCount || 0}}笔</span>
+            <span class="sp">本金: {{overdueMap.billMoneyCount.toFixed(2) || 0}}元</span>
+            <span class="sp">利息: {{overdueMap.interestCount.toFixed(2) || 0}}元</span>
+            <span class="sp">罚息: {{overdueMap.penaltyCount.toFixed(2) || 0}}元</span>
           </div>
         </div>
       </div>
@@ -58,18 +58,18 @@
       <div>
         <div class="title">回款数据</div>
         <div class="content returned">
-          <p>笔数: <span>{{totalMoneyMap.totalBillCount}}笔</span> 
-            金额: {{totalMoneyMap.totalMoney.toFixed(2)}}元</p>
-          <p>本金: {{totalMoneyMap.billMoneyCount.toFixed(2)}}元, 
-            利息: {{totalMoneyMap.interestCount.toFixed(2)}}元, 
-            罚息: {{totalMoneyMap.penaltyCount.toFixed(2)}}元, 
-            手续费: {{totalMoneyMap.serviceMoney.toFixed(2)}}元</p>
-          <p>已回款{{returnedMoneyMap.returnedBillCount}}笔, 
-            共计{{returnedMoneyMap.totalMoney.toFixed(2)}}元, 
-            其中本金{{returnedMoneyMap.billMoneyCount.toFixed(2)}}元, 
-            利息{{returnedMoneyMap.interestCount.toFixed(2)}}元, 
-            罚息{{returnedMoneyMap.penaltyCount.toFixed(2)}}元, 
-            手续费{{returnedMoneyMap.serviceMoney.toFixed(2)}}元</p>
+          <p>笔数: <span>{{totalMoneyMap.totalBillCount || 0}}笔</span> 
+            金额: {{totalMoneyMap.totalMoney.toFixed(2) || 0}}元</p>
+          <p>本金: {{totalMoneyMap.billMoneyCount.toFixed(2)|| 0}}元, 
+            利息: {{totalMoneyMap.interestCount.toFixed(2) || 0}}元, 
+            罚息: {{totalMoneyMap.penaltyCount.toFixed(2) || 0}}元, 
+            手续费: {{totalMoneyMap.serviceMoney.toFixed(2) || 0}}元</p>
+          <p>已回款{{returnedMoneyMap.returnedBillCount || 0}}笔, 
+            共计{{returnedMoneyMap.totalMoney.toFixed(2) || 0}}元, 
+            其中本金{{returnedMoneyMap.billMoneyCount.toFixed(2) || 0}}元, 
+            利息{{returnedMoneyMap.interestCount.toFixed(2) || 0}}元, 
+            罚息{{returnedMoneyMap.penaltyCount.toFixed(2) || 0}}元, 
+            手续费{{returnedMoneyMap.serviceMoney.toFixed(2) || 0}}元</p>
           <div class="table">
             <Table :loading="loading" :columns="columns" :data="returneds"></Table>
             <Page :current="returnedsPage" size="small" :page-size="5" :total="total" show-total class="page" @on-change="handleChange" />

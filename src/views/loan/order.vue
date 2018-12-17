@@ -58,7 +58,7 @@
             </li>
             <li>
               <span class="sp1">订单状态</span>
-              <span class="sp2">{{allStatus.filter(it => it.id == orderStatusInfo.orderStatus)[0].text}}</span>
+              <span class="sp2">{{orderStatusInfo.orderStatus? allStatus.filter(it => it.id == orderStatusInfo.orderStatus)[0].text : ''}}</span>
               <!-- <span class="sp2">{{orderStatusInfo.orderStatus}}</span>   -->
             </li>
             <li>
@@ -471,6 +471,7 @@ export default {
         { title: '当前状态', key: 'orderStatus', align: 'center',
         render: (h, params) => {
           return h('div', this.allStatus.filter(it => it.id == params.row.orderStatus)[0].text)
+          // return h('div', '')
         } },
         { title: '下单时间', key: 'orderTime', align: 'center' },
         { title: '渠道', key: 'channelName', align: 'center' },
@@ -773,6 +774,7 @@ export default {
       // console.log(this.tabIndex)
       // console.log(this.replaceOptions.serviceMoney)
       const params = {
+        userId: this.$store.getters.userInfo.userId,
         companyId: this.$store.getters.userInfo.companyId,
         customerId: this.id,
         transactionAmount: this.platformInLoanMoney,

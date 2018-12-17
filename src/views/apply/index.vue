@@ -319,15 +319,21 @@ export default {
       getApplyMsg({ customerId: this.id }).then(res => {
         if (res.state == 1) {
           this.items = res.info.data.appleyDetail
-          if (this.items.idCardPhotoPositiveNegative != '' && this.items.idCardPhotoPositiveNegative != null) {
+          if (this.items.idCardPhotoPositiveNegative != '' && this.items.idCardPhotoPositiveNegative !== null) {
             this.sfzImgs.push(this.items.idCardPhotoPositive)
           }
-          if (this.items.idCardPhotoPositiveNegative != '' && this.items.idCardPhotoPositiveNegative != null) {
+          if (this.items.idCardPhotoPositiveNegative != '' && this.items.idCardPhotoPositiveNegative !== null) {
             this.sfzImgs.push(this.items.idCardPhotoPositiveNegative)
           }
           if (res.info.data.userAttestation && res.info.data.userAttestation.length > 0) {
             for (const o of res.info.data.userAttestation) {
               this.authentications.push(o.creditItemId)
+            }
+          }
+          if (this.items.img != '' && this.items.img !== null) {
+            const imgs = JSON.parse(this.items.img)
+            for (const o of imgs) {
+              this.sfzImgs.push(o.img)
             }
           }
           // console.log(this.authentications)

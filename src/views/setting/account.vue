@@ -233,20 +233,25 @@ export default {
       // if (this.)
       const params = this.form
       if (this.id == '') {
-        for (const i in this.form) {
-          if (this.form[i] == '') {
-            this.$Message.error('请填入完整信息')
-            return
-          }
-        }
+        // for (const i in this.form) {
+        //   if (this.form[i] == '') {
+        //     this.$Message.error('请填入完整信息')
+        //     return
+        //   }
+        // }
         params.userId = ''
         params.companyId = this.$store.getters.userInfo.companyId
       } else {
         params.userId = this.id
       }
       params.approvalLevel = this.form.approvalLevel.join(',')
-      params.permission = this.roles.join(',')
-      params.adminPermission = this.rolesChilder.join(',')
+      if (this.form.superAdmin == 1) {
+        params.permission = ''
+        params.adminPermission = ''
+      } else {
+        params.permission = this.roles.join(',')
+        params.adminPermission = this.rolesChilder.join(',')
+      }
       addAndUpdateAccountMsg(params).then(res => {
         if (res.state == 1) {
           this.$Message.success('保存成功')
