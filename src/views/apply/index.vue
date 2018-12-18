@@ -409,40 +409,5 @@ export default {
       border-bottom: 1px solid #E1E7EB;
     }
   }
-  .sfz-img {
-    width: 100%;
-    text-align: center;
-    span {
-      display: inline-block;
-      width: 150px;
-      height: 150px;
-      margin: 0 4px 4px 0;
-      border: 1px solid #E1E7EB;
-      position: relative;
-      > img {
-        width: 100%;
-        height: 100%;
-      }
-      &:hover {
-        .mask {
-          display: flex;
-        }
-      }
-      .mask {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        top: 0;
-        left: 0;
-        background-color: rgba(0,0,0,0.6);
-        color: #FFF;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        .icon {
-          cursor: pointer;
-        }
-      }
-    }
-  }
+  
 </style>

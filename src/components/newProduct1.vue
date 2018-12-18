@@ -56,7 +56,7 @@
                   <ul v-if="item.repaymentType != 13 && item.repayCycle">
                     <li v-for="(it, i) in item.repayCycle" style="margin-bottom: 10px;">
                       <span style="margin-right: 30px;"><InputNumber :min="0" v-model="it.cycleNum" style="width: 100px;"size="large"></InputNumber> 期</span>
-                      <span style="margin-right: 30px;">标准月利率: <InputNumber :min="0" v-model="it.cycleRateNormal" style="width: 150px;" size="large"></InputNumber>%</span>
+                      <span style="margin-right: 30px;">标准期利率: <InputNumber :min="0" v-model="it.cycleRateNormal" style="width: 150px;" size="large"></InputNumber>%</span>
                       <!-- <span style="margin-right: 30px;"><InputNumber :min="0" v-model="it.cycleRateLeast" style="width: 150px;" size="large" placeholder="最低月利率"></InputNumber>% (月)</span> -->
                       <Button type="error" shape="circle" icon="ios-trash-outline" @click.stop.prevent="handleDelete(item.repayCycle, i)"></Button>
                     </li>

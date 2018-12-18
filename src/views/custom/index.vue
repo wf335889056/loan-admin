@@ -62,10 +62,59 @@
               <span class="sp1">银行卡是否认证</span>
               <span class="sp2">{{userOption.bankCardFication == 0? '未认证' : '已认证'}}</span>
             </li>
+            <li>
+              <span class="sp1">客户地址</span>
+              <span class="sp2">{{userOption.address}}</span>
+            </li>
+            <li>
+              <span class="sp1">婚姻状态</span>
+              <span class="sp2">{{userOption.customerMarriageStatus}}</span>
+            </li>
+            <li>
+              <span class="sp1">公司名称</span>
+              <span class="sp2">{{userOption.customerCompanyName}}</span>
+            </li>
+            <li>
+              <span class="sp1">公司地址</span>
+              <span class="sp2">{{userOption.customerCompanyAddress}}</span>
+            </li>
+            <li>
+              <span class="sp1">公司电话</span>
+              <span class="sp2">{{userOption.customerCompanyPhone}}</span>
+            </li>
+            <li>
+              <span class="sp1">职务</span>
+              <span class="sp2">{{userOption.customerCompanyPhone}}</span>
+            </li>
+            <li>
+              <span class="sp1">收入</span>
+              <span class="sp2">{{userOption.customerCompanyPhone}}</span>
+            </li>
+            <li>
+              <span class="sp1">紧急联系人姓名</span>
+              <span class="sp2">{{userOption.urgencyPeopleName}}</span>
+            </li>
+            <li>
+              <span class="sp1">紧急联系人手机号</span>
+              <span class="sp2">{{userOption.urgencyPeoplephone}}</span>
+            </li>
           </ul>
           <!-- <p class="info-p">审核信息</p>
           <p class="line-msg">暂无数据</p> -->
         </div>
+        <div class="content">
+            <p class="info-p">身份证照片、人脸识别</p>
+            <p v-if="sfzImgs.length == 0" class="line-msg">暂无上传</p>
+            <div v-else class="sfz-img">
+              <span v-for="item in sfzImgs">
+                <img :src="item" alt="身份证">
+                <div class="mask">
+                  <Icon class="icon" type="ios-eye-outline" size="30" @click.native="handleView(item)"></Icon>
+                </div>
+              </span>
+            </div>
+        </div>
+        <p class="title"><Tag color="warning">风控信息</Tag></p>
         <tabView :userCustom="userOption" :customInfo="customOption" />
       </div>
       <div class="footer">
@@ -79,6 +128,9 @@
       <div slot="footer">
         <Button type="primary" size="default" long @click="handleDelete">确定</Button>
       </div>
+    </Modal>
+    <Modal title="预览图片" v-model="visible">
+      <img :src="imgUrl" style="width: 100%" alt="预览">
     </Modal>
   </div>
 </template>
@@ -125,13 +177,20 @@ export default {
         jingDong: {},
         taoBao: {},
         zhiFuBao: {}
-      }
+      },
+      sfzImgs: [],
+      imgUrl: '',
+      visible: false
     }
   },
   mounted() {
     this.fetchCustomListOrMsg()
   },
   methods: {
+    handleView(url) {
+      this.imgUrl = url
+      this.visible = true
+    },
     handleBlack() {
       this.balckConfirm = true
     },
@@ -219,6 +278,7 @@ export default {
       this.fetchCustomListOrMsg()
     },
     fetchCustomMsg() {
+      this.sfzImgs.splice(0, this.sfzImgs.length)
       const params = {
         userAppId: this.id,
         companyId: this.$store.getters.userInfo.companyId,
@@ -233,6 +293,15 @@ export default {
         if (res.state == 1) {
           this.userStatus = res.info.clientManagementDetails.userStatus
           this.userOption = res.info.clientManagementDetails
+          this.userOption.idCardPhotoPositive != '' && this.sfzImgs.push(this.userOption.idCardPhotoPositive)
+          this.userOption.idCardPhotoPositiveNegative != '' && this.sfzImgs.push(this.userOption.idCardPhotoPositiveNegative)
+          // 人脸识别
+          if (res.info.xx != '' && res.info.xx !== null) {
+            const imgs = JSON.parse(res.info.xx)
+            for (const o of imgs) {
+              this.sfzImgs.push(o.img)
+            }
+          }
           // 运营商
           if (res.info.yys != '' && res.info.yys !== null) {
             const operator = JSON.parse(res.info.yys)

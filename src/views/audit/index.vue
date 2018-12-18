@@ -124,6 +124,10 @@
               <span class="sp1">客户身份证号码</span>
               <span class="sp2">{{customerInfo.customerIdcard}}</span>
             </li>
+            <li>
+              <span class="sp1">客户备注</span>
+              <span class="sp2">{{customerInfo.customerRemark}}</span>
+            </li>
           </ul>
           <p class="info-p">申请信息</p>
           <ul class="info-ul">
@@ -243,8 +247,10 @@
         <authorizationAndUpdate :authorizations="creditList" :updates="editLogList" />
       </div>
       <div class="footer">
-        <Button v-if="canAudit == 1 && auditInfo.checkStatus != 10" size="default" type="success" class="btn" @click="handlePass">审核通过</Button>
-        <Button v-if="canAudit == 1" size="default" type="error" class="btn" @click="handleReject">审核被拒</Button>
+        <template v-if="auditInfo.checkStatus != 0">
+          <Button v-if="canAudit == 1 && auditInfo.checkStatus != 10" size="default" type="success" class="btn" @click="handlePass">审核通过</Button>
+          <Button v-if="canAudit == 1" size="default" type="error" class="btn" @click="handleReject">审核被拒</Button>
+        </template>
         <Button size="default" type="success" class="btn" @click="handleUpdate">客户备注</Button>
         <Button size="default" type="primary" class="btn" @click="handleBatch(0)">编辑负责人</Button>
       </div>
@@ -394,8 +400,7 @@ export default {
         bargainName: '',
         riskControl: '',
         loansSuggest: '',
-        productCycleRateNormal: '',
-        electronicBargainStatus: 0
+        productCycleRateNormal: ''
       },
       editLogList: [],
       creditList: [],
@@ -436,7 +441,10 @@ export default {
           return h('div', this.status.filter(it => it.id == params.row.checkStatus)[0].text)
         } },
         { title: '授信额度(元)', key: 'loanAmount', align: 'center' },
-        { title: '放款订单状态', key: 'orderStatus', align: 'center' },
+        { title: '放款订单状态', key: 'orderStatus', align: 'center',
+        render: (h, params) => {
+          return h('div', this.allStatus.filter(it => it.id == params.row.orderStatus)[0].text)
+        } },
         { title: '还款进度', key: 'repaySchedule', align: 'center' }
       ]
     }
@@ -561,6 +569,7 @@ export default {
       params.userId = this.$store.getters.userInfo.userId
       params.customerId = this.id
       params.checkStatus = this.customStatus
+      params.electronicBargainStatus = 0
       passLoanAudio(params).then(res => {
         if (res.state == 1) {
           this.$Message.success('审核通过')
