@@ -13,12 +13,21 @@
               <Input type="text" v-model="formInline.customerName" clearable placeholder="客户姓名" />
             </FormItem>
             <FormItem>
+              <Input type="text" v-model="formInline.phone" clearable placeholder="客户手机号" />
+            </FormItem>
+            <FormItem>
               <Input type="text" v-model="formInline.channelName" clearable placeholder="渠道" />
             </FormItem>
             <FormItem>
               <Select v-model="formInline.orderStatus" clearable placeholder="当前状态">
                 <Option v-for="item in status" :value="item.id" :label="item.text" :key="item.id"></Option>
               </Select>
+            </FormItem>
+            <FormItem>
+              <DatePicker type="date" placeholder="开始时间" v-model="formInline.startTime"></DatePicker>
+            </FormItem>
+            <FormItem>
+              <DatePicker type="date" placeholder="开始时间" v-model="formInline.endTime"></DatePicker>
             </FormItem>
         </Col>
         <Col span="2">
@@ -172,7 +181,7 @@
           </div>
         </div>
       <div class="footer">
-        <Button v-if="items.orderStatus == 1" size="default" type="success" class="btn" @click="handleUpdate">提交审核</Button>
+        <!-- <Button v-if="items.orderStatus == 1" size="default" type="success" class="btn" @click="handleUpdate">提交审核</Button> -->
         <!-- <Button v-if="items.orderStatus == 1" size="default" type="error" class="btn" @click="handleUpdate(7)">放弃申请</Button> -->
         <Button size="default" type="primary" class="btn" @click="handleBatch(0)">编辑负责人</Button>
       </div>
@@ -193,7 +202,10 @@ export default {
         productName: '',
         customerName: '',
         channelName: '',
-        orderStatus: 0
+        orderStatus: 0,
+        phone: '',
+        startTime: '',
+        endTime: ''
       },
       list: [],
       loading: true,

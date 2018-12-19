@@ -585,7 +585,6 @@ export default {
         customerId: this.id,
         companyId: this.$store.getters.userInfo.companyId
       }
-  
       getRerurnLoanOrderMsg(params).then(res => {
         if (res.state == 1) {
           for (const i in this.formReturn) {
@@ -603,6 +602,7 @@ export default {
       const params = this.formEntrust
       params.customerId = this.id
       params.collectionStatus = 19
+      params.collectionUserId = ''
       params.userId = this.$store.getters.userInfo.userId
       entrustOrCancelLoanOrderMsg(params).then(res => {
         if (res.state == 1) {

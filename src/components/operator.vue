@@ -1,35 +1,37 @@
 <template>
-  <div class="content">
-    <Divider>基本信息</Divider>
-    <ul class="info-ul">
-      <li v-for="item in userInfo">
-        <span class="sp1">{{transitionKey(item.key)}}</span>
-        <span class="sp2">{{item.value}}</span>
-      </li>
-    </ul>
-    <Divider>手机号基本信息</Divider>
-    <ul class="info-ul">
-      <li v-for="item in phoneInfo">
-        <span class="sp1">{{transitionKey(item.key)}}</span>
-        <span class="sp2">{{item.value}}</span>
-      </li>
-    </ul>
-    <Divider>月使用情况（按月汇总,汇总近6个月的）</Divider>
-    <Table :columns="columns1" :data="cellBehaviors"></Table>
-    <Divider>社交圈分析</Divider>
-    <p class="info-p">朋友圈联系人数量</p>
-    <ul class="info-ul">
-      <li v-for="item in summary">
-        <span class="sp1">{{transitionKey(item.key)}}</span>
-        <span class="sp2">{{item.value}}</span>
-      </li>
-    </ul>
-    <p class="info-p">朋友圈近6月（0-180天）联系人</p>
-    <Table :columns="columns2" :data="peerNumlist"></Table>
-    <p class="info-p">朋友圈近6月（0-180天）通话地</p>
-    <Table :columns="columns3" :data="locationToplist"></Table>
-    <Divider>通话详单（近6月）</Divider>
-    <Table :columns="columns4" :data="callContactDetail"></Table>
+  <div style="height:800px;overflow-y:auto;">
+    <div class="content">
+      <Divider>基本信息</Divider>
+      <ul class="info-ul">
+        <li v-for="item in userInfo">
+          <span class="sp1">{{transitionKey(item.key)}}</span>
+          <span class="sp2">{{item.value}}</span>
+        </li>
+      </ul>
+      <Divider>手机号基本信息</Divider>
+      <ul class="info-ul">
+        <li v-for="item in phoneInfo">
+          <span class="sp1">{{transitionKey(item.key)}}</span>
+          <span class="sp2">{{item.value}}</span>
+        </li>
+      </ul>
+      <Divider>月使用情况（按月汇总,汇总近6个月的）</Divider>
+      <Table :columns="columns1" :data="cellBehaviors"></Table>
+      <Divider>社交圈分析</Divider>
+      <p class="info-p">朋友圈联系人数量</p>
+      <ul class="info-ul">
+        <li v-for="item in summary">
+          <span class="sp1">{{transitionKey(item.key)}}</span>
+          <span class="sp2">{{item.value}}</span>
+        </li>
+      </ul>
+      <p class="info-p">朋友圈近6月（0-180天）联系人</p>
+      <Table :columns="columns2" :data="peerNumlist"></Table>
+      <p class="info-p">朋友圈近6月（0-180天）通话地</p>
+      <Table :columns="columns3" :data="locationToplist"></Table>
+      <Divider>通话详单（近6月）</Divider>
+      <Table :columns="columns4" :data="callContactDetail"></Table>
+    </div>
   </div>
 </template>
 
@@ -233,5 +235,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 </style>

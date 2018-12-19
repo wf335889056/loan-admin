@@ -241,7 +241,16 @@ export default {
               this.formProduct[i] = res.info.data[i]
             }
           }
-          this.listProduct = res.info.data.creditItemType && res.info.data.creditItemType != ''? res.info.data.creditItemType.split(',') : []
+          if (res.info.data.creditItemType && res.info.data.creditItemType != '') {
+            const arrs = res.info.data.creditItemType.split(',')
+            const controls = arrs.map(it => {
+              return { id: it }
+            })
+            this.listProduct = controls
+          } else {
+            this.listProduct.splice(0, this.listProduct.length)
+          }
+          
           this.list1 = res.info.data.channelList != null? res.info.data.channelList : []
           this.contract2Id = res.info.data.bargainBorrowMap != null? res.info.data.bargainBorrowMap.bargainBorrowId : ''
           this.contract3Id = res.info.data.bargainDefMap != null? res.info.data.bargainDefMap.bargainDeferId : ''

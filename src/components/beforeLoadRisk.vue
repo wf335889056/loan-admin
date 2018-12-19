@@ -24,10 +24,7 @@ export default {
   data() {
     return {
       columns: [
-        {
-          type: 'expand',
-          accordion: true,
-          width: 50,
+        { type: 'expand', accordion: true, width: 50,
           render: (h, params) => {
             const list = params.row.riskDetails != null? params.row.riskDetails : []
             return h('Table', {
@@ -37,7 +34,7 @@ export default {
                 columns: [
                   { title: '风险详情ID', key: 'riskDetailId', align: 'center' },
                   { title: '风险详情名称', key: 'riskDetailName', align: 'center' },
-                  { title: '风险详情说明', key: 'riskDetailValue', align: 'center' }
+                  { title: '风险详情备注', key: 'riskDetailValue', align: 'center' }
                 ]
               }
             })
@@ -45,18 +42,12 @@ export default {
         },
         { title: '风险ID', key: 'riskId', align: 'center' },
         { title: '风险名称', key: 'riskName', align: 'center' },
-        { 
-          title: '风险等级', 
-          key: 'riskLevel', 
-          align: 'center',
+        { title: '风险等级', key: 'riskLevel', align: 'center',
           render: (h, params) => {
             return h('div', enTransitionCn(params.row.riskLevel))
           }
         },
-        { 
-          title: '是否命中该风险', 
-          key: 'hit', 
-          align: 'center',
+        { title: '是否命中该风险', key: 'hit', align: 'center',
           render: (h, params) => {
             const isHit = h('div', {
               style: {

@@ -13,6 +13,9 @@
               <Input type="text" v-model="formInline.customerName" clearable placeholder="客户姓名" />
             </FormItem>
             <FormItem>
+              <Input type="text" v-model="formInline.phone" clearable placeholder="客户手机号" />
+            </FormItem>
+            <FormItem>
               <Input type="text" v-model="formInline.channelName" clearable placeholder="渠道" />
             </FormItem>
             <FormItem>
@@ -22,6 +25,12 @@
                 <Option :value="13">审核被拒</Option>
                 <Option :value="14">审核通过</Option>
               </Select>
+            </FormItem>
+            <FormItem>
+              <DatePicker type="date" placeholder="开始时间" v-model="formInline.startTime"></DatePicker>
+            </FormItem>
+            <FormItem>
+              <DatePicker type="date" placeholder="开始时间" v-model="formInline.endTime"></DatePicker>
             </FormItem>
         </Col>
         <Col span="2">
@@ -188,7 +197,7 @@
             </li>
             <li>
               <span class="sp1">工资收入</span>
-              <span class="sp2">{{jobInfo.customerPosition == 1? '2000-4000' : jobInfo.customerPosition == 2? '4000-6000' : jobInfo.customerPosition == 3? '5000-8000' : jobInfo.customerPosition == 4? '8000-12000' : jobInfo.customerPosition == 5? '12000及以上' : '未知'}}</span>
+              <span class="sp2">{{jobInfo.customeEarning == 1? '2000-4000' : jobInfo.customeEarning == 2? '4000-6000' : jobInfo.customeEarning == 3? '5000-8000' : jobInfo.customeEarning == 4? '8000-12000' : jobInfo.customeEarning == 5? '12000及以上' : ''}}</span>
             </li>
             <li>
               <span class="sp1">公司名称</span>
@@ -238,12 +247,12 @@
             </li>
           </ul>
         </div>
+        <p class="title"><Tag color="warning">风控信息</Tag></p>
+        <tabView :options="controls" :userCustom="userOption" :customInfo="customOption"/>
         <p class="title"><Tag color="warning">历史进件</Tag></p>
         <div class="content">
           <Table :columns="columns2" :data="historys"></Table>
         </div>
-        <!-- <p class="title"><Tag color="warning">风控信息</Tag></p>
-        <tabView :options="controls" /> -->
         <authorizationAndUpdate :authorizations="creditList" :updates="editLogList" />
       </div>
       <div class="footer">
@@ -277,7 +286,7 @@
             <li>
               <span class="sp1">授信额度(元)</span>
               <span class="sp2">
-                <Input v-model="formPass.creditMoney"></Input>
+                <Input v-model="formPass.creditMoney" :readonly="auditInfo.checkStatus != 1"></Input>
               </span>
             </li>
             <li>
@@ -328,10 +337,10 @@
             </li> -->
           </ul>
           <div style="margin-top: 10px"> 
-            <Input v-model="formPass.riskControl" type="textarea" placeholder="输入风控措施"></Input>
+            <Input v-model="formPass.riskControl" type="textarea" placeholder="输入风控措施" :readonly="auditInfo.checkStatus != 1"></Input>
           </div>
           <div style="margin-top: 10px"> 
-            <Input v-model="formPass.loansSuggest" type="textarea"  placeholder="贷后管理建议"></Input>
+            <Input v-model="formPass.loansSuggest" type="textarea"  placeholder="贷后管理建议" :readonly="auditInfo.checkStatus != 1"></Input>
           </div>
           <p style="text-align: left; font-size: 16px;color: red;">*开启后会要求客户签署电子合同, 客户签署后生成放款订单, 在平台生成具有法律意义的借款凭证。 若通过借款平台放款, 则无需开启</p>
         </template>
@@ -339,6 +348,11 @@
       <div slot="footer">
         <Button v-if="modelType == 0" type="primary" size="default" long @click="handleRejectSubmit">提交</Button>
         <Button v-if="modelType == 1" type="primary" size="default" long @click="handlePassSubmit">提交</Button>
+      </div>
+    </Modal>
+    <Modal v-model="auditModelShow" title="机审结果">
+      <div slot="footer">
+          <Button type="primary" size="default" long @click="auditModelShow = false">关闭</Button>
       </div>
     </Modal>
   </div>
@@ -358,7 +372,10 @@ export default {
         channelName: '',
         customerName: '',
         productName: '',
-        orderStatus: 0
+        orderStatus: 0,
+        phone: '',
+        startTime: '',
+        endTime: ''
       },
       list: [],
       loading: true,
@@ -415,6 +432,16 @@ export default {
       historys: [],
       controls: [],
       auditResult: {},
+      userOption: {},
+      customOption: {
+        operator: {},
+        addressBook: [],
+        jingDong: {},
+        taoBao: {},
+        zhiFuBao: {}
+      },
+      auditModelShow: false,
+      auditResultReject: {},
       columns: [
         { type: 'selection', width: 60, align: 'center' },
         { title: '产品名称', key: 'productName', align: 'center' },
@@ -430,7 +457,25 @@ export default {
         { title: '渠道', key: 'channelName', align: 'center' },
         { title: '业务经理', key: 'businessAdmin', align: 'center' },
         { title: '负责人', key: 'userName', align: 'center' },
-        { title: '资方名称', key: 'capitalTitle', align: 'center' }
+        { title: '资方名称', key: 'capitalTitle', align: 'center' },
+        { title: '操作', key: 'action', width: 100, align: 'center',
+        render: (h, params) => {
+          return h('Button', {
+            props: {
+              type: 'text',
+              size: 'small'
+            },
+            style: {
+              color: '#2db7f5'
+            },
+            on: {
+              click: (e) => {
+                e.stopPropagation()
+                this.auditModelShow = true
+              }
+            }
+          }, '机审结果')
+        } }
       ],
       columns2: [
         { title: '申请时间', key: 'applyTime', align: 'center' },
@@ -649,6 +694,12 @@ export default {
           this.historys = res.info.data.idcardApplyList
           this.auditResult = res.info.data.checkResult
           this.controls = res.info.data.riskControlInfo.creditItemType.split(',')
+          this.userOption = {
+            phone: this.customerInfo.customerPhone,
+            idcard: this.customerInfo.customerIdcard,
+            userName: this.customerInfo.customerName,
+            userAppId: this.customerId
+          }
           setTimeout(() => {
             this.loadDrawer = false
           }, 1000)

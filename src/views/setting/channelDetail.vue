@@ -156,7 +156,7 @@ export default {
       }
       params.channelAdminList = admins.join(',') || ''
       params.channelProduct = products.join(',') || ''
-      params.channelLinkman = JSON.stringify(this.channelContacts) || ''
+      params.channelLinkman = ''
       params.companyId = this.$store.getters.userInfo.companyId
       params.userName = this.$store.getters.userInfo.userName
       addOrUpdateChannelMsg(params).then(res => {

@@ -24,15 +24,16 @@
     },
     computed: {
       optionsList() {
-        // console.log(this.checkedList)
+        console.log(this.checkedList)
         const options = this.options
         for (const o of options) {
           this.checkedList.forEach(it => {
-            if (it == o.id) {
+            if (it.id == o.id) {
               o.checked = true
             }
           })
         }
+        // this.$emit('update', list)
         return options
       }
     },

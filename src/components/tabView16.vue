@@ -2,18 +2,30 @@
   <div class="tab-box">
     <Tabs type="card" @on-click="handleClick" v-model="tabsName">
       <TabPane v-for="(item, index) in tabs" :label="item.title" :key="item.id" :name="String(index)">
-        <operator v-if="item.id == 12" :obj="customInfo.operator" />
+        <!-- 运营商 -->
+        <operator v-if="item.id == 12" :obj="customInfo.operator" /> 
+        <!-- 反欺诈 -->
         <antiFraud v-if="item.id == 2" :risk="id2Data"/>
+        <!-- 多头负债 -->
         <longDebt v-if="item.id == 4" :obj="id4Data" />
+        <!-- 多头借贷 -->
         <longBorrowing v-if="item.id == 5" :obj="id5Data" />
         <!-- <networkPhoneThree v-if="item.id == 11" :obj="id11Data" /> -->
+        <!-- 贷前综合分析 -->
         <beforeLoadRisk v-if="item.id == 3" :obj="id3Data" />
+        <!-- 失信 -->
         <breakFaith v-if="item.id == 7" :obj="id7Data" />
+        <!-- 网贷逾期 -->
         <loanOverdue v-if="item.id == 8" :obj="id8Data" />
+        <!-- 公安信息 -->
         <publicSecurity v-if="item.id == 6" :obj="id6Data" />
+        <!-- 淘宝 -->
         <taoBao v-if="item.id == 14" :obj="customInfo.taoBao" />
+        <!-- 京东 -->
         <jingDong v-if="item.id == 13" :obj="customInfo.jingDong" />
+        <!-- 通讯录 -->
         <addressBook v-if="item.id == 17" :list="customInfo.addressBook" />
+        <!-- 支付宝 -->
         <zhiFuBao v-if="item.id == 16" :obj="customInfo.zhiFuBao" />
       </TabPane>
     </Tabs>
@@ -77,6 +89,7 @@ export default {
   },
   computed: {
     tabs() {
+      console.log(this.options)
       const arrs = thirdPartyVerification()
       const tabs = []
       if (!this.options) {

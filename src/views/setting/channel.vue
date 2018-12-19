@@ -56,7 +56,7 @@ export default {
         } },
         { title: '渠道名称', key: 'channelName', align: 'center' },
         { title: '已添加产品', key: 'productName', align: 'center' },
-        { title: '业务类型', key: 'channelBusinessType', align: 'center' },
+        { title: '渠道备注', key: 'channelBusinessType', align: 'center' },
         { title: '创建人', key: 'userName', align: 'center' },
         { title: '创建时间', key: 'createTime', align: 'center' },
         {
@@ -136,7 +136,7 @@ export default {
       }
       params.channelAdminList = admins.join(',') || ''
       params.channelProduct = products.join(',') || ''
-      params.channelLinkman = JSON.stringify(this.channelContacts) || ''
+      params.channelLinkman = ''
       params.channelId = ''
       params.companyId = this.userInfo.companyId
       params.userName = this.userInfo.userName
@@ -152,7 +152,7 @@ export default {
           this.channelContacts = [{ linkmanName: '', linkmanPhone: '' }]
         }
       })
-      console.log(params)
+      // console.log(params)
     },
     fetchChannelLisgOrMsg() {
       const params = {

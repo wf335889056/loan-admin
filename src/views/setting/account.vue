@@ -14,11 +14,11 @@
         <div class="form" style="margin-top: 30px;">
           <Form :model="form" :label-width="150" style="text-align: left;">
             <FormItem label="手机号:">
-              <Input v-model="form.phone" size="large" clearable></Input>
+              <Input v-model="form.phone" size="large" :readonly="canUpdatePhone"></Input>
             </FormItem>
-            <FormItem label="验证码:" v-if="id == ''">
-              <Input v-model="form.code" size="large" clearable style="width: 60%;"></Input>
-              <span class="span" @click="handleCode" :class="{'disabled': time != '获取验证码'}">{{time}}</span>
+            <FormItem label="密码:">
+              <Input v-model="form.code" size="large" clearable></Input>
+              <!-- <span class="span" @click="handleCode" :class="{'disabled': time != '获取验证码'}">{{time}}</span> -->
             </FormItem>
             <FormItem label="职位:">
               <Input v-model="form.position" size="large" clearable></Input>
@@ -105,11 +105,7 @@ export default {
         { title: '职位', key: 'position', align: 'center' },
         { title: '手机号', key: 'phone', align: 'center' },
         { title: '创建时间', key: 'creationTime', align: 'center' },
-        {
-          title: '操作',
-          key: 'action',
-          width: 200,
-          align: 'center',
+        { title: '操作', key: 'action', width: 200, align: 'center',
           render: (h, params) => {
             // stateStatus 0 禁用 1启用
             const forbidden = h('Button', {
@@ -173,7 +169,8 @@ export default {
       updateForm: {
         userName: '',
         password: ''
-      }
+      },
+      canUpdatePhone: false
     }
   },
   mounted() {
@@ -224,6 +221,7 @@ export default {
         roleId: '',
         superAdmin: 0
       }
+      this.canUpdatePhone = false
       this.drawerShow = true
     },
     handleRole() {
@@ -291,6 +289,7 @@ export default {
       this.drawerTitle = '账户详情'
       this.loadDrawer = true
       this.drawerShow = true
+      this.canUpdatePhone = true
       this.fetchAccountMsg()
     },
     fetchAccountMsg() {

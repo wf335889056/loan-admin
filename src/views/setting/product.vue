@@ -175,9 +175,11 @@ export default {
       })
     },
     handleDone() {
+      const len = this.listProduct.length
+      const ids = len > 5? [12, 17, 13, 14, 16].concat(this.listProduct) : [12, 17, 13, 14, 16]
       const params = {
         productId: this.id,
-        creditItemType: this.listProduct.join(',')
+        creditItemType: ids.join(',')
       }
       saveProductCreditItem(params).then(res => {
         if (res.state == 1) {

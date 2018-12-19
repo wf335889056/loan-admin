@@ -4,13 +4,13 @@
       <FormItem label="渠道名:">
         <Input v-model="form.channelName" size="large" clearable></Input>
       </FormItem>
-      <FormItem label="渠道简称:">
+      <!-- <FormItem label="渠道简称:">
         <Input v-model="form.channelNameShort" size="large" clearable></Input>
       </FormItem>
       <FormItem label="公司全称:">
         <Input v-model="form.channelCompanyName" size="large" clearable></Input>
-      </FormItem>
-      <FormItem label="业务类型:">
+      </FormItem> -->
+      <FormItem label="渠道备注:">
         <Input v-model="form.channelBusinessType" size="large" clearable></Input>
       </FormItem>
       <FormItem label="渠道管理员:">
@@ -35,7 +35,7 @@
         </template>
         <button class="btn-add" @click.stop.prevent="handleAddProducts">新增</button>
       </FormItem>
-      <FormItem label="联系人:">
+      <!-- <FormItem label="联系人:">
         <template v-for="(item, index) in contacts">
           <div style="margin-bottom: 20px;">
             <Input v-model="item.linkmanName" size="large" clearable placeholder="联系人姓名" style="width: 30%;"></Input>
@@ -45,7 +45,7 @@
         </template>
         <p style="text-align: left; font-size: 18px;margin-bottom: 10px; color: red;">*联系人手机会收到订单短信通知。</p>
         <button class="btn-add" @click.stop.prevent="handleAddContacts">新增联系人</button>
-      </FormItem>
+      </FormItem> -->
     </Form>
   </div>  
 </template>

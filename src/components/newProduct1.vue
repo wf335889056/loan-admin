@@ -4,9 +4,9 @@
             <FormItem label="产品名称:">
               <Input v-model="form.productName" size="large" clearable></Input>
             </FormItem>
-            <FormItem label="产品描述:">
+            <!-- <FormItem label="产品描述:">
               <Input v-model="form.description" size="large" clearable></Input>
-            </FormItem>
+            </FormItem> -->
             <FormItem label="产品logo:">
               <uploadImage :uploadList="imgs" @upload="imageSuccess" :uploadMax="1"/>
             </FormItem>
