@@ -24,10 +24,12 @@
               </Select>
             </FormItem>
             <FormItem>
-              <DatePicker type="date" placeholder="开始时间" v-model="formInline.startTime"></DatePicker>
+              <DatePicker type="date" placeholder="开始时间" 
+              v-model="formInline.startTime" @on-change="handleTimeChangeA"></DatePicker>
             </FormItem>
             <FormItem>
-              <DatePicker type="date" placeholder="开始时间" v-model="formInline.endTime"></DatePicker>
+              <DatePicker type="date" placeholder="结束时间" 
+              v-model="formInline.endTime" @on-change="handleTimeChangeB"></DatePicker>
             </FormItem>
         </Col>
         <Col span="2">
@@ -253,6 +255,12 @@ export default {
     }
   },
   methods: {
+    handleTimeChangeA(val) {
+      this.formInline.startTime = val
+    },
+    handleTimeChangeB(val) {
+      this.formInline.endTime = val
+    },
     handleView(url) {
       this.imgUrl = url
       this.visible = true

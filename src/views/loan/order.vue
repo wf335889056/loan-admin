@@ -116,17 +116,17 @@
           <p class="info-p">打款信息</p>
           <ul class="info-ul">
             <li>
-              <span class="sp1">打款人</span>
+              <span class="sp1">放款渠道</span>
               <span class="sp2">{{loanInfo.remitPeople}}</span>
             </li>
-            <li>
+            <!-- <li>
               <span class="sp1">打款银行</span>
               <span class="sp2">{{loanInfo.remitBank}}</span>
             </li>
             <li>
               <span class="sp1">打款账户</span>
               <span class="sp2">{{loanInfo.remitAccount}}</span>
-            </li>
+            </li> -->
             <li>
               <span class="sp1">本次放款金额</span>
               <span class="sp2">{{loanInfo.nowRemitMoney}}</span>
@@ -162,6 +162,10 @@
             <li style="width: 100%;">
               <span class="sp1">罚息</span>
               <span class="sp2">{{productInfo.defaultType}}</span>
+            </li>
+            <li style="width: 100%;">
+              <span class="sp1">还款周期</span>
+              <span class="sp2">{{productInfo.byStagesNum}}</span>
             </li>
           </ul>
           <p class="info-p">渠道信息</p>
@@ -236,25 +240,48 @@
               <span clasa="sp2">{{replaceOptions.shouldRemitMoney}}</span>
             </li>
             <li>
-              <span class="sp1">已放款金额(元)</span>
-              <span clasa="sp2">{{replaceOptions.hadRemitMoney}}</span>
+              <span class="sp1">富友手续费(元)</span>
+              <span clasa="sp2">1</span>
             </li>
             <li>
               <span class="sp1">手续费(元)</span>
               <span clasa="sp2">{{replaceOptions.serviceMoney}}</span>
             </li>
             <li style="width: 100%">
-              <span class="sp1">本次放款金额(元)</span>
-              <span clasa="sp2"><Input v-model="platformInLoanMoney" placeholder="输入金额"></Input></span>
+              <span class="sp1">本次放款金额(元)(已扣除手续费)</span>
+              <span clasa="sp2">{{replaceOptions.nowRemitMoney}}</span>
             </li>
           </ul>
         </TabPane>
         <TabPane name="2" label="平台外放款">
-          <p class="line-msg">暂未开通</p> 
+          <ul class="info-ul">
+            <li>
+              <span class="sp1">放款渠道</span>
+              <span clasa="sp2">
+                <Input v-model="platformOutLoanType" placeholder="输入放款方式"></Input>
+              </span>
+            </li>
+            <li>
+              <span class="sp1">收款人</span>
+              <span clasa="sp2">{{customInfo.customerName}}</span>
+            </li>
+            <li>
+              <span class="sp1">应放款金额(元)</span>
+              <span clasa="sp2">{{replaceOptions.shouldRemitMoney}}</span>
+            </li>
+            <li>
+              <span class="sp1">手续费(元)</span>
+              <span clasa="sp2">{{replaceOptions.serviceMoney}}</span>
+            </li>
+            <li style="width: 100%">
+              <span class="sp1">本次放款金额(元)(已扣除手续费)</span>
+              <span clasa="sp2">{{replaceOptions.nowRemitMoney}}</span>
+            </li>
+          </ul>
         </TabPane>
       </Tabs>
       <div slot="footer">
-        <Button v-if="tabIndex == 1" type="primary" size="default" long @click="handleLoanSubmit">确认</Button>
+        <Button type="primary" size="default" long @click="handleLoanSubmit">确认</Button>
       </div>
     </Modal>
     <Modal v-model="modalFormShow" :title="modalTitle">
@@ -319,7 +346,7 @@
           <li>
             <span class="sp1">本次还款金额(元)</span>
             <span class="sp2">
-              <Input v-model="formCleanBill.nowRepayMoney" placeholder="输入罚息"></Input>  
+              <Input v-model="formCleanBill.nowRepayMoney" placeholder="输入金额"></Input>  
             </span>  
           </li>
         </ul>
@@ -424,7 +451,7 @@ export default {
       tabIndex: '1',
       replaceOptions: {},
       platformOptions: {},
-      platformInLoanMoney: '',
+      platformOutLoanType: '',
       creditList: [],
       editLogList: [],
       customInfo: {},
@@ -773,21 +800,27 @@ export default {
     handleLoanSubmit() {
       // console.log(this.tabIndex)
       // console.log(this.replaceOptions.serviceMoney)
-      const params = {
-        userId: this.$store.getters.userInfo.userId,
-        companyId: this.$store.getters.userInfo.companyId,
-        customerId: this.id,
-        transactionAmount: this.platformInLoanMoney,
-        serviceCharge: this.replaceOptions.serviceMoney
-      }
-      confirmPassLoanInPlatform(params).then(res => {
-        if (res.state == 1) {
-          this.$Message.success('放款成功')
-          this.modalShow = false
-          this.fetchLoanMsg()
-          this.fetchLoanOrderList()
+      // 富友放款
+      if (this.tabIndex == 1) {
+        const params = {
+          userId: this.$store.getters.userInfo.userId,
+          companyId: this.$store.getters.userInfo.companyId,
+          customerId: this.id,
+          transactionAmount: this.replaceOptions.shouldRemitMoney,
+          serviceCharge: this.replaceOptions.serviceMoney
         }
-      })
+        // console.log(params)
+        confirmPassLoanInPlatform(params).then(res => {
+          if (res.state == 1) {
+            this.$Message.success('放款成功')
+            this.modalShow = false
+            this.fetchLoanMsg()
+            this.fetchLoanOrderList()
+          }
+        })
+      } else {
+        // console.log('线下放款')
+      }
     },
     handleCance() {
       const params = {
@@ -824,6 +857,7 @@ export default {
       getLoanMsgthirdParty(params).then(res => {
         if (res.state == 1) {
           this.replaceOptions = res.info.data
+          this.tabIndex = '1'
         }
       })
     },

@@ -9,7 +9,7 @@ export const baseUrl = 'http://www.xiaoyoujr.com:8091'
 
 const service = axios.create({
   baseURL: dev? '/api' : baseUrl,
-  timeout: 5000,
+  timeout: 60000,
   withCredentials: true
 })
 

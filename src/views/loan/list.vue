@@ -2,24 +2,45 @@
   <div class="wrapper">
     <Row>
       <Button type="primary" size="large" :disabled="isDisabled" style="margin-bottom: 30px;margin-right: 20px;" @click="handleBatch">批量分配  </Button>
+      <Button type="success" size="large" style="margin-bottom: 30px" @click="handleExport">导出</Button>
     </Row>
      <Row class="row">
-       <Form ref="formInline" class="formInline" :model="formInline"  inline>
+       <Form ref="formInline" class="formInline" :model="formInline" inline>
         <Col span="22">
-            <FormItem>
-              <Input type="text" v-model="formInline.customerName" clearable placeholder="客户姓名" />
-            </FormItem>
-            <FormItem>
-              <Input type="text" v-model="formInline.userName" clearable placeholder="负责人" />
-            </FormItem>
-            <FormItem>
-              <Select v-model="formInline.repaymentStatus" clearable placeholder="当前状态">
-                <Option :value="0">全部</Option>
-                <Option :value="2">还款完成</Option>
-                <Option :value="3">逾期</Option>
-                <Option :value="4">还款中</Option>
-              </Select>
-            </FormItem>
+          <FormItem>
+            <Input type="text" v-model="formInline.customerName" clearable placeholder="客户姓名" />
+          </FormItem>
+          <FormItem>
+            <Input v-model="formInline.customerPhone" clearable placeholder="客户手机号" />
+          </FormItem>
+          <FormItem>
+            <Input type="text" v-model="formInline.userName" clearable placeholder="负责人" />
+          </FormItem>
+          <FormItem>
+            <Select v-model="formInline.repaymentStatus" clearable placeholder="当前状态">
+              <Option :value="0">全部</Option>
+              <Option :value="2">还款完成</Option>
+              <Option :value="3">逾期</Option>
+              <Option :value="4">还款中</Option>
+            </Select>
+          </FormItem>
+          </br>
+          <FormItem>
+            <DatePicker type="date" placeholder="预计还款开始时间" format="yyyy-MM-dd" 
+            v-model="formInline.billEndDateStartTime" @on-change="handleTimeChangeA"></DatePicker>
+          </FormItem>
+          <FormItem>
+            <DatePicker type="date" placeholder="预计还款结束时间" format="yyyy-MM-dd" 
+            v-model="formInline.billEndDateEndTime" @on-change="handleTimeChangeB"></DatePicker>
+          </FormItem>
+          <FormItem>
+            <DatePicker type="date" placeholder="实际还款开始时间" format="yyyy-MM-dd" 
+            v-model="formInline.backMoneyTimeStartTime" @on-change="handleTimeChangeC"></DatePicker>
+          </FormItem>
+          <FormItem>
+            <DatePicker type="date" placeholder="实际还款结束时间" format="yyyy-MM-dd" 
+            v-model="formInline.backMoneyTimeEndTime" @on-change="handleTimeChangeD"></DatePicker>
+          </FormItem>
         </Col>
         <Col span="2">
           <FormItem>
@@ -29,10 +50,10 @@
         </Form>
     </Row>
     <div class="table">
-      <Table :loading="loading" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+      <Table :loading="loading" :columns="columns" :data="list" ref="table" @on-selection-change="handleSelectChange"></Table>
       <Page :current="page" :page-size="20" :total="total" show-total class="page" @on-change="handleChange" />
     </div>
-    <Modal v-model="modalFormShow" title="退还费用">
+    <!-- <Modal v-model="modalFormShow" title="退还费用">
       <ul class="info-ul">
         <li style="width: 100%">
           <span class="sp1">客户银行卡</span>
@@ -68,21 +89,26 @@
       </div>
       <div slot="footer">
         <Button type="primary" size="default" long @click="handleUpdateSubmit">确认提交</Button>
-      </div>
+      </div> -->
     </Modal>
   </div>
 </template>
 
 <script>
 import { getBillLianList, remarkAuditPeople, saveApplyPrincipal, getApplyPrincipal, 
-getRerurnLoanOrderMsg } from '@/utils/api'
+getRerurnLoanOrderMsg, getBillLianListExport } from '@/utils/api'
 export default {
   data() {
     return {
       formInline: {
         repaymentStatus: 0,
         userName: '',
-        customerName: ''
+        customerName: '',
+        billEndDateEndTime: '',
+        billEndDateStartTime: '',
+        backMoneyTimeStartTime: '',
+        backMoneyTimeEndTime: '',
+        customerPhone: ''
       },
       list: [],
       loading: true,
@@ -162,7 +188,37 @@ export default {
     }
   },
   methods: {
-    handleUpdateSubmit() {
+    handleTimeChangeA(val) {
+      this.formInline.billEndDateStartTime = val
+    },
+    handleTimeChangeB(val) {
+      this.formInline.billEndDateEndTime = val
+    },
+    handleTimeChangeC(val) {
+      this.formInline.backMoneyTimeStartTime = val
+    },
+    handleTimeChangeD(val) {
+      this.formInline.backMoneyTimeEndTime = val
+    },
+    handleExport() {
+      getBillLianListExport({companyId: this.$store.getters.userInfo.companyId}).then(res => {
+        if (res.state == 1) {
+          this.$refs.table.exportCsv({
+            filename: '账单列表',
+            data: res.info.data,
+            columns: [
+              { title: '客户编号', key: 'customerId', align: 'center' },
+              { title: '客户姓名', key: 'customerName', align: 'center' },
+              { title: '手机号码', key: 'customerPhone', align: 'center' },
+              { title: '账单金额', key: 'TotalBillMoney', align: 'center' },
+              { title: '当前状态', key: 'repaymentStatus', align: 'center' },
+              { title: '账单日期', key: 'billDate', align: 'center' },
+              { title: '展期次数', key: 'deferCount', align: 'center' },
+              { title: '负责人', key: 'userName', align: 'center' }
+            ]
+          })
+        }
+      })
     },
     handleSelectChange(selection) {
       this.selection = selection
@@ -278,7 +334,7 @@ export default {
         }
       })
     },
-    fetchBillLianList() {
+    fetchBillLianList(form) {
       const params = this.formInline
       params.limit = 20
       params.page = this.page

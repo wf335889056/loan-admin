@@ -132,6 +132,7 @@ export const menusList = [
   ] },
   { name: '设置管理', path: '/setting', icon: 'ios-settings-outline', childer: [
     { name: '账户管理', path: '/setting/account' },
+    { name: '机审标准', path: '/setting/standard' },
     { name: '产品管理', path: '/setting/product' },
     { name: '渠道管理', path: '/setting/channel' },
     { name: '财务管理', path: '/setting/finance' },

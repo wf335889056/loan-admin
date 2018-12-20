@@ -560,6 +560,14 @@ export function getBillLianList(query) {
     params: query
   })
 }
+// 放款管理 账单列表导出
+export function getBillLianListExport(query) {
+  return fetch({
+    url: '/LoanController/exportExcel',
+    method: 'post',
+    params: query
+  })
+}
 // 放款管理 展期列表
 export function getExhibitionRecordList(query) {
   return fetch({

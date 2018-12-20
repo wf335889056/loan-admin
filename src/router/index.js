@@ -27,7 +27,8 @@ import SettingPrice from '@/views/setting/price'
 import SettingProduct from '@/views/setting/product'
 import SettingProductDetail from '@/views/setting/productDetail'
 import SettingContract from '@/views/setting/contract'
-import SettingRoles from '@/views/setting/roles'
+// import SettingRoles from '@/views/setting/roles'
+import SettingStandard from '@/views/setting/standard'
 import OverdueIndex from '@/views/overdue/index'
 
 Vue.use(Router)
@@ -129,7 +130,7 @@ export default new Router({
       component: Common,
       children: [
         { path: 'account', component: SettingAccount },
-        { path: 'roles', component: SettingRoles },
+        { path: 'standard', component: SettingStandard },
         { path: 'channel', component: SettingChannel },
         { path: 'channelDetail', component: SettingChannelDetail },
         { path: 'company', component: SettingCompany },

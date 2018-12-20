@@ -13,7 +13,7 @@
               <Input type="text" v-model="formInline.customerName" clearable placeholder="客户姓名" />
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="formInline.phone" clearable placeholder="客户手机号" />
+              <Input v-model="formInline.phone" clearable placeholder="客户手机号" />
             </FormItem>
             <FormItem>
               <Input type="text" v-model="formInline.channelName" clearable placeholder="渠道" />
@@ -27,10 +27,12 @@
               </Select>
             </FormItem>
             <FormItem>
-              <DatePicker type="date" placeholder="开始时间" v-model="formInline.startTime"></DatePicker>
+              <DatePicker type="date" placeholder="开始时间" 
+              v-model="formInline.startTime" @on-change="handleTimeChangeA"></DatePicker>
             </FormItem>
             <FormItem>
-              <DatePicker type="date" placeholder="开始时间" v-model="formInline.endTime"></DatePicker>
+              <DatePicker type="date" placeholder="结束时间" 
+              v-model="formInline.endTime" @on-change="handleTimeChangeB"></DatePicker>
             </FormItem>
         </Col>
         <Col span="2">
@@ -505,6 +507,12 @@ export default {
     }
   },
   methods: {
+    handleTimeChangeA(val) {
+      this.formInline.startTime = val
+    },
+    handleTimeChangeB(val) {
+      this.formInline.endTime = val
+    },
     handleSelectChange(selection) {
       this.selection = selection
     },
