@@ -263,19 +263,19 @@
             </li>
             <li>
               <span class="sp1">收款人</span>
-              <span clasa="sp2">{{customInfo.customerName}}</span>
+              <span clasa="sp2">{{replacePlatformOutOptions.customerName}}</span>
             </li>
             <li>
               <span class="sp1">应放款金额(元)</span>
-              <span clasa="sp2">{{replaceOptions.shouldRemitMoney}}</span>
+              <span clasa="sp2">{{replacePlatformOutOptions.shouldRemitMoney}}</span>
             </li>
             <li>
               <span class="sp1">手续费(元)</span>
-              <span clasa="sp2">{{replaceOptions.serviceMoney}}</span>
+              <span clasa="sp2">{{replacePlatformOutOptions.serviceMoney}}</span>
             </li>
             <li style="width: 100%">
               <span class="sp1">本次放款金额(元)(已扣除手续费)</span>
-              <span clasa="sp2">{{replaceOptions.nowRemitMoney}}</span>
+              <span clasa="sp2">{{replacePlatformOutOptions.nowRemitMoney}}</span>
             </li>
           </ul>
         </TabPane>
@@ -417,7 +417,7 @@
 <script>
 import { getLoanOrderList, getLoanOrderMsg, getLoanMsgthirdParty, cancelLoan, 
 saveApplyPrincipal, getApplyPrincipal, updatePenaltyLoanOrder, remarkAuditPeople,
-getCleanBillMsg, confirmCleanBillMsg, getExhibitionLoanMsg, confirmExhibitionLoanMsg, 
+getCleanBillMsg, confirmCleanBillMsg, getExhibitionLoanMsg, confirmExhibitionLoanMsg, getLoanMsgthirdPlatformOutMsg,
 getRerurnLoanOrderMsg, getEntrustLoanOrderMsg, entrustOrCancelLoanOrderMsg, confirmPassLoanInPlatform } from '@/utils/api'
 import { producOrderAllStatus, repayments } from '@/utils'
 import tabView from '@/components/tabView16'
@@ -450,6 +450,7 @@ export default {
       modalSubmitShow: false,
       tabIndex: '1',
       replaceOptions: {},
+      replacePlatformOutOptions: {},
       platformOptions: {},
       platformOutLoanType: '',
       creditList: [],
@@ -838,7 +839,6 @@ export default {
     handleClick(row) {
       this.id = row.customerId
       this.drawerShow = true
-      this.fetchLoanMsgthirdParty()
       this.fetchLoanMsg()
       // this.fetchLoanAlertMsg()
     },
@@ -848,6 +848,17 @@ export default {
     handleChange(val) {
       this.page = val
       this.fetchLoanOrderList()
+    },
+    fetchLoanMsgthirdPlatformOutMsg() {
+      const params = {
+        customerId: this.id,
+        companyId: this.$store.getters.userInfo.companyId
+      }
+      getLoanMsgthirdPlatformOutMsg(params).then(res => {
+        if (res.state == 1) {
+          this.replacePlatformOutOptions = res.info.data
+        }
+      })
     },
     fetchLoanMsgthirdParty() {
       const params = {
@@ -886,6 +897,9 @@ export default {
             this.loadDrawer = false
           }, 1000)
         }
+      }).then(() => {
+        this.fetchLoanMsgthirdParty()
+        this.fetchLoanMsgthirdPlatformOutMsg()
       })
     },
     fetchApplyPrincipal() {

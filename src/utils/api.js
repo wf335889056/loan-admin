@@ -464,6 +464,14 @@ export function getLoanMsgthirdParty(query) {
     params: query
   })
 }
+// 放款管理 平台外放款（第三方支付）详情页
+export function getLoanMsgthirdPlatformOutMsg(query) {
+  return fetch({
+    url: '/LoanController/getOutPlatformLoanDetail',
+    method: 'post',
+    params: query
+  })
+}
 // 放款管理 平台内放款（第三方支付）
 export function confirmPassLoanInPlatform(query) {
   return fetch({
@@ -636,6 +644,23 @@ export function getOperartionList(query) {
 export function getOperartionMsg(query) {
   return fetch({
     url: '/StatisticsDataController/getAllApplyDataDetail',
+    method: 'post',
+    params: query
+  })
+}
+// 机审标准 获取风控自动审核项
+export function getStandardMsg(query) {
+  return fetch({
+    url: '/CheckController/getCreditAutoCheckMeasure',
+    method: 'post',
+    params: query
+  })
+}
+
+// 机审标准 保存风控自动审核项
+export function updateStandardMsg(query) {
+  return fetch({
+    url: '/CheckController/saveCreditAutoCheckMeasure',
     method: 'post',
     params: query
   })

@@ -1,29 +1,34 @@
 <template>
   <div class="content">
-    <p class="info-p">基本信息</p>
+    <!-- <p class="info-p">基本信息</p> -->
+    <Divider>基本信息</Divider>
     <ul class="info-ul">
       <li v-for="item in accountInfo">
         <span class="sp1">{{item.key}}</span>
         <span class="sp2">{{item.value}}</span>
       </li>
     </ul>
-    <p class="info-p">财富信息</p>
+    <!-- <p class="info-p">财富信息</p> -->
+    <Divider>财富信息</Divider>
     <ul class="info-ul">
       <li v-for="item in wealthInfo">
         <span class="sp1">{{item.key}}</span>
         <span class="sp2">{{item.value}}</span>
       </li>
     </ul>
-    <p class="info-p">地址分析</p>
+    <!-- <p class="info-p">地址分析</p> -->
+    <Divider>地址分析</Divider>
     <ul class="info-ul">
       <li v-for="item in addressAnalysis.fundamentalPointAnalysis">
         <span class="sp1">{{item.key}}</span>
         <span class="sp2">{{item.value}}</span>
       </li>
     </ul>
-    <p class="info-p">最近一次常用地址</p>
+    <!-- <p class="info-p">最近一次常用地址</p> -->
+    <Divider>最近一次常用地址</Divider>
     <Table :columns="columns" :data="addressAnalysis.fommonlyUsedAddress"></Table>
-    <p class="info-p">总体消费</p>
+    <!-- <p class="info-p">总体消费</p> -->
+    <Divider>总体消费</Divider>
     <ul class="info-ul">
       <li v-for="item in consumptionAnalysis">
         <span class="sp1">{{item.key}}</span>

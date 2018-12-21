@@ -2,10 +2,13 @@
   <div class="tab-box">
     <Tabs type="card" @on-click="handleClick" v-model="tabsName">
       <TabPane v-for="(item, index) in tabs" :label="item.title" :key="item.id" :name="String(index)">
+        <div class="content" v-if="item.id == 2 || item.id == 4 || item.id == 5 || item.id == 3 || item.id == 7 || item.id == 8 || item.id == 6">
+          <Button type="primary" :loading="loading" @click="handleRefreshClick(item.id)">刷新</Button>
+        </div>
         <!-- 运营商 -->
         <operator v-if="item.id == 12" :obj="customInfo.operator" /> 
         <!-- 反欺诈 -->
-        <antiFraud v-if="item.id == 2" :risk="id2Data"/>
+        <antiFraud v-if="item.id == 2" :obj="id2Data"/>
         <!-- 多头负债 -->
         <longDebt v-if="item.id == 4" :obj="id4Data" />
         <!-- 多头借贷 -->
@@ -34,6 +37,7 @@
 
 <script>
 import { thirdPartyVerification } from '@/utils'
+import { getStandardMsg } from '@/utils/api'
 import { getThirdPartyMsg, getThirdPartyVerify } from '@/utils/thirdPartyApi'
 import antiFraud from './antiFraud.vue'
 import longBorrowing from './longBorrowing.vue'
@@ -65,6 +69,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       tabsName: '0',
       id2Data: {},
       id4Data: {},
@@ -84,12 +89,13 @@ export default {
         addressAnalysis: {},
         consumptionAnalysis: {}
       },
-      id16Data: {}
+      id16Data: {},
+      standards: []
     }
   },
   computed: {
     tabs() {
-      console.log(this.options)
+      // console.log(this.options)
       const arrs = thirdPartyVerification()
       const tabs = []
       if (!this.options) {
@@ -106,9 +112,37 @@ export default {
       }
     }
   },
+  mounted() {
+    this.fetchStandardMsg()
+  },
   methods: {
+    fetchStandardMsg() {
+      getStandardMsg({companyId: this.$store.getters.userInfo.companyId}).then(res => {
+        if (res.state == 1) {
+          this.standards = res.info.data.other
+          console.log(this.standards)
+        }
+      })
+    },
+    handleRefreshClick(id) {
+      this.loading = true
+      this.$Modal.confirm({
+        title: '收费提示',
+        content: '此内容资料将要进行收费, 是否继续浏览? (仅首次查询收费)',
+        onOk: () => {
+          // console.log(this.userCustom)
+          this.fetchThirdPartyMsg(id)
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+        },
+        onCancel: () => {
+          this.loading = false
+        }
+      })
+    },
     handleClick(name) {
-      console.log(this.userCustom)
+      // console.log(this.userCustom)
       const index = Number(name)
       const id = this.tabs[index].id
       if (id == 17 || id == 12 || id == 13 || id == 14 || id == 16) return
@@ -141,7 +175,7 @@ export default {
             })
           } else if (res.info.type == 0) {
             const data = JSON.parse(res.info.jsonObject)
-            console.log(data)
+            // console.log(data)
             if (id == 4) {
               this.id4Data = data.data
             } else if (id == 5) {
@@ -155,8 +189,8 @@ export default {
             } else if (id == 8) {
               this.id8Data = typeof data.result == 'object'? data.result : {}
             } else if (id == 2) {
-              this.id2Data = data.data.risk
-            } else if (id ==6) {
+              this.id2Data = data.data
+            } else if (id == 6) {
               this.id6Data = data.data
             }
           }
@@ -180,7 +214,7 @@ export default {
           } catch (e) {
             return
           }
-          console.log(data)
+          // console.log(data)
           if (id == 4) {
             this.id4Data = data.data
           } else if (id == 5) {
@@ -194,8 +228,8 @@ export default {
           } else if (id == 8) {
             this.id8Data = typeof data.result == 'object'? data.result : {}
           } else if (id == 2) {
-            this.id2Data = data.data.risk
-          } else if (id ==6) {
+            this.id2Data = data.data
+          } else if (id == 6) {
             this.id6Data = data.data
           }
         }

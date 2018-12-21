@@ -9,12 +9,15 @@
         <span class="sp1">欺诈分值</span>
         <span class="sp2">{{risk.score}}</span>
       </li>
-      <li v-for="item in risk.risks">
+      <!-- <li v-for="item in risk.risks">
         <span class="sp1">{{item.description}}</span>
         <span class="sp2">{{transitionVal(item.value)}}</span>
-      </li>
+      </li> -->
     </ul>
     <p class="line-msg" v-else>暂无数据</p>
+    <Divider>信贷反欺诈核查</Divider>
+    <!-- <p class="info-p">信贷反欺诈核查</p> -->
+    <Table :columns="columns" :data="risk.risks"></Table>
   </div>  
 </template>
 
@@ -24,12 +27,23 @@ import { enTransitionCn } from '@/utils';
 import test1json from '@/assets/test1.json'
 export default {
   props: {
-    risk: {
+    obj: {
       type: Object,
       default: () => test1json.data.risk
     }
   },
-  mounted() {
+  data() {
+    return {
+      columns: [
+        {title: '风险描述', key: 'description', aglin: 'center'},
+        {title: '风险等级', key: 'value', aglin: 'center'}
+      ]
+    }
+  },
+  computed: {
+    risk() {
+      return this.obj['risk']? this.obj.risk : {}
+    }
   },
   methods: {
     transitionVal(val) {

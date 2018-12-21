@@ -23,6 +23,7 @@
                 <Option v-for="item in status" :value="item.id" :label="item.text" :key="item.id"></Option>
               </Select>
             </FormItem>
+            </br>
             <FormItem>
               <DatePicker type="date" placeholder="开始时间" 
               v-model="formInline.startTime" @on-change="handleTimeChangeA"></DatePicker>

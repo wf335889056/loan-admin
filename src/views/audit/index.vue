@@ -26,6 +26,7 @@
                 <Option :value="14">审核通过</Option>
               </Select>
             </FormItem>
+            </br>
             <FormItem>
               <DatePicker type="date" placeholder="开始时间" 
               v-model="formInline.startTime" @on-change="handleTimeChangeA"></DatePicker>
@@ -249,6 +250,18 @@
             </li>
           </ul>
         </div>
+        <div class="content">
+          <p class="info-p">身份证照片、人脸识别</p>
+          <p v-if="sfzImgs.length == 0" class="line-msg">暂无上传</p>
+          <div v-else class="sfz-img">
+            <span v-for="item in sfzImgs">
+              <img :src="item" alt="身份证">
+              <div class="mask">
+                <Icon class="icon" type="ios-eye-outline" size="30" @click.native="handleView(item)"></Icon>
+              </div>
+            </span>
+          </div>
+        </div>
         <p class="title"><Tag color="warning">风控信息</Tag></p>
         <tabView :options="controls" :userCustom="userOption" :customInfo="customOption"/>
         <p class="title"><Tag color="warning">历史进件</Tag></p>
@@ -379,6 +392,7 @@ export default {
         startTime: '',
         endTime: ''
       },
+      sfzImgs: [],
       list: [],
       loading: true,
       loadDrawer: true,
@@ -688,6 +702,7 @@ export default {
         checkStatus: this.customStatus
       }
       this.loadDrawer = true
+      this.sfzImgs.splice(0, this.sfzImgs.length)
       getAuditMsg(params).then(res => {
         if (res.state == 1) {
           this.canAudit = res.info.data.canCheck
@@ -706,7 +721,55 @@ export default {
             phone: this.customerInfo.customerPhone,
             idcard: this.customerInfo.customerIdcard,
             userName: this.customerInfo.customerName,
-            userAppId: this.customerId
+            userAppId: res.info.data.userAppId
+          }
+          // 人脸识别
+          if (res.info.data.xx != '' && res.info.data.xx !== null) {
+            const imgs = JSON.parse(res.info.data.xx)
+            for (const o of imgs) {
+              this.sfzImgs.push(o.img)
+            }
+          }
+          // 运营商
+          if (res.info.data.yys != '' && res.info.data.yys !== null) {
+            const operator = JSON.parse(res.info.data.yys)
+            if (operator.code == 200) {
+              this.customOption.operator = operator.data
+            }
+          } else {
+            this.customOption.operator = {}
+          }
+          // 通讯录
+          if (res.info.data.tx != '' && res.info.data.tx !== null) {
+            const addressBook = JSON.parse(res.info.data.tx)
+            this.customOption.addressBook = addressBook
+          } else {
+            this.customOption.addressBook = []
+          }
+          // 京东
+          if (res.info.data.jd != '' && res.info.data.jd !== null) {
+            const jd = JSON.parse(res.info.data.jd)
+            if (jd.code == 200) {
+              this.customOption.jingDong = jd.data
+            }
+          }
+          // 淘宝
+          if (res.info.data.tb != '' && res.info.data.tb !== null) {
+            const tb = JSON.parse(res.info.data.tb)
+            if (tb.code == 200) {
+              this.customOption.taoBao = tb.data
+            }
+          } else {
+            this.customOption.taoBao = {}
+          }
+          // 支付宝
+          if (res.info.data.zfb != '' && res.info.data.zfb !== null) {
+            const zfb = JSON.parse(res.info.data.zfb)
+            if (zfb.alipay_user_info_share_response.code == 10000) {
+              this.customOption.zhiFuBao = zfb.alipay_user_info_share_response
+            }
+          } else {
+            this.customOption.zhiFuBao = {}
           }
           setTimeout(() => {
             this.loadDrawer = false
