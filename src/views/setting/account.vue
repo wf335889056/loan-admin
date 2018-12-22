@@ -13,11 +13,11 @@
       <div class="detail" v-else>
         <div class="form" style="margin-top: 30px;">
           <Form :model="form" :label-width="150" style="text-align: left;">
-            <FormItem label="手机号:">
+            <FormItem label="账号:">
               <Input v-model="form.phone" size="large" :readonly="canUpdatePhone"></Input>
             </FormItem>
             <FormItem label="密码:">
-              <Input v-model="form.code" size="large" clearable></Input>
+              <Input type="password" v-model="form.code" size="large" clearable></Input>
               <!-- <span class="span" @click="handleCode" :class="{'disabled': time != '获取验证码'}">{{time}}</span> -->
             </FormItem>
             <FormItem label="职位:">
@@ -50,7 +50,7 @@
                 <Checkbox v-for="(item, index) in childer" :label="item.name" :key="index"></Checkbox>
               </CheckboxGroup>
             </FormItem>
-            <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*该手机号第一次创建账号时，默认姓名和密码为手机号</p>
+            <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*该手机号第一次创建账号时，默认姓名与账号一致</p>
             <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*若登录者修改的是自身信息，请重新登录</p>
           </Form>
         </div>

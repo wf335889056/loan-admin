@@ -100,7 +100,7 @@
                   <RadioGroup v-model="form.procedurePayType" size="large" style="margin-left: 50px;">
                     <Radio :label="1">按期支付</Radio>
                     <Radio :label="2">贷前扣除</Radio>
-                    <Radio :label="3">贷后支付</Radio>
+                    <!-- <Radio :label="3">贷后支付</Radio> -->
                   </RadioGroup>
                   <!-- <span style="float:right;">最大手续费：<InputNumber :min="0" v-model="form.procedureMax" style="width: 100px;" size="large"></InputNumber>元</span> -->
                 </div>

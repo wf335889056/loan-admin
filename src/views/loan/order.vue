@@ -119,14 +119,6 @@
               <span class="sp1">放款渠道</span>
               <span class="sp2">{{loanInfo.remitPeople}}</span>
             </li>
-            <!-- <li>
-              <span class="sp1">打款银行</span>
-              <span class="sp2">{{loanInfo.remitBank}}</span>
-            </li>
-            <li>
-              <span class="sp1">打款账户</span>
-              <span class="sp2">{{loanInfo.remitAccount}}</span>
-            </li> -->
             <li>
               <span class="sp1">本次放款金额</span>
               <span class="sp2">{{loanInfo.nowRemitMoney}}</span>
@@ -236,7 +228,7 @@
               <span clasa="sp2">{{replaceOptions.balance}}</span>
             </li>
             <li>
-              <span class="sp1">应放款金额(元)</span>
+              <span class="sp1">申请金额(元)</span>
               <span clasa="sp2">{{replaceOptions.shouldRemitMoney}}</span>
             </li>
             <li>
@@ -266,7 +258,7 @@
               <span clasa="sp2">{{replacePlatformOutOptions.customerName}}</span>
             </li>
             <li>
-              <span class="sp1">应放款金额(元)</span>
+              <span class="sp1">申请金额(元)</span>
               <span clasa="sp2">{{replacePlatformOutOptions.shouldRemitMoney}}</span>
             </li>
             <li>
@@ -276,6 +268,9 @@
             <li style="width: 100%">
               <span class="sp1">本次放款金额(元)(已扣除手续费)</span>
               <span clasa="sp2">{{replacePlatformOutOptions.nowRemitMoney}}</span>
+            </li>
+            <li style="width: 100%">
+              <span class="sp2">平台外放款, 若发生其他不明因数, 请私下协商</span>
             </li>
           </ul>
         </TabPane>
@@ -416,9 +411,9 @@
 
 <script>
 import { getLoanOrderList, getLoanOrderMsg, getLoanMsgthirdParty, cancelLoan, 
-saveApplyPrincipal, getApplyPrincipal, updatePenaltyLoanOrder, remarkAuditPeople,
-getCleanBillMsg, confirmCleanBillMsg, getExhibitionLoanMsg, confirmExhibitionLoanMsg, getLoanMsgthirdPlatformOutMsg,
-getRerurnLoanOrderMsg, getEntrustLoanOrderMsg, entrustOrCancelLoanOrderMsg, confirmPassLoanInPlatform } from '@/utils/api'
+saveApplyPrincipal, getApplyPrincipal, updatePenaltyLoanOrder, remarkAuditPeople, getLoanMsgthirdPlatformOutMsg,
+getCleanBillMsg, confirmCleanBillMsg, getExhibitionLoanMsg, confirmExhibitionLoanMsg, getRerurnLoanOrderMsg, 
+getEntrustLoanOrderMsg, entrustOrCancelLoanOrderMsg, confirmPassLoanInPlatform, confirmPassLoanOutPlatform } from '@/utils/api'
 import { producOrderAllStatus, repayments } from '@/utils'
 import tabView from '@/components/tabView16'
 import authorizationAndUpdate from '@/components/authorizationAndUpdate'
@@ -813,7 +808,7 @@ export default {
         // console.log(params)
         confirmPassLoanInPlatform(params).then(res => {
           if (res.state == 1) {
-            this.$Message.success('放款成功')
+            this.$Message.success('平台内放款成功')
             this.modalShow = false
             this.fetchLoanMsg()
             this.fetchLoanOrderList()
@@ -821,6 +816,22 @@ export default {
         })
       } else {
         // console.log('线下放款')
+        const params = {
+          customerId: this.id,
+          nowRemitMoney: this.replacePlatformOutOptions.nowRemitMoney,
+          serviceMoney: this.replacePlatformOutOptions.serviceMoney,
+          serialNumberId: '',
+          remitChannel: this.platformOutLoanType,
+          userId: this.$store.getters.userInfo.userId
+        }
+        confirmPassLoanOutPlatform(params).then(res => {
+          if (res.state == 1) {
+            this.$Message.success('平台外放款成功')
+            this.modalShow = false
+            this.fetchLoanMsg()
+            this.fetchLoanOrderList()
+          }
+        })
       }
     },
     handleCance() {

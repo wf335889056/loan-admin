@@ -50,25 +50,33 @@
     <Drawer title="借款审核" v-model="drawerShow" width="60" class="drawer" :mask-closable="false">
       <Spin fix size="large" v-if="loadDrawer"></Spin>
       <div class="detail" v-else>
-        <template>
-          <p class="title"><Tag color="warning">审核信息</Tag></p>
-          <div class="content">
-            <ul class="info-ul">
-              <li>
-                <span class="sp1">申请编号</span>
-                <span class="sp2">{{auditInfo.applyCode}}</span>
-              </li>
-              <li>
-                <span class="sp1">审核状态</span>
-                <span class="sp2">{{status.filter(it => it.id == auditInfo.checkStatus)[0].text}}</span>
-              </li>
-              <li>
-                <span class="sp1">审核通过时间</span>
-                <span class="sp2">{{auditInfo.orderCheckTime}}</span>
-              </li>
-            </ul>
-          </div>
-        </template>
+        <p class="title"><Tag color="warning">审核信息</Tag></p>
+        <div class="content">
+          <ul class="info-ul">
+            <li>
+              <span class="sp1">申请编号</span>
+              <span class="sp2">{{auditInfo.applyCode}}</span>
+            </li>
+            <li>
+              <span class="sp1">审核状态</span>
+              <span class="sp2">{{status.filter(it => it.id == auditInfo.checkStatus)[0].text}}</span>
+            </li>
+            <li>
+              <span class="sp1">审核通过时间</span>
+              <span class="sp2">{{auditInfo.orderCheckTime}}</span>
+            </li>
+          </ul>
+        </div>
+        <p class="title"><Tag color="warning">机审结果</Tag></p>
+        <div class="content">
+          <ul class="info-ul" v-if="standardResult.length > 0">
+            <li v-for="item in standardResult" :key="item.creditAutoCheckMeasureId">
+              <span class="sp1">{{item.title}}</span>
+              <span class="sp2">{{item.creditAutoResult}}</span>
+            </li>
+          </ul>
+          <p class="line-msg" v-else>符合机审标准, 可放款</p>
+        </div>
         <template v-if="auditResult !== null">
           <p class="title"><Tag color="warning">审核结果</Tag></p>
           <div class="content">
@@ -263,7 +271,7 @@
           </div>
         </div>
         <p class="title"><Tag color="warning">风控信息</Tag></p>
-        <tabView :options="controls" :userCustom="userOption" :customInfo="customOption"/>
+        <tabView :options="controls" :userCustom="userOption" :customInfo="customOption" @isRefreshAutoResult="refreshAutoResult"/>
         <p class="title"><Tag color="warning">历史进件</Tag></p>
         <div class="content">
           <Table :columns="columns2" :data="historys"></Table>
@@ -273,7 +281,7 @@
       <div class="footer">
         <template v-if="auditInfo.checkStatus != 0">
           <Button v-if="canAudit == 1 && auditInfo.checkStatus != 10" size="default" type="success" class="btn" @click="handlePass">审核通过</Button>
-          <Button v-if="canAudit == 1" size="default" type="error" class="btn" @click="handleReject">审核被拒</Button>
+          <Button v-if="canAudit == 1 && auditInfo.checkStatus != 10" size="default" type="error" class="btn" @click="handleReject">审核被拒</Button>
         </template>
         <Button size="default" type="success" class="btn" @click="handleUpdate">客户备注</Button>
         <Button size="default" type="primary" class="btn" @click="handleBatch(0)">编辑负责人</Button>
@@ -301,7 +309,7 @@
             <li>
               <span class="sp1">授信额度(元)</span>
               <span class="sp2">
-                <Input v-model="formPass.creditMoney" :readonly="auditInfo.checkStatus != 1"></Input>
+                <Input v-model="formPass.creditMoney" :readonly="auditInfo.checkStatus != 1" placeholder="输入授信额度"></Input>
               </span>
             </li>
             <li>
@@ -357,15 +365,23 @@
           <div style="margin-top: 10px"> 
             <Input v-model="formPass.loansSuggest" type="textarea"  placeholder="贷后管理建议" :readonly="auditInfo.checkStatus != 1"></Input>
           </div>
-          <p style="text-align: left; font-size: 16px;color: red;">*开启后会要求客户签署电子合同, 客户签署后生成放款订单, 在平台生成具有法律意义的借款凭证。 若通过借款平台放款, 则无需开启</p>
+          <!-- <p style="text-align: left; font-size: 16px;color: red;">*开启后会要求客户签署电子合同, 客户签署后生成放款订单, 在平台生成具有法律意义的借款凭证。 若通过借款平台放款, 则无需开启</p> -->
         </template>
       </Form>
       <div slot="footer">
+        <!-- 0拒绝 1通过 -->
         <Button v-if="modelType == 0" type="primary" size="default" long @click="handleRejectSubmit">提交</Button>
         <Button v-if="modelType == 1" type="primary" size="default" long @click="handlePassSubmit">提交</Button>
       </div>
     </Modal>
     <Modal v-model="auditModelShow" title="机审结果">
+      <ul class="info-ul" v-if="standardResult.length > 0">
+        <li v-for="item in standardResult" :key="item.creditAutoCheckMeasureId">
+          <span class="sp1">{{item.title}}</span>
+          <span class="sp2">{{item.creditAutoResult}}</span>
+        </li>
+      </ul>
+      <p class="line-msg" v-else>符合机审标准, 可放款</p>
       <div slot="footer">
           <Button type="primary" size="default" long @click="auditModelShow = false">关闭</Button>
       </div>
@@ -377,8 +393,8 @@
 import tabView from '@/components/tabView16'
 import authorizationAndUpdate from '@/components/authorizationAndUpdate.vue'
 import { getAuditList, saveApplyPrincipal, getApplyPrincipal, remarkAuditPeople, 
-getAuditMsg, getAudioPassMsg, passLoanAudio, rejectLoanAudio } from '@/utils/api'
-import { repayments, producOrderAllStatus } from '@/utils'
+getAuditMsg, getAudioPassMsg, passLoanAudio, rejectLoanAudio, getStandardResult } from '@/utils/api'
+import { repayments, producOrderAllStatus, transformStandard } from '@/utils'
 export default {
   components: { authorizationAndUpdate, tabView },
   data() {
@@ -422,7 +438,7 @@ export default {
         customerRemark: ''
       },
       formPass: {
-        creditMoney: '',
+        creditMoney: 0,
         productRepaymentType: '',
         productCycleNum: '',
         creditRate: '',
@@ -458,6 +474,7 @@ export default {
       },
       auditModelShow: false,
       auditResultReject: {},
+      standardResult: [],
       columns: [
         { type: 'selection', width: 60, align: 'center' },
         { title: '产品名称', key: 'productName', align: 'center' },
@@ -487,6 +504,7 @@ export default {
             on: {
               click: (e) => {
                 e.stopPropagation()
+                this.fetchStandardResult()
                 this.auditModelShow = true
               }
             }
@@ -521,6 +539,29 @@ export default {
     }
   },
   methods: {
+    refreshAutoResult(bool) {
+      if (bool) {
+        setTimeout(() => {
+          this.fetchStandardResult()
+        }, 1000)
+      }
+    },
+    fetchStandardResult() {
+      this.standardResult.splice(0, this.standardResult.length)
+      const params = {
+        customerId: this.id,
+        companyId: this.id
+      }
+      getStandardResult(params).then(res => {
+        if (res.state == 1) {
+          console.log(res.info)
+          this.standardResult = res.info.data
+          for (const o of this.standardResult) {
+            o.title = transformStandard(o.creditAutoCheckMeasureId)
+          }
+        }
+      })
+    },
     handleTimeChangeA(val) {
       this.formInline.startTime = val
     },
@@ -611,6 +652,11 @@ export default {
       this.fetchAuditList()
     },
     handlePassSubmit() {
+      // console.log(this.formPass.creditMoney)
+      if (this.formPass.creditMoney == '') {
+        this.$Message.error('授信额度不能为空')
+        return false
+      }
       this.fetchPassLoanAudio()
     },
     handlePass() {
@@ -626,8 +672,13 @@ export default {
       getAudioPassMsg(params).then(res => {
         if (res.state == 1) {
           for (const o in this.formPass) {
-            this.formPass[o] = res.info.data[o]
+            if (o == 'creditMoney') {
+              this.formPass[o] = res.info.data[o] == 0? '' : res.info.data[o]
+            } else {
+              this.formPass[o] = res.info.data[o]
+            }
           }
+          // this.formPass.creditMoney = ''
         }
       })
     },
@@ -721,7 +772,8 @@ export default {
             phone: this.customerInfo.customerPhone,
             idcard: this.customerInfo.customerIdcard,
             userName: this.customerInfo.customerName,
-            userAppId: res.info.data.userAppId
+            userAppId: res.info.data.userAppId,
+            customerId: this.id
           }
           // 人脸识别
           if (res.info.data.xx != '' && res.info.data.xx !== null) {

@@ -6,7 +6,7 @@
         <div class="login-form">
           <div class="input">
             <Icon type="md-person" class="icon" />
-            <input type="text" v-model="phone" :maxlength="11" placeholder="输入手机号码">
+            <input type="text" v-model="phone" :maxlength="11" placeholder="输入账号">
           </div>
           <div class="input">
             <Icon type="md-lock" class="icon" />

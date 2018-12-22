@@ -7,21 +7,6 @@
         </div>
         <!-- 运营商 -->
         <operator v-if="item.id == 12" :obj="customInfo.operator" /> 
-        <!-- 反欺诈 -->
-        <antiFraud v-if="item.id == 2" :obj="id2Data"/>
-        <!-- 多头负债 -->
-        <longDebt v-if="item.id == 4" :obj="id4Data" />
-        <!-- 多头借贷 -->
-        <longBorrowing v-if="item.id == 5" :obj="id5Data" />
-        <!-- <networkPhoneThree v-if="item.id == 11" :obj="id11Data" /> -->
-        <!-- 贷前综合分析 -->
-        <beforeLoadRisk v-if="item.id == 3" :obj="id3Data" />
-        <!-- 失信 -->
-        <breakFaith v-if="item.id == 7" :obj="id7Data" />
-        <!-- 网贷逾期 -->
-        <loanOverdue v-if="item.id == 8" :obj="id8Data" />
-        <!-- 公安信息 -->
-        <publicSecurity v-if="item.id == 6" :obj="id6Data" />
         <!-- 淘宝 -->
         <taoBao v-if="item.id == 14" :obj="customInfo.taoBao" />
         <!-- 京东 -->
@@ -30,14 +15,32 @@
         <addressBook v-if="item.id == 17" :list="customInfo.addressBook" />
         <!-- 支付宝 -->
         <zhiFuBao v-if="item.id == 16" :obj="customInfo.zhiFuBao" />
+        <Spin size="large" fix v-if="loading"></Spin>
+        <template v-else>
+          <!-- 反欺诈 -->
+          <antiFraud v-if="item.id == 2" :obj="id2Data" :standard="standards" @updateAutoResult="getAutoResult"/>
+          <!-- 多头负债 -->
+          <longDebt v-if="item.id == 4" :obj="id4Data" />
+          <!-- 多头借贷 -->
+          <longBorrowing v-if="item.id == 5" :obj="id5Data" />
+          <!-- <networkPhoneThree v-if="item.id == 11" :obj="id11Data" /> -->
+          <!-- 贷前综合分析 -->
+          <beforeLoadRisk v-if="item.id == 3" :obj="id3Data" :standard="standards" @updateAutoResult="getAutoResult"/>
+          <!-- 失信 -->
+          <breakFaith v-if="item.id == 7" :obj="id7Data" />
+          <!-- 网贷逾期 -->
+          <loanOverdue v-if="item.id == 8" :obj="id8Data" />
+          <!-- 公安信息 -->
+          <publicSecurity v-if="item.id == 6" :obj="id6Data" />
+        </template>
       </TabPane>
     </Tabs>
   </div>
 </template>
 
 <script>
-import { thirdPartyVerification } from '@/utils'
-import { getStandardMsg } from '@/utils/api'
+import { thirdPartyVerification, transformStandard } from '@/utils'
+import { getStandardMsg, updateStandardResult } from '@/utils/api'
 import { getThirdPartyMsg, getThirdPartyVerify } from '@/utils/thirdPartyApi'
 import antiFraud from './antiFraud.vue'
 import longBorrowing from './longBorrowing.vue'
@@ -116,11 +119,30 @@ export default {
     this.fetchStandardMsg()
   },
   methods: {
+    getAutoResult(data) {
+      console.log(data)
+      if (this.$route.path == '/audit/index') {
+        const params = {
+          customerId: this.userCustom.customerId,
+          companyId: this.$store.getters.userInfo.companyId,
+          creditAutoJson: JSON.stringify(data)
+        }
+        console.log(params)
+        updateStandardResult(params).then(res => {
+          if (res.state == 1) {
+            console.log(res.info)
+            this.$emit('isRefreshAutoResult', true)
+          }
+        })
+      }
+    },
     fetchStandardMsg() {
       getStandardMsg({companyId: this.$store.getters.userInfo.companyId}).then(res => {
         if (res.state == 1) {
           this.standards = res.info.data.other
-          console.log(this.standards)
+          for (const o of this.standards) {
+            o.title = transformStandard(o.autoId)
+          }
         }
       })
     },
@@ -131,7 +153,8 @@ export default {
         content: '此内容资料将要进行收费, 是否继续浏览? (仅首次查询收费)',
         onOk: () => {
           // console.log(this.userCustom)
-          this.fetchThirdPartyMsg(id)
+          this.$Message.success('刷新成功')
+          this.fetchThirdPartyMsg(id, 1)
           setTimeout(() => {
             this.loading = false
           }, 1000)
@@ -170,7 +193,7 @@ export default {
               title: '收费提示',
               content: '此内容资料将要进行收费, 是否继续浏览? (仅首次查询收费)',
               onOk: () => {
-                this.fetchThirdPartyMsg(id)
+                this.fetchThirdPartyMsg(id, 0)
               }
             })
           } else if (res.info.type == 0) {
@@ -197,13 +220,14 @@ export default {
         }
       })
     },
-    fetchThirdPartyMsg(id) {
+    fetchThirdPartyMsg(id, type) {
       const params = {
         phone: this.userCustom.phone,
         idcard: this.userCustom.idcard,
         userName: this.userCustom.customerName,
         userAppId: this.userCustom.userAppId,
-        id
+        id,
+        type
       }
       getThirdPartyMsg(params).then(res => {
         if (res.state == 1) {

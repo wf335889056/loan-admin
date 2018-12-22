@@ -123,7 +123,7 @@ export default {
       modelTopUp: false,
       modeBuy: false,
       formInline1: {
-        money: 0.01,
+        money: 1000,
         payWay: 1
       },
       formInline2: {

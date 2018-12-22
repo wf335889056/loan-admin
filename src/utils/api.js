@@ -472,14 +472,14 @@ export function getLoanMsgthirdPlatformOutMsg(query) {
     params: query
   })
 }
-// 放款管理 平台内放款（第三方支付）
-export function confirmPassLoanInPlatform(query) {
-  return fetch({
-    url: '/deskManagementController/paymentBehalf',
-    method: 'post',
-    params: query
-  })
-}
+// // 放款管理 平台内放款（第三方支付）
+// export function confirmPassLoanInPlatform(query) {
+//   return fetch({
+//     url: '/deskManagementController/paymentBehalf',
+//     method: 'post',
+//     params: query
+//   })
+// }
 // 放款管理 取消放款
 export function cancelLoan(query) {
   return fetch({
@@ -488,10 +488,18 @@ export function cancelLoan(query) {
     params: query
   })
 }
+// 放款管理 平台内确认放款
+export function confirmPassLoanInPlatform(query) {
+  return fetch({
+    url: '/LoanController/passOutPlatformLoan',
+    method: 'post',
+    params: query
+  })
+}
 // 放款管理 平台外确认放款
 export function confirmPassLoanOutPlatform(query) {
   return fetch({
-    url: '/LoanController/passOutPlatformLoan',
+    url: '/LoanController/passOffLineLoan',
     method: 'post',
     params: query
   })
@@ -656,11 +664,26 @@ export function getStandardMsg(query) {
     params: query
   })
 }
-
 // 机审标准 保存风控自动审核项
 export function updateStandardMsg(query) {
   return fetch({
     url: '/CheckController/saveCreditAutoCheckMeasure',
+    method: 'post',
+    params: query
+  })
+}
+// 机审标准 保存风控自动审结果
+export function updateStandardResult(query) {
+  return fetch({
+    url: '/CheckController/saveCreditAutoResult',
+    method: 'post',
+    params: query
+  })
+}
+// 机审标准 获取风控自动审结果
+export function getStandardResult(query) {
+  return fetch({
+    url: '/CheckController/getCreditAutoResult',
     method: 'post',
     params: query
   })

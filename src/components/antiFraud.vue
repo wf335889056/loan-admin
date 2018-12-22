@@ -30,6 +30,10 @@ export default {
     obj: {
       type: Object,
       default: () => test1json.data.risk
+    },
+    standard: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -42,7 +46,20 @@ export default {
   },
   computed: {
     risk() {
-      return this.obj['risk']? this.obj.risk : {}
+      const standardScore = this.standard.length > 0? this.standard[7] : 0
+      if (this.obj['risk']) {
+        const risk = this.obj.risk
+        if (risk.score > Number(standardScore.autoMeasureValue) && standardScore.autoMeasureType == 1) {
+          console.log('反欺诈分偏高')
+          const params = {
+            creditAutoCheckMeasureId: standardScore.autoId,
+            creditAutoResult: '不通过'
+          }
+          this.$emit('updateAutoResult', params)
+        }
+        return risk
+      }
+      return {}
     }
   },
   methods: {

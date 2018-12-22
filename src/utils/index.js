@@ -142,3 +142,52 @@ export const menusList = [
   ] },
   { name: '运营数据', path: '/operartion', icon: 'ios-paper-outline' }
 ]
+
+export function transformStandard(id) {
+  switch(id) {
+    case 1:
+    return '入网时长时间低于(月):'
+    case 2:
+    return '前十个有效手机号码与通讯录对比命中记录(个):'
+    case 3:
+    return '通讯录和通话记录比对(个):'
+    case 4:
+    return '手机号码不重复号码低于(个):'
+    case 5:
+    return '平均通话时长低于(秒):'
+    case 6:
+    return '手机未实名认证(未获取数据不包括在内):'
+    case 7:
+    return '芝麻分值大于(分):'
+    case 8:
+    return '花呗当期逾期状态(已逾期):'
+    case 9:
+    return '借呗当期逾期状态(已逾期):'
+    case 10:
+    return '淘宝收货地址(无):'
+    case 11:
+    return '花呗额度(元):'
+    case 12:
+    return '借呗额度(秒):'
+    case 13:
+    return '绑定信用卡张数(张):'
+    case 14:
+    return '年龄限制(岁):'
+    case 15:
+    return '贷前综合风险值(分):'
+    case 16:
+    return '简单风险命中数量(个)(上限8个):'
+    case 17:
+    return '法院失信名单(个):'
+    case 18:
+    return '24个月多平台借款数量(个):'
+    case 19:
+    return '24个月多平台被拒绝数量(个):'
+    case 20:
+    return '24个月逾期记录数量(条):'
+    case 21:
+    return '信贷反欺诈分值(分):'
+    default:
+    return ''
+  }
+}
