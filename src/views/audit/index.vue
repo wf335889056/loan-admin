@@ -504,6 +504,7 @@ export default {
             on: {
               click: (e) => {
                 e.stopPropagation()
+                this.id = params.row.customerId
                 this.fetchStandardResult()
                 this.auditModelShow = true
               }
@@ -550,7 +551,7 @@ export default {
       this.standardResult.splice(0, this.standardResult.length)
       const params = {
         customerId: this.id,
-        companyId: this.id
+        companyId: this.$store.getters.userInfo.companyId
       }
       getStandardResult(params).then(res => {
         if (res.state == 1) {
