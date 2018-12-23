@@ -107,7 +107,7 @@ export default {
           if (i == 'score' && standardScore.autoMeasureType == 1 && temp[i] < Number(standardScore.autoMeasureValue)) {
             this.result.push({
               creditAutoCheckMeasureId: standardScore.autoId,
-              creditAutoResult: '不通过'
+              creditAutoResult: '不合格'
             })
           } 
         }
@@ -129,7 +129,7 @@ export default {
       if (hitList1Len > Number(standards[3].autoMeasureValue) && standards[3].autoMeasureType == 1) {
         standard.push({
           creditAutoCheckMeasureId: standards[3].autoId,
-          creditAutoResult: '不通过'
+          creditAutoResult: '不合格'
         })
       }
       // 24个月多平台借款数量(个)
@@ -142,7 +142,7 @@ export default {
             if (Number(month24BorrowNumber) > Number(standards[4].autoMeasureValue) && standards[4].autoMeasureType == 1) {
               standard.push({
                 creditAutoCheckMeasureId: standards[4].autoId,
-                creditAutoResult: '不通过'
+                creditAutoResult: '不合格'
               })
             }
           }
@@ -158,7 +158,7 @@ export default {
             if (month24overdueLen > Number(standards[6].autoMeasureValue)) {
               standard.push({
                 creditAutoCheckMeasureId: standards[6].autoId,
-                creditAutoResult: '不通过'
+                creditAutoResult: '不合格'
               })
             }
           }
@@ -170,7 +170,7 @@ export default {
       if (hitListLen < Number(standards[2].autoMeasureValue) && standards[2].autoMeasureType == 1) {
         standard.push({
           creditAutoCheckMeasureId: standards[2].autoId,
-          creditAutoResult: '失败'
+          creditAutoResult: '不合格'
         })
       }
       // 24个月多平台被拒绝数量(个)
@@ -183,7 +183,7 @@ export default {
             if (Number(month24RejectList) > Number(standards[5].autoMeasureValue) && standards[5].autoMeasureType == 1) {
               standard.push({
                 creditAutoCheckMeasureId: standards[5].autoId,
-                creditAutoResult: '失败'
+                creditAutoResult: '不合格'
               })
             }
           }

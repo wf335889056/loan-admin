@@ -119,7 +119,7 @@
               </li>
               <li>
                 <span class="sp1">手续费支付方式</span>
-                <span class="sp2">{{auditResult.productProcedurePayType == 1? '按期支付' : auditResult.productProcedurePayType == 2? '贷前扣除' : '贷后支付'}}</span>
+                <span class="sp2">{{auditResult.productProcedurePayType == 1? '按期支付' : auditResult.productProcedurePayType == 2? '贷前扣除' : ''}}</span>
               </li>
               <li>
                 <span class="sp1">资方</span>
@@ -208,7 +208,7 @@
             </li>
             <li>
               <span class="sp1">工资收入</span>
-              <span class="sp2">{{jobInfo.customeEarning == 1? '2000-4000' : jobInfo.customeEarning == 2? '4000-6000' : jobInfo.customeEarning == 3? '5000-8000' : jobInfo.customeEarning == 4? '8000-12000' : jobInfo.customeEarning == 5? '12000及以上' : ''}}</span>
+              <span class="sp2">{{jobInfo.customerEarning == 1? '2000-4000' : jobInfo.customerEarning == 2? '4000-6000' : jobInfo.customerEarning == 3? '5000-8000' : jobInfo.customerEarning == 4? '8000-12000' : jobInfo.customerEarning == 5? '12000及以上' : ''}}</span>
             </li>
             <li>
               <span class="sp1">公司名称</span>
@@ -555,7 +555,7 @@ export default {
       }
       getStandardResult(params).then(res => {
         if (res.state == 1) {
-          console.log(res.info)
+          // console.log(res.info)
           this.standardResult = res.info.data
           for (const o of this.standardResult) {
             o.title = transformStandard(o.creditAutoCheckMeasureId)
@@ -643,7 +643,6 @@ export default {
       this.customStatus = row.checkStatus
       this.drawerShow = true
       this.fetchAuditMsg()
-      this.fetchAuditPassMsg()
     },
     handleSubmit() {
       this.fetchAuditList()
@@ -828,6 +827,9 @@ export default {
             this.loadDrawer = false
           }, 1000)
         }
+      }).then(() => {
+        this.fetchStandardResult()
+        this.fetchAuditPassMsg()
       })
     },
     fetchApplyPrincipal() {

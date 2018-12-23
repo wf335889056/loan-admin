@@ -92,12 +92,15 @@ export default {
   computed: {
     data() {
       const arrs = []
+      // console.log(this.obj)
       for (const i in this.obj) {
-        arrs.push({
-          key: this[i],
-          title: this.transitionVal(i),
-          table: this.obj[i] == null? [] : this.obj[i]
-        })
+        if (Array.isArray(this.obj[i])) {
+          arrs.push({
+            key: this[i],
+            title: this.transitionVal(i),
+            table: this.obj[i] == null? [] : this.obj[i]
+          })
+        }
       }
       return arrs
     }

@@ -120,17 +120,17 @@ export default {
   },
   methods: {
     getAutoResult(data) {
-      console.log(data)
+      // console.log(data)
       if (this.$route.path == '/audit/index') {
         const params = {
           customerId: this.userCustom.customerId,
           companyId: this.$store.getters.userInfo.companyId,
-          creditAutoJson: JSON.stringify(data)
+          json: data
         }
-        console.log(params)
-        updateStandardResult(params).then(res => {
+        // console.log(params)
+        updateStandardResult({resultJson: encodeURI(JSON.stringify(params))}).then(res => {
           if (res.state == 1) {
-            console.log(res.info)
+            // console.log(res.info)
             this.$emit('isRefreshAutoResult', true)
           }
         })

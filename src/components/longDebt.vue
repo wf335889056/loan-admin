@@ -38,7 +38,7 @@ export default {
           align: 'center',
           render: (h, params) => {
             const n = Number(params.row.borrowState)
-            return h('div', n == 1? '拒贷' : n == 2? '批贷已放款' : n == 3? '待放款' : n == 4? '借款人放弃申请' : N == 5? '审核中' : n == 6? '待放款' : '未知')
+            return h('div', n == 1? '拒贷' : n == 2? '批贷已放款' : n == 3? '待放款' : n == 4? '借款人放弃申请' : n == 5? '审核中' : n == 6? '待放款' : '未知')
           }
         },
         { 

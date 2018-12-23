@@ -38,63 +38,63 @@
         <div class="content">
           <p class="info-p">基础信息</p>
           <ul class="info-ul">
-            <li>
+            <li style="width: 100%">
               <span class="sp1">客户姓名</span>
               <span class="sp2">{{userOption.customerName}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">手机号码</span>
               <span class="sp2">{{userOption.userAppPhone}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">客户身份证号</span>
               <span class="sp2">{{userOption.userIdcard}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">客户贷款状态</span>
               <span class="sp2">{{parseUserStatus(userOption.userStatus)}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">身份证是否认证</span>
-              <span class="sp2">{{userOption.idCardCertification == 0? '未认证' : '已认证'}}</span>
+              <span class="sp2">{{userOption.idCardCertification == 1? '已认证' : '未认证'}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">银行卡是否认证</span>
-              <span class="sp2">{{userOption.bankCardFication == 0? '未认证' : '已认证'}}</span>
+              <span class="sp2">{{userOption.bankCardFication == 1? '已认证' : '未认证'}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">客户地址</span>
               <span class="sp2">{{userOption.address}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">婚姻状态</span>
               <span class="sp2">{{userOption.customerMarriageStatus}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">公司名称</span>
               <span class="sp2">{{userOption.customerCompanyName}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">公司地址</span>
               <span class="sp2">{{userOption.customerCompanyAddress}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">公司电话</span>
               <span class="sp2">{{userOption.customerCompanyPhone}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">职务</span>
-              <span class="sp2">{{userOption.customerCompanyPhone}}</span>
+              <span class="sp2">{{userOption.customerPosition}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">收入</span>
-              <span class="sp2">{{userOption.customerCompanyPhone}}</span>
+              <span class="sp2">{{userOption.customerEarning}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">紧急联系人姓名</span>
               <span class="sp2">{{userOption.urgencyPeopleName}}</span>
             </li>
-            <li>
+            <li style="width: 100%">
               <span class="sp1">紧急联系人手机号</span>
               <span class="sp2">{{userOption.urgencyPeoplephone}}</span>
             </li>
