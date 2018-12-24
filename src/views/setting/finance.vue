@@ -3,7 +3,7 @@
     <Row>
       <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="drawerShow = true">账户管理</Button>
       <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="topUpModal = true">充值</Button>
-      <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="futForwardModal = true">提出</Button>
+      <!-- <Button type="primary" size="large" style="margin-bottom: 30px;margin-right: 20px;" @click="futForwardModal = true">提出</Button> -->
     </Row>
     <p class="p1"><span>富友账户余额：<i>{{accountMoney.toFixed(2)}}</i> 元</span> <span>可用余额：<i>{{availableMoney.toFixed(2)}}</i> 元</span></p>
     <Row>

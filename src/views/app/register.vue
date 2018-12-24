@@ -63,8 +63,12 @@ export default {
       })
     },
     handleCode() {
+      if (this.phone == '') {
+        this.$Message.error('输入手机号码')
+        return
+      }
       if (this.time != '获取验证码') return
-      const param = {
+      const params = {
         companyId: this.companyId,
         userAppPhone: this.phone,
         type: 1

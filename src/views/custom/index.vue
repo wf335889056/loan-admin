@@ -56,11 +56,11 @@
             </li>
             <li style="width: 100%">
               <span class="sp1">身份证是否认证</span>
-              <span class="sp2">{{userOption.idCardCertification == 1? '已认证' : '未认证'}}</span>
+              <span class="sp2">{{idCardCertification == 1? '已认证' : '未认证'}}</span>
             </li>
             <li style="width: 100%">
               <span class="sp1">银行卡是否认证</span>
-              <span class="sp2">{{userOption.bankCardFication == 1? '已认证' : '未认证'}}</span>
+              <span class="sp2">{{bankCardFication == 1? '已认证' : '未认证'}}</span>
             </li>
             <li style="width: 100%">
               <span class="sp1">客户地址</span>
@@ -171,6 +171,8 @@ export default {
       value: '',
       total: 0,
       userOption: {},
+      idCardCertification: 0,
+      bankCardFication: 0,
       customOption: {
         operator: {},
         addressBook: [],
@@ -295,6 +297,8 @@ export default {
           this.userOption = res.info.clientManagementDetails
           this.userOption.idCardPhotoPositive != '' && this.sfzImgs.push(this.userOption.idCardPhotoPositive)
           this.userOption.idCardPhotoPositiveNegative != '' && this.sfzImgs.push(this.userOption.idCardPhotoPositiveNegative)
+          this.bankCardFication = res.info.bankCardFication
+          this.idCardCertification = res.info.idCardCertification
           // 人脸识别
           if (res.info.xx != '' && res.info.xx !== null) {
             const imgs = JSON.parse(res.info.xx)

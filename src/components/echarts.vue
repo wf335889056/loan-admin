@@ -58,10 +58,4 @@ export default {
   .chart {
     height: 400px;
   }
-  @media (max-width: 1500px) {
-    .chart {
-      width: 100%;
-      height: auto;
-    }
-  }
 </style>

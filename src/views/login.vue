@@ -35,10 +35,10 @@
           this.$Message.error('请填入完整信息')
           return
         }
-        if (this.phone.length != 11) {
-          this.$Message.error('手机号格式不正确')
-          return
-        }
+        // if (this.phone.length != 11) {
+        //   this.$Message.error('手机号格式不正确')
+        //   return
+        // }
         accountLogin({ phone: this.phone, password: this.password }).then(res => {
           // console.log(res.info)
           if (res.state == 1) {

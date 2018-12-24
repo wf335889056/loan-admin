@@ -10,7 +10,7 @@ import fetch from './fetch'
 // 分享页面h5注册
 export function h5Register(query) {
   return fetch({
-    url: '/deskManagementController/mobileSms',
+    url: '/deskManagementController/register',
     method: 'post',
     params: query
   })

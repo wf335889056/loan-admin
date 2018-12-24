@@ -76,7 +76,7 @@
               </li>
               <li>
                 <span class="sp1">婚姻状况</span>
-                <span class="sp2">{{items.customerMarriageStatus == 0? '未婚' : '已婚'}}</span>
+                <span class="sp2">{{items.customerMarriageStatus == 0? '未婚' : items.customerMarriageStatus == 1? '已婚' : ''}}</span>
               </li>
               <li>
                 <span class="sp1">紧急联系人姓名</span>
@@ -84,7 +84,7 @@
               </li>
               <li>
                 <span class="sp1">紧急联系人关系</span>
-                <span class="sp2">{{items.urgencyPeopleType == 1? '亲戚' : items.urgencyPeopleType == 2? '配偶' : items.urgencyPeopleType == 3? '子女' : '朋友' }}</span>
+                <span class="sp2">{{items.urgencyPeopleType == 1? '亲戚' : items.urgencyPeopleType == 2? '配偶' : items.urgencyPeopleType == 3? '子女' : items.urgencyPeopleType == 4? '朋友' : '' }}</span>
               </li>
               <li>
                 <span class="sp1">紧急联系人电话</span>

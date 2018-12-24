@@ -176,7 +176,7 @@ export default {
     },
     handleDone() {
       const len = this.listProduct.length
-      const ids = len > 5? [12, 17, 13, 14, 16].concat(this.listProduct) : [12, 17, 13, 14, 16]
+      const ids = len > 5? [].concat(this.listProduct) : [12, 17, 13, 14, 16]
       const params = {
         productId: this.id,
         creditItemType: ids.join(',')

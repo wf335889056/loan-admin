@@ -255,7 +255,7 @@
             </li>
             <li>
               <span class="sp1">收款人</span>
-              <span clasa="sp2">{{replacePlatformOutOptions.customerName}}</span>
+              <span clasa="sp2">{{customInfo.customerName}}</span>
             </li>
             <li>
               <span class="sp1">申请金额(元)</span>

@@ -329,7 +329,7 @@
             </li>
             <li>
               <span class="sp1">手续费支付方式</span>
-              <span class="sp2">{{formPass.productProcedurePayType == 1? '按期值' : formPass.productProcedurePayType == 2? '贷前扣除' : '贷后支付'}}</span>
+              <span class="sp2">{{formPass.productProcedurePayType == 1? '按期值' : formPass.productProcedurePayType == 2? '贷前扣除' : ''}}</span>
             </li>
             <!-- <li>
               <span class="sp1">手续费/平台费(%)</span>
@@ -775,6 +775,8 @@ export default {
             userAppId: res.info.data.userAppId,
             customerId: this.id
           }
+          this.sfzImgs.push(this.customerInfo.idCardPhotoPositive)
+          this.sfzImgs.push(this.customerInfo.idCardPhotoPositiveNegative)
           // 人脸识别
           if (res.info.data.xx != '' && res.info.data.xx !== null) {
             const imgs = JSON.parse(res.info.data.xx)
