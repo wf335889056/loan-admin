@@ -667,6 +667,7 @@ export default {
         params.totalMoney = this.totalMoneyExhibition
         params.billId = this.billId
         params.customerId = this.id
+        params.userId = this.$store.getters.userInfo.userId
         confirmExhibitionLoanMsg(params).then(res => {
           if (res.state == 1) {
             this.$Message.success('展期成功')

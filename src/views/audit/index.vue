@@ -235,7 +235,7 @@
             </li>
             <li>
               <span class="sp1">紧急联系人关系类型</span>
-              <span class="sp2">{{linkman.urgencyPeopleType == 1? '亲戚' : linkman.urgencyPeopleType == 2? '配偶' : linkman.urgencyPeopleType == 3? '子女' : linkman.urgencyPeopleType == 4? '朋友' : '未知'}}</span>
+              <span class="sp2">{{linkman.urgencyPeopleType == 1? '亲戚' : linkman.urgencyPeopleType == 2? '配偶' : linkman.urgencyPeopleType == 3? '子女' : linkman.urgencyPeopleType == 4? '朋友' : ''}}</span>
             </li>
           </ul>
           <p class="info-p">申请表</p>

@@ -24,13 +24,13 @@
       </TabPane>
       <!-- <TabPane label="套餐使用明细" name="2">
         <div class="table">
-          <Table :columns="columns2" :data="list3"></Table>
+          <Table :columns="columns2" :data="list2"></Table>
           <Page :current="pageB" :page-size="20" :total="list2len" show-total class="page" @on-change="handleChangeB" />
         </div>
       </TabPane> -->
       <TabPane label="大数据计费" name="3">
         <div class="table">
-          <Table :columns="columns1" :data="list2"></Table>
+          <Table :columns="columns1" :data="list3"></Table>
           <Page :current="pageC" :page-size="20" :total="list3len" show-total class="page" @on-change="handleChangeC" />  
         </div>
       </TabPane>
