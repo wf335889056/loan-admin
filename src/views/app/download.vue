@@ -20,7 +20,7 @@
       <p class="p">更新时间：2018-09-30 14:33:18</p>
       <div class="qr-code">
         <div class="code-img">
-          <img src="" alt="二维码">
+          <img :src="qrCodeUrl" alt="二维码">
         </div>
       </div>
       <div class="btn">
@@ -35,13 +35,18 @@
 import logo from '@/assets/logo_xyjr60.png'
 import topImage from '@/assets/top@2x_2.png'
 import btnImage from '@/assets/button_cked@2x_2.png'
+import android from '@/assets/android.png'
+import ios from '@/assets/ios.png'
 import { appDevice } from '@/utils'
 export default {
   data() {
     return {
       logo,
       topImage,
-      btnImage
+      btnImage,
+      ios,
+      android,
+      qrCodeUrl: ''
     }
   },
   computed: {
@@ -52,12 +57,21 @@ export default {
       return appDevice().android
     }
   },
+  mounted() {
+    if (this.isIos) {
+      this.qrCodeUrl = this.ios
+    } else if (this.isAndroid) {
+      this.qrCodeUrl = this.android
+    }
+  },
   methods: {
     handleSubmit() {
       if (this.isIos) {
+        window.open('https://www.y4d.cn/Vywf', '_self')
         return
       }
       if (this.isAndroid) {
+        window.open('http://www.xiaoyoujr.com:8090/app/xiaoyou.apk', '_self')
         return
       }
     }

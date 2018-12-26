@@ -72,7 +72,7 @@
           <ul class="info-ul" v-if="standardResult.length > 0">
             <li v-for="item in standardResult" :key="item.creditAutoCheckMeasureId">
               <span class="sp1">{{item.title}}</span>
-              <span class="sp2">{{item.creditAutoResult}}</span>
+              <span class="sp2" :class="{'red': item.creditAutoResult == '不合格'}">{{item.creditAutoResult}}</span>
             </li>
           </ul>
           <p class="line-msg" v-else>符合机审标准, 可放款</p>
@@ -378,7 +378,7 @@
       <ul class="info-ul" v-if="standardResult.length > 0">
         <li v-for="item in standardResult" :key="item.creditAutoCheckMeasureId">
           <span class="sp1">{{item.title}}</span>
-          <span class="sp2">{{item.creditAutoResult}}</span>
+          <span class="sp2" :class="{'red': item.creditAutoResult == '不合格'}">{{item.creditAutoResult}}</span>
         </li>
       </ul>
       <p class="line-msg" v-else>符合机审标准, 可放款</p>
@@ -771,7 +771,7 @@ export default {
           this.userOption = {
             phone: this.customerInfo.customerPhone,
             idcard: this.customerInfo.customerIdcard,
-            userName: this.customerInfo.customerName,
+            customerName: this.customerInfo.customerName,
             userAppId: res.info.data.userAppId,
             customerId: this.id
           }

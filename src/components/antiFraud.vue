@@ -51,10 +51,10 @@ export default {
         const risk = this.obj.risk
         if (risk.score > Number(standardScore.autoMeasureValue) && standardScore.autoMeasureType == 1) {
           // console.log('反欺诈分偏高')
-          const params = {
-            creditAutoCheckMeasureId: standardScore.autoId,
-            creditAutoResult: '不合格'
-          }
+          const params = [{
+              creditAutoCheckMeasureId: standardScore.autoId,
+              creditAutoResult: '不合格'
+          }]
           this.$emit('updateAutoResult', params)
         }
         return risk
