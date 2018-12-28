@@ -75,15 +75,15 @@
           <ul class="info-ul" v-if="Object.keys(customInfo).length > 0">
             <li>
               <span class="sp1">客户姓名</span>
-              <span class="sp2">{{customerInfo.customerName}}</span>
+              <span class="sp2">{{customInfo.customerName}}</span>
             </li>
             <li>
               <span class="sp1">客户手机号码</span>
-              <span class="sp2">{{customerInfo.customerPhone}}</span>
+              <span class="sp2">{{customInfo.customerPhone}}</span>
             </li>
             <li>
               <span class="sp1">客户身份证号码</span>
-              <span class="sp2">{{customerInfo.customerIdcard}}</span>
+              <span class="sp2">{{customInfo.customerIdcard}}</span>
             </li>
           </ul>
           <p class="info-p">原账单信息</p>
@@ -187,10 +187,10 @@ export default {
       this.loadDrawer = true
       getExhibitionRecordMsg(params).then(res => {
         if (res.state == 1) {
-          if (res.info.data.customerInfo != null) {
+          if (res.info.data.customerInfo !== null) {
             this.customInfo = res.info.data.customerInfo
           }
-          if (res.info.data.rawBill != null) {
+          if (res.info.data.rawBill !== null) {
             this.billInfo = res.info.data.rawBill
           }
           this.deferInfo = res.info.data.deferContentInfo
