@@ -168,7 +168,7 @@ export default {
     },
     handleClick(row) {
       this.deferId = row.deferId
-      this.customId = row.customId
+      this.customId = row.customerId
       this.drawerShow = true
       this.fetchExhibitionRecordMsg()
     },
