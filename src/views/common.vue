@@ -103,47 +103,47 @@
       verifierAccountRoles() {
         const menuArrs = []
         const menuAllArrs = menusList
-        this.menus = menuAllArrs
-        // if (this.userInfo.superAdmin == 1) {
-        //   this.menus = menuAllArrs
-        //   return
-        // }
-        // if (this.userInfo.permission != '' && this.userInfo.superAdmin == 0) {
-        //   const permission = this.userInfo.permission.split(',')
-        //   for (const o of permission) {
-        //     for (const q of menuAllArrs) {
-        //       if (o == q.name) {
-        //         if (o == '设置管理') {
-        //           const obj = {
-        //             ...q,
-        //             childer: []
-        //           }
-        //           menuArrs.push(obj)
-        //         } else {
-        //           menuArrs.push(q)
-        //         }
-        //       }
-        //     }
-        //   }
-        //   if (this.userInfo.adminPermission != '') {
-        //     const adminPermission = this.userInfo.adminPermission.split(',')
-        //     const adminMenus = menusList[7].childer
-        //     const childers = []
-        //     for (const z of adminPermission) {
-        //       for (const y of adminMenus) {
-        //         if (z == y.name) {
-        //           childers.push(y)
-        //         }
-        //       }
-        //     }
-        //     for (const a of menuArrs) {
-        //       if (a.name == '设置管理') {
-        //         a.childer = childers
-        //       } 
-        //     }
-        //   }
-        //   this.menus = menuArrs
-        // }
+        // this.menus = menuAllArrs
+        if (this.userInfo.superAdmin == 1) {
+          this.menus = menuAllArrs
+          return
+        }
+        if (this.userInfo.permission != '' && this.userInfo.superAdmin == 0) {
+          const permission = this.userInfo.permission.split(',')
+          for (const o of permission) {
+            for (const q of menuAllArrs) {
+              if (o == q.name) {
+                if (o == '设置管理') {
+                  const obj = {
+                    ...q,
+                    childer: []
+                  }
+                  menuArrs.push(obj)
+                } else {
+                  menuArrs.push(q)
+                }
+              }
+            }
+          }
+          if (this.userInfo.adminPermission != '') {
+            const adminPermission = this.userInfo.adminPermission.split(',')
+            const adminMenus = menusList[7].childer
+            const childers = []
+            for (const z of adminPermission) {
+              for (const y of adminMenus) {
+                if (z == y.name) {
+                  childers.push(y)
+                }
+              }
+            }
+            for (const a of menuArrs) {
+              if (a.name == '设置管理') {
+                a.childer = childers
+              } 
+            }
+          }
+          this.menus = menuArrs
+        }
       },
       handleSelect(name) {
         // console.log(name)
