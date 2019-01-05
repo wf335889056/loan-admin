@@ -183,6 +183,8 @@ export default {
       window.open(this.formChannel.qrCode)
     },
     fetchChannelLisgOrMsg() {
+      this.channelProduct.splice(0, this.channelProduct.length)
+      this.channelAdminList.splice(0, this.channelAdminList.length)
       const params = {
         channelId: this.id,
         companyId: this.$store.getters.userInfo.companyId,
