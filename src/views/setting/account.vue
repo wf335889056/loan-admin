@@ -50,8 +50,10 @@
                 <Checkbox v-for="(item, index) in childer" :label="item.name" :key="index"></Checkbox>
               </CheckboxGroup>
             </FormItem>
-            <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*该手机号第一次创建账号时，默认姓名与账号一致</p>
-            <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*若登录者修改的是自身信息，请重新登录</p>
+            <template v-if="id == ''">
+              <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*该手机号第一次创建账号时，默认姓名与账号一致</p>
+              <p style="text-align: right; font-size: 20px;margin-bottom: 10px;color: red;">*若登录者修改的是自身信息，请重新登录</p>
+            </template>
           </Form>
         </div>
       </div>
