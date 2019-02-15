@@ -31,15 +31,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    if (!dev) {
-      const stringTime = "2019-02-1 00:00:00"
-      const targetTime = Date.parse(new Date(stringTime))
-      const currTime = Date.parse(new Date())
-      if (currTime >= targetTime) {
-        iView.Message.error(res.info.message)
-        return Promise.reject(res)
-      }
-    }
     if (res.state == 0) {
       iView.Message.error(res.info.message)
       return Promise.reject(res)
